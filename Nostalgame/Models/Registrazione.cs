@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Nostalgame.Models
 {
@@ -31,5 +32,12 @@ namespace Nostalgame.Models
         [StringLength(100)]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+
+        [ForeignKey("IdUtente")]
+        public Utente Utente { get; set; }
+
+        [ForeignKey("IdAbbonamento")]
+        public Abbonamento Abbonamento { get; set; }
     }
+
 }

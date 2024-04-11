@@ -1,0 +1,59 @@
+﻿@model Nostalgame.Models.Noleggio
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Noleggio</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdNoleggio" />
+            <div class="form-group">
+                <label asp-for="IdVideogioco" class="control-label"></label>
+                <input asp-for="IdVideogioco" class="form-control" />
+                <span asp-validation-for="IdVideogioco" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataInizio" class="control-label"></label>
+                <input asp-for="DataInizio" class="form-control" />
+                <span asp-validation-for="DataInizio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataFine" class="control-label"></label>
+                <input asp-for="DataFine" class="form-control" />
+                <span asp-validation-for="DataFine" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Restituito" /> @Html.DisplayNameFor(model => model.Restituito)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="CostoSpedizione" class="control-label"></label>
+                <input asp-for="CostoSpedizione" class="form-control" />
+                <span asp-validation-for="CostoSpedizione" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NoleggianteId" class="control-label"></label>
+                <select asp-for="NoleggianteId" class="form-control" asp-items="ViewBag.NoleggianteId"></select>
+                <span asp-validation-for="NoleggianteId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

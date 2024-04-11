@@ -48,6 +48,9 @@ namespace Nostalgame.Models
         [ForeignKey("IdProprietario")]
         public Utente Proprietario { get; set; }
 
+        [ForeignKey("IdGenere")]
+        public Genere Genere { get; set; }
+
         //creo una proprietà che non è presente nel database per poter caricare l'immagine
         [NotMapped]
         public IFormFile File { get; set; }

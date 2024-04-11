@@ -1,0 +1,45 @@
+﻿@model Nostalgame.Models.RegistrazioneViewModel
+
+<h2>Registrazione</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label for="UserName">Username</label>
+        <input type="text" class="form-control" id="UserName" asp-for="UserName" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Password">Password</label>
+        <input type="password" class="form-control" id="Password" asp-for="Password" required />
+    </div>
+
+    <h3>Dettagli Registrazione</h3>
+    <div class="form-group">
+        <label for="Nome">Nome</label>
+        <input type="text" class="form-control" id="Nome" asp-for="Registrazione.Nome" required />
+    </div>
+    <div class="form-group">
+        <label for="Cognome">Cognome</label>
+        <input type="text" class="form-control" id="Cognome" asp-for="Registrazione.Cognome" required />
+    </div>
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input type="email" class="form-control" id="Email" asp-for="Registrazione.Email" required />
+    </div>
+    <div class="form-group">
+        <label for="Indirizzo">Indirizzo</label>
+        <input type="text" class="form-control" id="Indirizzo" asp-for="Registrazione.Indirizzo" required />
+    </div>
+    <div class="form-group">
+        <label for="Citta">Città</label>
+        <input type="text" class="form-control" id="Citta" asp-for="Registrazione.Citta" required />
+        </div>
+
+    <h3>Dettagli Abbonamento</h3>
+    <div class="form-group">
+        <label for="IdAbbonamento">Tipo Abbonamento</label>
+        <select class="form-control" id="IdAbbonamento" asp-for="Registrazione.IdAbbonamento" asp-items="ViewBag.IdAbbonamento"></select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Registrati</button>
+</form>

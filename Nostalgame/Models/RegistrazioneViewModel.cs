@@ -1,11 +1,9 @@
-﻿using Nostalgame.Models;
-
-namespace Nostalgame.Models
+﻿namespace Nostalgame.Models
 {
     public class RegistrazioneViewModel
     {
-        public Utente Utente { get; set; }
-        public Abbonamento Abbonamento { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
         public Registrazione Registrazione { get; set; }
     }
 }
