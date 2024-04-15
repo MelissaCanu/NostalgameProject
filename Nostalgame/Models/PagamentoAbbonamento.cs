@@ -23,6 +23,11 @@ namespace Nostalgame.Models
         [Column(TypeName = "decimal(18, 2)")]
         public decimal ImportoPagato { get; set; }
 
+        public int? IdMetodoPagamento { get; set; }
+
+        [ForeignKey("IdMetodoPagamento")]
+        public MetodoPagamento MetodoPagamento { get; set; }
+
         //setting the foreign key for the user - this is a navigation property which is used to load the related entity
         [ForeignKey("IdUtente")]
         public Utente Utente { get; set; }
