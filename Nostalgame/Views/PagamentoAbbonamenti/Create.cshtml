@@ -28,7 +28,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="ImportoPagato" class="control-label"></label>
-                <input asp-for="ImportoPagato" class="form-control" id="ImportoPagato" readonly />
+                <p>@Model.ImportoPagato</p>
+                <input asp-for="ImportoPagato" type="hidden" id="ImportoPagato" />
+                <input asp-for="CostoMensile" type="hidden" id="CostoMensile" />
                 <span asp-validation-for="ImportoPagato" class="text-danger"></span>
             </div>
 

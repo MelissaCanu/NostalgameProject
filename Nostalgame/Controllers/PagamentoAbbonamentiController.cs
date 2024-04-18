@@ -73,6 +73,7 @@ namespace Nostalgame.Controllers
                 IdUtente = userId, // Imposta l'ID dell'utente
                 IdAbbonamento = abbonamento.IdAbbonamento, // Imposta l'ID dell'abbonamento
                 CostoMensile = abbonamento.CostoMensile, // Imposta il costo mensile
+                ImportoPagato = abbonamento.CostoMensile, // Imposta l'importo al costo mensile
                 DataPagamento = DateTime.Today // Imposta la data di pagamento
             };
 
@@ -84,7 +85,7 @@ namespace Nostalgame.Controllers
         // POST: PagamentoAbbonamenti/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdPagamentoAbbonamento,IdUtente,IdAbbonamento,DataPagamento,CostoMensile")] AbbonamentoViewModel abbonamentoViewModel, string stripeToken)
+        public async Task<IActionResult> Create([Bind("IdPagamentoAbbonamento,IdUtente,IdAbbonamento,DataPagamento,CostoMensile,ImportoPagato")] AbbonamentoViewModel abbonamentoViewModel, string stripeToken)
         {
             _logger.LogInformation($"Stripe Token: {stripeToken}");
             _logger.LogInformation($"Model is valid: {ModelState.IsValid}");

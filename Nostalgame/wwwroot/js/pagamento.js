@@ -12,6 +12,9 @@ var form = document.getElementById('payment-form');
 form.addEventListener('submit', function (event) {
     event.preventDefault();
 
+    // Imposta il valore di ImportoPagato al valore di CostoMensile
+    document.getElementById('ImportoPagato').value = document.getElementById('CostoMensile').value;
+
     stripe.createToken(card).then(function (result) {
         if (result.error) {
             // Mostra gli errori nel form
