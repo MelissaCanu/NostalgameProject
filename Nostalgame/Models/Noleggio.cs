@@ -26,11 +26,6 @@ namespace Nostalgame.Models
         // ID dell'utente che ha noleggiato il videogioco
         public string NoleggianteId { get; set; }
 
-        public int? IdMetodoPagamento { get; set; }
-
-        [ForeignKey("IdMetodoPagamento")]
-        public MetodoPagamento MetodoPagamento { get; set; }
-
 
         // Navigazione alla proprietà Utente per ottenere le informazioni dell'utente noleggiante
         [ForeignKey("NoleggianteId")]
