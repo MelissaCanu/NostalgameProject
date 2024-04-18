@@ -14,7 +14,7 @@ namespace Nostalgame.Models
 
         [Required]
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal CostoAnnuale { get; set; } // Cambiato da CostoMensile a CostoAnnuale
+        public decimal CostoMensile { get; set; } 
     }
 
 }

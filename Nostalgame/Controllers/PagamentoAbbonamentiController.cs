@@ -72,9 +72,9 @@ namespace Nostalgame.Controllers
             {
                 IdUtente = userId, // Imposta l'ID dell'utente
                 IdAbbonamento = abbonamento.IdAbbonamento, // Imposta l'ID dell'abbonamento
-                CostoAnnuale = abbonamento.CostoAnnuale, // Imposta il costo annuale
-                ImportoPagato = abbonamento.CostoAnnuale, // Imposta l'importo al costo mensile
-                DataPagamento = DateTime.Today // Imposta la data di pagamento
+                CostoMensile = abbonamento.CostoMensile, // Imposta il costo annuale
+                ImportoPagato = abbonamento.CostoMensile, // Imposta l'importo al costo mensile
+                DataPagamento = DateTime.UtcNow // Imposta la data di pagamento a quella corrente in UTC 
             };
 
             // Passa l'abbonamento alla vista
@@ -85,7 +85,7 @@ namespace Nostalgame.Controllers
         // POST: PagamentoAbbonamenti/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdPagamentoAbbonamento,IdUtente,IdAbbonamento,DataPagamento,CostoAnnuale,ImportoPagato")] AbbonamentoViewModel abbonamentoViewModel, string stripeToken)
+        public async Task<IActionResult> Create([Bind("IdPagamentoAbbonamento,IdUtente,IdAbbonamento,DataPagamento,CostoMensile,ImportoPagato")] AbbonamentoViewModel abbonamentoViewModel, string stripeToken)
         {
             _logger.LogInformation($"Stripe Token: {stripeToken}");
             _logger.LogInformation($"Model is valid: {ModelState.IsValid}");
@@ -102,6 +102,9 @@ namespace Nostalgame.Controllers
             }
             if (ModelState.IsValid)
             {
+                // Imposta la data e l'ora del pagamento sulla data e l'ora UTC correnti
+                abbonamentoViewModel.DataPagamento = DateTime.UtcNow;
+
                 //ottengo l'utente
                 var user = await _userManager.FindByIdAsync(abbonamentoViewModel.IdUtente);
 
@@ -150,7 +153,7 @@ namespace Nostalgame.Controllers
                     IdUtente = abbonamentoViewModel.IdUtente,
                     IdAbbonamento = abbonamentoViewModel.IdAbbonamento,
                     DataPagamento = abbonamentoViewModel.DataPagamento,
-                    ImportoPagato = abbonamentoViewModel.CostoAnnuale, // Assegna CostoMensile a ImportoPagato
+                    ImportoPagato = abbonamentoViewModel.CostoMensile, // Assegna CostoMensile a ImportoPagato
                     StripeSubscriptionId = subscription.Id, // Salva l'ID della sottoscrizione Stripe
                 };
 

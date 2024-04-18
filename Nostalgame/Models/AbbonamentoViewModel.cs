@@ -6,7 +6,7 @@
         public string IdUtente { get; set; }
         public int IdAbbonamento { get; set; }
         public DateTime DataPagamento { get; set; }
-        public decimal CostoAnnuale { get; set; }
+        public decimal CostoMensile { get; set; }
         public decimal ImportoPagato { get; set; }
     }
 }

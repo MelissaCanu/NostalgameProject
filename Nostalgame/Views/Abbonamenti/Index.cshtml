@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.TipoAbbonamento)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CostoAnnuale)
+                @Html.DisplayNameFor(model => model.CostoMensile)
             </th>
             <th></th>
         </tr>
@@ -28,7 +28,7 @@
                 @Html.DisplayFor(modelItem => item.TipoAbbonamento)
             </td>
             <td>
-                    @Html.DisplayFor(modelItem => item.CostoAnnuale)
+                    @Html.DisplayFor(modelItem => item.CostoMensile)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.IdAbbonamento">Edit</a> |

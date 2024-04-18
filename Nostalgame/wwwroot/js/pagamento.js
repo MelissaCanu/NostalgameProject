@@ -12,8 +12,8 @@ var form = document.getElementById('payment-form');
 form.addEventListener('submit', function (event) {
     event.preventDefault();
 
-    // Imposta il valore di ImportoPagato al valore di CostoAnnuale
-    document.getElementById('ImportoPagato').value = document.getElementById('CostoAnnuale').value;
+    // Imposta il valore di ImportoPagato al valore di CostoMensile
+    document.getElementById('ImportoPagato').value = document.getElementById('CostoMensile').value;
 
     stripe.createPaymentMethod({
         type: 'card',
