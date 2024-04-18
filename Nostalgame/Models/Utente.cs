@@ -11,7 +11,9 @@ namespace Nostalgame.Models
         [StringLength(20)]
         public string? Ruolo { get; set; } = "User";
 
-        
+        public string StripeCustomerId { get; set; }
+
+
     }
 
 }

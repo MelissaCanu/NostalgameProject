@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Nostalgame.Data;
 using Nostalgame.Models;
+using Stripe;
 
 namespace Nostalgame.Controllers
 {
@@ -65,6 +66,7 @@ namespace Nostalgame.Controllers
         // POST: Registrazioni/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         public async Task<IActionResult> Create(RegistrazioneViewModel model)
         {
@@ -74,7 +76,24 @@ namespace Nostalgame.Controllers
                 return View(model);
             }
 
-            var user = new Utente { UserName = model.UserName, Email = model.Registrazione.Email };
+            // Crea un cliente Stripe per l'utente
+            var customerOptions = new CustomerCreateOptions
+            {
+                Name = model.Registrazione.Nome,
+                Email = model.Registrazione.Email,
+                // Puoi aggiungere qui altri campi come l'indirizzo, il numero di telefono, ecc.
+            };
+            var customerService = new CustomerService();
+            Customer customer = customerService.Create(customerOptions);
+
+            // Controlla se la creazione del cliente Stripe è riuscita
+            if (customer == null)
+            {
+                _logger.LogWarning("Failed to create Stripe customer");
+                return View(model);
+            }
+
+            var user = new Utente { UserName = model.UserName, Email = model.Registrazione.Email, StripeCustomerId = customer.Id };
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
@@ -97,14 +116,15 @@ namespace Nostalgame.Controllers
             }
             else
             {
-                _logger.LogWarning("User creation failed: {Errors}", result.Errors);
+                foreach (var error in result.Errors)
+                {
+                    _logger.LogWarning("User creation failed: {Code} {Description}", error.Code, error.Description);
+                }
             }
 
             // Se siamo arrivati fin qui, qualcosa è andato storto, mostra di nuovo il form
             return View(model);
         }
-
-
 
 
         // GET: Registrazioni/Edit/5

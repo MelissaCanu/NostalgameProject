@@ -12,9 +12,9 @@ namespace Nostalgame.Models
         [StringLength(50)]
         public string TipoAbbonamento { get; set; }
 
-        //aggiungo un campo per il costo mensile dell'abbonamento che varia tra Standard e Premium
         [Required]
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal CostoMensile { get; set; }
+        public decimal CostoAnnuale { get; set; } // Cambiato da CostoMensile a CostoAnnuale
     }
+
 }

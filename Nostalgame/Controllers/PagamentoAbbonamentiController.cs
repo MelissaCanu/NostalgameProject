@@ -72,8 +72,8 @@ namespace Nostalgame.Controllers
             {
                 IdUtente = userId, // Imposta l'ID dell'utente
                 IdAbbonamento = abbonamento.IdAbbonamento, // Imposta l'ID dell'abbonamento
-                CostoMensile = abbonamento.CostoMensile, // Imposta il costo mensile
-                ImportoPagato = abbonamento.CostoMensile, // Imposta l'importo al costo mensile
+                CostoAnnuale = abbonamento.CostoAnnuale, // Imposta il costo annuale
+                ImportoPagato = abbonamento.CostoAnnuale, // Imposta l'importo al costo mensile
                 DataPagamento = DateTime.Today // Imposta la data di pagamento
             };
 
@@ -85,11 +85,11 @@ namespace Nostalgame.Controllers
         // POST: PagamentoAbbonamenti/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdPagamentoAbbonamento,IdUtente,IdAbbonamento,DataPagamento,CostoMensile,ImportoPagato")] AbbonamentoViewModel abbonamentoViewModel, string stripeToken)
+        public async Task<IActionResult> Create([Bind("IdPagamentoAbbonamento,IdUtente,IdAbbonamento,DataPagamento,CostoAnnuale,ImportoPagato")] AbbonamentoViewModel abbonamentoViewModel, string stripeToken)
         {
             _logger.LogInformation($"Stripe Token: {stripeToken}");
             _logger.LogInformation($"Model is valid: {ModelState.IsValid}");
-
+            _logger.LogInformation("Create method was called.");
 
             if (!ModelState.IsValid)
             {
@@ -102,6 +102,47 @@ namespace Nostalgame.Controllers
             }
             if (ModelState.IsValid)
             {
+                //ottengo l'utente
+                var user = await _userManager.FindByIdAsync(abbonamentoViewModel.IdUtente);
+
+                //log per StripeCustomerId
+                _logger.LogInformation($"StripeCustomerId: {user.StripeCustomerId}");
+
+                // Crea un metodo di pagamento e collegalo al cliente Stripe
+                var options = new PaymentMethodAttachOptions
+                {
+                    Customer = user.StripeCustomerId,
+                };
+                var service = new PaymentMethodService();
+                PaymentMethod paymentMethod = service.Attach(stripeToken, options);
+                // Imposta il metodo di pagamento come predefinito per il cliente
+                var customerService = new CustomerService();
+                var customerOptions = new CustomerUpdateOptions
+                {
+                    InvoiceSettings = new CustomerInvoiceSettingsOptions
+                    {
+                        DefaultPaymentMethod = paymentMethod.Id,
+                    },
+                };
+                Customer customer = customerService.Update(user.StripeCustomerId, customerOptions);
+
+                // Crea una sottoscrizione su Stripe
+                var subscriptionOptions = new SubscriptionCreateOptions
+                {
+                    Customer = user.StripeCustomerId, // Usa l'ID del cliente Stripe dell'utente
+                    Items = new List<SubscriptionItemOptions>
+            {
+                new SubscriptionItemOptions
+                {
+                    Price = "price_1P6vs7Rs6OMBWVDjmYkq6Ksf", // Sostituisci con l'ID del prezzo Stripe dell'abbonamento
+                    Quantity = 1,
+                },
+            },
+                };
+
+                var subscriptionService = new SubscriptionService();
+                Subscription subscription = subscriptionService.Create(subscriptionOptions);
+
                 // Crea un nuovo PagamentoAbbonamento
                 var pagamentoAbbonamento = new PagamentoAbbonamento
                 {
@@ -109,7 +150,8 @@ namespace Nostalgame.Controllers
                     IdUtente = abbonamentoViewModel.IdUtente,
                     IdAbbonamento = abbonamentoViewModel.IdAbbonamento,
                     DataPagamento = abbonamentoViewModel.DataPagamento,
-                    ImportoPagato = abbonamentoViewModel.CostoMensile // Assegna CostoMensile a ImportoPagato
+                    ImportoPagato = abbonamentoViewModel.CostoAnnuale, // Assegna CostoMensile a ImportoPagato
+                    StripeSubscriptionId = subscription.Id, // Salva l'ID della sottoscrizione Stripe
                 };
 
                 // Aggiungi il nuovo PagamentoAbbonamento al contesto e salva le modifiche
@@ -123,6 +165,60 @@ namespace Nostalgame.Controllers
             // Se il modello non è valido, restituisci la vista con il modello originale
             return View(abbonamentoViewModel);
         }
+
+
+        private void HandleInvoicePaid(Invoice invoice)
+        {
+            // Trova il pagamento corrispondente all'ID della sottoscrizione Stripe
+            var pagamento = _context.PagamentiAbbonamenti.FirstOrDefault(p => p.StripeSubscriptionId == invoice.SubscriptionId);
+
+            if (pagamento != null)
+            {
+                // Aggiorna il pagamento per riflettere il pagamento riuscito
+                pagamento.DataPagamento = DateTime.Now;
+                pagamento.ImportoPagato = invoice.Total / 100.0m; // Stripe utilizza centesimi, quindi dividiamo per 100
+
+                _context.Update(pagamento);
+                _context.SaveChanges();
+            }
+            else
+            {
+                // Gestisci il caso in cui non esiste un pagamento corrispondente
+                _logger.LogWarning($"Non è stato trovato nessun pagamento per la sottoscrizione Stripe {invoice.SubscriptionId}");
+            }
+        }
+
+
+        //Configuro i webhook di Stripe per ricevere notifiche quando si verifica un evento di fatturazione, come il rinnovo di una sottoscrizione. 
+        [HttpPost("stripe/webhook")]
+        public async Task<IActionResult> StripeWebhook()
+        {
+            var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+
+            try
+            {
+                var stripeEvent = EventUtility.ParseEvent(json);
+
+                // Handle the event
+                if (stripeEvent.Type == Events.InvoicePaid)
+                {
+                    var invoice = stripeEvent.Data.Object as Invoice;
+                    // Then define and call a method to handle the successful payment:
+                    HandleInvoicePaid(invoice);
+                }
+                else
+                {
+                    // Unexpected event type
+                    return BadRequest();
+                }
+                return Ok();
+            }
+            catch (StripeException e)
+            {
+                return BadRequest();
+            }
+        }
+
 
 
         // GET: PagamentoAbbonamenti/Edit/5

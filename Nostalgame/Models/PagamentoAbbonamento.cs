@@ -28,6 +28,9 @@ namespace Nostalgame.Models
 
         [ForeignKey("IdUtente")]
         public Utente Utente { get; set; }
+
+        public string StripeSubscriptionId { get; set; } // Campo per collegare ogni pagamento al corrispondente abbonamento Stripe
+
     }
 
 }
