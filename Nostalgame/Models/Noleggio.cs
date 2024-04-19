@@ -18,10 +18,9 @@ namespace Nostalgame.Models
         [Required]
         public bool Restituito { get; set; }
 
-        //aggiungo un campo per il costo della spedizione che varia in base al tipo di abbonamento
-        [Required]
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal CostoSpedizione { get; set; }
+        //aggiungo un campo per l'indirizzo di spedizione
+        public string IndirizzoSpedizione { get; set; }
+
 
         // ID dell'utente che ha noleggiato il videogioco
         public string NoleggianteId { get; set; }
@@ -30,6 +29,6 @@ namespace Nostalgame.Models
         // Navigazione alla proprietà Utente per ottenere le informazioni dell'utente noleggiante
         [ForeignKey("NoleggianteId")]
         public Utente Noleggiante { get; set; }
-
+        public Videogioco Videogioco { get; internal set; }
     }
 }

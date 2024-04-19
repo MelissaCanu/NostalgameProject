@@ -33,11 +33,7 @@
                     <input class="form-check-input" asp-for="Restituito" /> @Html.DisplayNameFor(model => model.Restituito)
                 </label>
             </div>
-            <div class="form-group">
-                <label asp-for="CostoSpedizione" class="control-label"></label>
-                <input asp-for="CostoSpedizione" class="form-control" />
-                <span asp-validation-for="CostoSpedizione" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="NoleggianteId" class="control-label"></label>
                 <select asp-for="NoleggianteId" class="form-control" asp-items="ViewBag.NoleggianteId"></select>

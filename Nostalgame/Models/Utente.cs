@@ -13,6 +13,7 @@ namespace Nostalgame.Models
 
         public string StripeCustomerId { get; set; }
 
+        public virtual CarrelloNoleggio CarrelloNoleggio { get; set; }
 
     }
 

@@ -23,5 +23,9 @@ namespace Nostalgame.Data
         public DbSet<Noleggio> Noleggi { get; set; }
 
         public DbSet<PagamentoAbbonamento> PagamentiAbbonamenti { get; set; }
+
+        public DbSet<CarrelloNoleggio> CarrelliNoleggio { get; set; }
+
+
     }
 }

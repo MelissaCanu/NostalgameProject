@@ -173,7 +173,7 @@ namespace Nostalgame.Migrations
 
                     b.HasKey("IdAbbonamento");
 
-                    b.ToTable("Abbonamenti");
+                    b.ToTable("Abbonamenti", (string)null);
                 });
 
             modelBuilder.Entity("Nostalgame.Models.Avatar", b =>
@@ -202,7 +202,7 @@ namespace Nostalgame.Migrations
 
                     b.HasIndex("IdUtente");
 
-                    b.ToTable("Avatars");
+                    b.ToTable("Avatars", (string)null);
                 });
 
             modelBuilder.Entity("Nostalgame.Models.Genere", b =>
@@ -220,7 +220,7 @@ namespace Nostalgame.Migrations
 
                     b.HasKey("IdGenere");
 
-                    b.ToTable("Generi");
+                    b.ToTable("Generi", (string)null);
                 });
 
             modelBuilder.Entity("Nostalgame.Models.Noleggio", b =>
@@ -254,7 +254,7 @@ namespace Nostalgame.Migrations
 
                     b.HasIndex("NoleggianteId");
 
-                    b.ToTable("Noleggi");
+                    b.ToTable("Noleggi", (string)null);
                 });
 
             modelBuilder.Entity("Nostalgame.Models.PagamentoAbbonamento", b =>
@@ -288,7 +288,7 @@ namespace Nostalgame.Migrations
 
                     b.HasIndex("IdUtente");
 
-                    b.ToTable("PagamentiAbbonamenti");
+                    b.ToTable("PagamentiAbbonamenti", (string)null);
                 });
 
             modelBuilder.Entity("Nostalgame.Models.Registrazione", b =>
@@ -337,7 +337,7 @@ namespace Nostalgame.Migrations
 
                     b.HasIndex("IdUtente");
 
-                    b.ToTable("Registrazioni");
+                    b.ToTable("Registrazioni", (string)null);
                 });
 
             modelBuilder.Entity("Nostalgame.Models.Utente", b =>
@@ -466,7 +466,7 @@ namespace Nostalgame.Migrations
 
                     b.HasIndex("IdProprietario");
 
-                    b.ToTable("Videogiochi");
+                    b.ToTable("Videogiochi", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
