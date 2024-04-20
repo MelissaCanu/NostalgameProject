@@ -14,8 +14,7 @@ namespace Nostalgame.Models
         [ForeignKey("UtenteId")]
         public virtual Utente Utente { get; set; }
 
-        // Navigazione alla proprietà Noleggio
-        public virtual List<Noleggio> Noleggi { get; set; }
+
     }
 
 }

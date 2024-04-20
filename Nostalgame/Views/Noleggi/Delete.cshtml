@@ -1,4 +1,4 @@
-﻿@model Nostalgame.Models.Noleggio
+﻿@model Noleggio
 
 @{
     ViewData["Title"] = "Delete";
@@ -12,10 +12,10 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdVideogioco)
+            @Html.DisplayNameFor(model => model.IdUtenteNoleggiante)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdVideogioco)
+            @Html.DisplayFor(model => model.IdUtenteNoleggiante)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.DataInizio)
@@ -30,17 +30,28 @@
             @Html.DisplayFor(model => model.DataFine)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Restituito)
+            @Html.DisplayNameFor(model => model.IndirizzoSpedizione)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Restituito)
+            @Html.DisplayFor(model => model.IndirizzoSpedizione)
         </dd>
-        
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Noleggiante)
+            @Html.DisplayNameFor(model => model.CostoNoleggio)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Noleggiante.Id)
+            @Html.DisplayFor(model => model.CostoNoleggio)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StripePaymentId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StripePaymentId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Videogioco)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Videogioco.CasaProduttrice)
         </dd>
     </dl>
     

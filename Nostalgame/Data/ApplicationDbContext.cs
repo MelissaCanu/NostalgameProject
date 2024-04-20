@@ -20,9 +20,10 @@ namespace Nostalgame.Data
         public DbSet<Genere> Generi { get; set; }
 
         public DbSet<Videogioco> Videogiochi { get; set; }
-        public DbSet<Noleggio> Noleggi { get; set; }
 
         public DbSet<PagamentoAbbonamento> PagamentiAbbonamenti { get; set; }
+
+        public DbSet<Noleggio> Noleggi { get; set; }
 
         public DbSet<CarrelloNoleggio> CarrelliNoleggio { get; set; }
 

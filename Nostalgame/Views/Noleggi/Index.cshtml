@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Nostalgame.Models.Noleggio>
+﻿@model IEnumerable<Noleggio>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.IdVideogioco)
+                @Html.DisplayNameFor(model => model.IdUtenteNoleggiante)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DataInizio)
@@ -22,11 +22,16 @@
                 @Html.DisplayNameFor(model => model.DataFine)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Restituito)
+                @Html.DisplayNameFor(model => model.IndirizzoSpedizione)
             </th>
-
             <th>
-                @Html.DisplayNameFor(model => model.Noleggiante)
+                @Html.DisplayNameFor(model => model.CostoNoleggio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StripePaymentId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Videogioco)
             </th>
             <th></th>
         </tr>
@@ -35,7 +40,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.IdVideogioco)
+                @Html.DisplayFor(modelItem => item.IdUtenteNoleggiante)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DataInizio)
@@ -44,11 +49,16 @@
                 @Html.DisplayFor(modelItem => item.DataFine)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Restituito)
+                @Html.DisplayFor(modelItem => item.IndirizzoSpedizione)
             </td>
-
             <td>
-                @Html.DisplayFor(modelItem => item.Noleggiante.Id)
+                @Html.DisplayFor(modelItem => item.CostoNoleggio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StripePaymentId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Videogioco.CasaProduttrice)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.IdNoleggio">Edit</a> |

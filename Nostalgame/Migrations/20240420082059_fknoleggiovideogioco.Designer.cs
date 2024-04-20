@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nostalgame.Data;
 
@@ -11,9 +12,11 @@ using Nostalgame.Data;
 namespace Nostalgame.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240420082059_fknoleggiovideogioco")]
+    partial class fknoleggiovideogioco
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,45 +158,6 @@ namespace Nostalgame.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Noleggio", b =>
-                {
-                    b.Property<int>("IdNoleggio")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdNoleggio"));
-
-                    b.Property<decimal>("CostoNoleggio")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<DateTime>("DataFine")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataInizio")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("IdUtenteNoleggiante")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IdVideogioco")
-                        .HasColumnType("int");
-
-                    b.Property<string>("IndirizzoSpedizione")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("StripePaymentId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("IdNoleggio");
-
-                    b.HasIndex("IdVideogioco");
-
-                    b.ToTable("Noleggi", (string)null);
-                });
-
             modelBuilder.Entity("Nostalgame.Models.Abbonamento", b =>
                 {
                     b.Property<int>("IdAbbonamento")
@@ -212,7 +176,7 @@ namespace Nostalgame.Migrations
 
                     b.HasKey("IdAbbonamento");
 
-                    b.ToTable("Abbonamenti", (string)null);
+                    b.ToTable("Abbonamenti");
                 });
 
             modelBuilder.Entity("Nostalgame.Models.Avatar", b =>
@@ -241,7 +205,7 @@ namespace Nostalgame.Migrations
 
                     b.HasIndex("IdUtente");
 
-                    b.ToTable("Avatars", (string)null);
+                    b.ToTable("Avatars");
                 });
 
             modelBuilder.Entity("Nostalgame.Models.CarrelloNoleggio", b =>
@@ -261,7 +225,7 @@ namespace Nostalgame.Migrations
                     b.HasIndex("UtenteId")
                         .IsUnique();
 
-                    b.ToTable("CarrelliNoleggio", (string)null);
+                    b.ToTable("CarrelliNoleggio");
                 });
 
             modelBuilder.Entity("Nostalgame.Models.Genere", b =>
@@ -279,7 +243,49 @@ namespace Nostalgame.Migrations
 
                     b.HasKey("IdGenere");
 
-                    b.ToTable("Generi", (string)null);
+                    b.ToTable("Generi");
+                });
+
+            modelBuilder.Entity("Nostalgame.Models.Noleggio", b =>
+                {
+                    b.Property<int>("IdNoleggio")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdNoleggio"));
+
+                    b.Property<int?>("CarrelloNoleggioId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DataFine")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DataInizio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("IdVideogioco")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IndirizzoSpedizione")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NoleggianteId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("Restituito")
+                        .HasColumnType("bit");
+
+                    b.HasKey("IdNoleggio");
+
+                    b.HasIndex("CarrelloNoleggioId");
+
+                    b.HasIndex("IdVideogioco");
+
+                    b.HasIndex("NoleggianteId");
+
+                    b.ToTable("Noleggi");
                 });
 
             modelBuilder.Entity("Nostalgame.Models.PagamentoAbbonamento", b =>
@@ -313,7 +319,7 @@ namespace Nostalgame.Migrations
 
                     b.HasIndex("IdUtente");
 
-                    b.ToTable("PagamentiAbbonamenti", (string)null);
+                    b.ToTable("PagamentiAbbonamenti");
                 });
 
             modelBuilder.Entity("Nostalgame.Models.Registrazione", b =>
@@ -362,7 +368,7 @@ namespace Nostalgame.Migrations
 
                     b.HasIndex("IdUtente");
 
-                    b.ToTable("Registrazioni", (string)null);
+                    b.ToTable("Registrazioni");
                 });
 
             modelBuilder.Entity("Nostalgame.Models.Utente", b =>
@@ -491,7 +497,7 @@ namespace Nostalgame.Migrations
 
                     b.HasIndex("IdProprietario");
 
-                    b.ToTable("Videogiochi", (string)null);
+                    b.ToTable("Videogiochi");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -545,17 +551,6 @@ namespace Nostalgame.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Noleggio", b =>
-                {
-                    b.HasOne("Nostalgame.Models.Videogioco", "Videogioco")
-                        .WithMany("Noleggi")
-                        .HasForeignKey("IdVideogioco")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Videogioco");
-                });
-
             modelBuilder.Entity("Nostalgame.Models.Avatar", b =>
                 {
                     b.HasOne("Nostalgame.Models.Utente", "Utente")
@@ -576,6 +571,27 @@ namespace Nostalgame.Migrations
                         .IsRequired();
 
                     b.Navigation("Utente");
+                });
+
+            modelBuilder.Entity("Nostalgame.Models.Noleggio", b =>
+                {
+                    b.HasOne("Nostalgame.Models.CarrelloNoleggio", null)
+                        .WithMany("Noleggi")
+                        .HasForeignKey("CarrelloNoleggioId");
+
+                    b.HasOne("Nostalgame.Models.Videogioco", "Videogioco")
+                        .WithMany()
+                        .HasForeignKey("IdVideogioco");
+
+                    b.HasOne("Nostalgame.Models.Utente", "Noleggiante")
+                        .WithMany()
+                        .HasForeignKey("NoleggianteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Noleggiante");
+
+                    b.Navigation("Videogioco");
                 });
 
             modelBuilder.Entity("Nostalgame.Models.PagamentoAbbonamento", b =>
@@ -625,7 +641,7 @@ namespace Nostalgame.Migrations
                         .IsRequired();
 
                     b.HasOne("Nostalgame.Models.Utente", "Proprietario")
-                        .WithMany("Videogiochi")
+                        .WithMany()
                         .HasForeignKey("IdProprietario")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -635,17 +651,15 @@ namespace Nostalgame.Migrations
                     b.Navigation("Proprietario");
                 });
 
+            modelBuilder.Entity("Nostalgame.Models.CarrelloNoleggio", b =>
+                {
+                    b.Navigation("Noleggi");
+                });
+
             modelBuilder.Entity("Nostalgame.Models.Utente", b =>
                 {
                     b.Navigation("CarrelloNoleggio")
                         .IsRequired();
-
-                    b.Navigation("Videogiochi");
-                });
-
-            modelBuilder.Entity("Nostalgame.Models.Videogioco", b =>
-                {
-                    b.Navigation("Noleggi");
                 });
 #pragma warning restore 612, 618
         }

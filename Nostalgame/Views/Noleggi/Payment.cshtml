@@ -1,0 +1,50 @@
+﻿@model Noleggio
+
+@{
+    ViewData["Title"] = "Payment";
+}
+
+<h1>Payment</h1>
+
+<h4>Noleggio</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Charge" id="payment-form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="IdNoleggio" type="hidden" />
+
+            <div class="form-group">
+                <label for="card-element">
+                    Carta di Credito
+                </label>
+                <div id="card-element">
+                    <!-- Un elemento Stripe per l'input della carta di credito sarà inserito qui. -->
+                </div>
+
+                <!-- Usato per visualizzare gli errori dell'elemento della carta. -->
+                <div id="card-errors" role="alert"></div>
+            </div>
+            <div class="form-group">
+                <label for="stripeEmail">Email</label>
+                <input id="stripeEmail" name="stripeEmail" type="email" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Pay" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="~/js/noleggio.js"></script>
+}

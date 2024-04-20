@@ -8,6 +8,7 @@ namespace Nostalgame.Models
     //questa tabella contiene le informazioni relative ai videogiochi e si collega alla tabella Genere
     public class Videogioco
     {
+
         [Key]
         public int IdVideogioco { get; set; }
 
@@ -39,14 +40,20 @@ namespace Nostalgame.Models
         [Required]
         public int IdGenere { get; set; }
 
-        // ID dell'utente che possiede il videogioco
-        //trasformo in string per poter collegare la tabella Videogioco con la tabella Utente
         [Required]
         public string IdProprietario { get; set; }
 
         // Navigazione alla proprietà Utente per ottenere le informazioni dell'utente proprietario
         [ForeignKey("IdProprietario")]
         public Utente Proprietario { get; set; }
+
+        // Un videogioco può essere noleggiato molte volte
+        public virtual ICollection<Noleggio> Noleggi { get; set; }
+
+        public Videogioco()
+        {
+            Noleggi = new HashSet<Noleggio>();
+        }
 
         [ForeignKey("IdGenere")]
         public Genere Genere { get; set; }

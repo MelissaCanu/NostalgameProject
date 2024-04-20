@@ -1,4 +1,4 @@
-﻿@model Nostalgame.Models.Noleggio
+﻿@model Noleggio
 
 @{
     ViewData["Title"] = "Edit";
@@ -15,8 +15,13 @@
             <input type="hidden" asp-for="IdNoleggio" />
             <div class="form-group">
                 <label asp-for="IdVideogioco" class="control-label"></label>
-                <input asp-for="IdVideogioco" class="form-control" />
+                <select asp-for="IdVideogioco" class="form-control" asp-items="ViewBag.IdVideogioco"></select>
                 <span asp-validation-for="IdVideogioco" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdUtenteNoleggiante" class="control-label"></label>
+                <input asp-for="IdUtenteNoleggiante" class="form-control" />
+                <span asp-validation-for="IdUtenteNoleggiante" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DataInizio" class="control-label"></label>
@@ -28,16 +33,20 @@
                 <input asp-for="DataFine" class="form-control" />
                 <span asp-validation-for="DataFine" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Restituito" /> @Html.DisplayNameFor(model => model.Restituito)
-                </label>
-            </div>
-
             <div class="form-group">
-                <label asp-for="NoleggianteId" class="control-label"></label>
-                <select asp-for="NoleggianteId" class="form-control" asp-items="ViewBag.NoleggianteId"></select>
-                <span asp-validation-for="NoleggianteId" class="text-danger"></span>
+                <label asp-for="IndirizzoSpedizione" class="control-label"></label>
+                <input asp-for="IndirizzoSpedizione" class="form-control" />
+                <span asp-validation-for="IndirizzoSpedizione" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CostoNoleggio" class="control-label"></label>
+                <input asp-for="CostoNoleggio" class="form-control" />
+                <span asp-validation-for="CostoNoleggio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StripePaymentId" class="control-label"></label>
+                <input asp-for="StripePaymentId" class="form-control" />
+                <span asp-validation-for="StripePaymentId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

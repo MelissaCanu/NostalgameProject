@@ -1,14 +1,11 @@
-﻿using Nostalgame.Models;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class Noleggio
+public class NoleggioViewModel
 {
-    [Key]
     public int IdNoleggio { get; set; }
 
     [Required]
-    [ForeignKey("Videogioco")]
     public int IdVideogioco { get; set; }
 
     [Required]
@@ -29,6 +26,4 @@ public class Noleggio
     public decimal CostoNoleggio { get; set; }
 
     public string? StripePaymentId { get; set; }
-
-    public Videogioco Videogioco { get; set; }
 }

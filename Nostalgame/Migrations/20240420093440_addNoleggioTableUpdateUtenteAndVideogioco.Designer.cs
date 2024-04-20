@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nostalgame.Data;
 
@@ -11,9 +12,11 @@ using Nostalgame.Data;
 namespace Nostalgame.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240420093440_addNoleggioTableUpdateUtenteAndVideogioco")]
+    partial class addNoleggioTableUpdateUtenteAndVideogioco
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,13 +188,14 @@ namespace Nostalgame.Migrations
                         .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("StripePaymentId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdNoleggio");
 
                     b.HasIndex("IdVideogioco");
 
-                    b.ToTable("Noleggi", (string)null);
+                    b.ToTable("Noleggi");
                 });
 
             modelBuilder.Entity("Nostalgame.Models.Abbonamento", b =>
@@ -212,7 +216,7 @@ namespace Nostalgame.Migrations
 
                     b.HasKey("IdAbbonamento");
 
-                    b.ToTable("Abbonamenti", (string)null);
+                    b.ToTable("Abbonamenti");
                 });
 
             modelBuilder.Entity("Nostalgame.Models.Avatar", b =>
@@ -241,7 +245,7 @@ namespace Nostalgame.Migrations
 
                     b.HasIndex("IdUtente");
 
-                    b.ToTable("Avatars", (string)null);
+                    b.ToTable("Avatars");
                 });
 
             modelBuilder.Entity("Nostalgame.Models.CarrelloNoleggio", b =>
@@ -261,7 +265,7 @@ namespace Nostalgame.Migrations
                     b.HasIndex("UtenteId")
                         .IsUnique();
 
-                    b.ToTable("CarrelliNoleggio", (string)null);
+                    b.ToTable("CarrelliNoleggio");
                 });
 
             modelBuilder.Entity("Nostalgame.Models.Genere", b =>
@@ -279,7 +283,7 @@ namespace Nostalgame.Migrations
 
                     b.HasKey("IdGenere");
 
-                    b.ToTable("Generi", (string)null);
+                    b.ToTable("Generi");
                 });
 
             modelBuilder.Entity("Nostalgame.Models.PagamentoAbbonamento", b =>
@@ -313,7 +317,7 @@ namespace Nostalgame.Migrations
 
                     b.HasIndex("IdUtente");
 
-                    b.ToTable("PagamentiAbbonamenti", (string)null);
+                    b.ToTable("PagamentiAbbonamenti");
                 });
 
             modelBuilder.Entity("Nostalgame.Models.Registrazione", b =>
@@ -362,7 +366,7 @@ namespace Nostalgame.Migrations
 
                     b.HasIndex("IdUtente");
 
-                    b.ToTable("Registrazioni", (string)null);
+                    b.ToTable("Registrazioni");
                 });
 
             modelBuilder.Entity("Nostalgame.Models.Utente", b =>
@@ -491,7 +495,7 @@ namespace Nostalgame.Migrations
 
                     b.HasIndex("IdProprietario");
 
-                    b.ToTable("Videogiochi", (string)null);
+                    b.ToTable("Videogiochi");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
