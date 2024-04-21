@@ -4,6 +4,34 @@
     ViewData["Title"] = "Details";
 }
 
+@if (TempData["PaymentSuccess"] != null && (bool)TempData["PaymentSuccess"] == true)
+{
+    <div class="alert alert-success">
+        Il pagamento è stato effettuato con successo! Verrai reindirizzato alla lista dei noleggi tra 10 secondi.
+    </div>
+
+    <progress id="progressBar" value="10" max="10"></progress>
+    <p id="countdown">10</p>
+
+    <script>
+        var progressBar = document.getElementById('progressBar');
+        var countdown = document.getElementById('countdown');
+        var secondsRemaining = 10;
+
+        var intervalId = setInterval(function () {
+            secondsRemaining--;
+            progressBar.value = secondsRemaining;
+            countdown.textContent = secondsRemaining;
+
+            if (secondsRemaining <= 0) {
+                clearInterval(intervalId);
+                window.location.href = '@Url.Action("Index", "Noleggi")';
+            }
+        }, 1000);
+    </script>
+}
+
+
 <h1>Details</h1>
 
 <div>

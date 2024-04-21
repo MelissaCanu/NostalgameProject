@@ -131,7 +131,7 @@ namespace Nostalgame.Controllers
             if (request == null)
             {
                 _logger.LogError("La richiesta è null. Verifica che il corpo della richiesta sia un JSON valido.");
-                return BadRequest();
+                return Json(new { status = "error", message = "La richiesta è null. Verifica che il corpo della richiesta sia un JSON valido." });
             }
 
             var customers = new CustomerService();
@@ -140,13 +140,13 @@ namespace Nostalgame.Controllers
             var customer = customers.Create(new CustomerCreateOptions
             {
                 Email = request.StripeEmail,
-                // Aggiungi qui eventuali altre opzioni
+                
             });
 
             var noleggio = await _context.Noleggi.FindAsync(request.IdNoleggio);
             if (noleggio == null)
             {
-                return NotFound();
+                return Json(new { status = "error", message = "Noleggio non trovato" });
             }
 
             var paymentIntent = paymentIntents.Create(new PaymentIntentCreateOptions
@@ -165,12 +165,13 @@ namespace Nostalgame.Controllers
                 noleggio.StripePaymentId = paymentIntent.Id;
                 _context.Update(noleggio);
                 await _context.SaveChangesAsync();
-                return Ok();
+                TempData["PaymentSuccess"] = true;
+                return Json(new { status = "success", message = "Il pagamento è riuscito", redirectUrl = Url.Action("Details", "Noleggi", new { id = noleggio.IdNoleggio }) });
             }
             else
             {
                 // Gestisci il caso in cui il pagamento non sia riuscito
-                return BadRequest();
+                return Json(new { status = "error", message = "Il pagamento non è riuscito" });
             }
         }
 

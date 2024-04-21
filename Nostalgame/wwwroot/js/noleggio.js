@@ -47,10 +47,14 @@ function stripePaymentMethodHandler(paymentMethod) {
         },
         body: JSON.stringify(data)
     })
-        .then(response => {
-            console.log('Risposta dal server:', response);
-            return response.json();
+        .then(response => response.json())
+        .then(data => {
+            console.log('Dati ricevuti dal server:', data);
+            if (data.status === 'success') {
+                window.location.href = data.redirectUrl;
+            } else {
+                console.error('Errore:', data.message);
+            }
         })
-        .then(data => console.log('Dati ricevuti dal server:', data))
         .catch(error => console.error('Errore:', error));
 }
