@@ -2,25 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Nostalgame.Data;
+using Nostalgame.Models;
 using Stripe;
 
 namespace Nostalgame.Controllers
 {
     public class NoleggiController : Controller
-    {
+    {   // Dichiarazione delle variabili di classe - servono per accedere al database, all'utente corrente e per registrare i log
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<Utente> _userManager;
         private readonly ILogger<NoleggiController> _logger;
 
-        public NoleggiController(ApplicationDbContext context, ILogger<NoleggiController> logger)
+        public NoleggiController(ApplicationDbContext context, UserManager<Utente> userManager, ILogger<NoleggiController> logger)
         {
             _context = context;
+            _userManager = userManager;
             _logger = logger;
         }
 
+        // Modello per la richiesta di pagamento
+        // - contiene l'email dell'utente, l'ID del metodo di pagamento e l'ID del noleggio e viene passato al metodo Charge
         public class ChargeRequest
         {
             public string StripeEmail { get; set; }
@@ -56,17 +62,65 @@ namespace Nostalgame.Controllers
         }
 
         // GET: Noleggi/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(int idVideogioco)
         {
-            ViewData["IdVideogioco"] = new SelectList(_context.Videogiochi, "IdVideogioco", "CasaProduttrice");
-            return View();
+            // Ottieni l'utente attualmente loggato
+            var user = await _userManager.GetUserAsync(User);
+
+            // Ottieni l'abbonamento dell'utente
+            var registrazione = await _context.Registrazioni
+                .Include(r => r.Abbonamento)
+                .FirstOrDefaultAsync(r => r.IdUtente == user.Id);
+
+            if (registrazione == null)
+            {
+                // Gestisci il caso in cui l'utente non ha un abbonamento
+                return NotFound("Abbonamento non trovato per l'utente corrente");
+            }
+
+            // Recupera l'oggetto Videogioco dal database
+            var videogioco = await _context.Videogiochi.FindAsync(idVideogioco);
+
+            // Verifica se l'oggetto Videogioco è null
+            if (videogioco == null)
+            {
+                // Gestisci il caso in cui non esiste un Videogioco con l'IdVideogioco fornito
+                return NotFound("Videogioco non trovato");
+            }
+
+
+            // Crea un nuovo modello di noleggio
+            var noleggioViewModel = new NoleggioViewModel();
+
+            // Imposta l'ID del videogioco e l'ID dell'utente noleggiante nel modello
+            noleggioViewModel.IdVideogioco = idVideogioco;
+            noleggioViewModel.IdUtenteNoleggiante = user.UserName;
+            noleggioViewModel.DataInizio = DateTime.Now;
+            noleggioViewModel.DataFine = DateTime.Now.AddDays(7); //imposto data fine a 7 gg da data inizio
+
+            // Verifica se l'utente ha un abbonamento premium
+            if (registrazione.Abbonamento.TipoAbbonamento == "Premium")
+            {
+                // Se l'utente ha un abbonamento premium, il costo del noleggio è 3 e le spese di spedizione sono 0
+                noleggioViewModel.CostoNoleggio = 3;
+                noleggioViewModel.SpeseSpedizione = 0;
+            }
+            else
+            {
+                // Se l'utente non ha un abbonamento premium, il costo del noleggio è 3 e le spese di spedizione sono un valore specifico
+                noleggioViewModel.CostoNoleggio = 5;
+                noleggioViewModel.SpeseSpedizione = 3; // Imposta questo valore in base alle tue esigenze
+            }
+
+            ViewData["IdVideogioco"] = new SelectList(_context.Videogiochi, "IdVideogioco", "Titolo", idVideogioco);
+            return View(noleggioViewModel);
         }
 
         // POST: Noleggi/Create
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdVideogioco,IdUtenteNoleggiante,DataInizio,DataFine,IndirizzoSpedizione,CostoNoleggio")] NoleggioViewModel noleggioViewModel)
+        public async Task<IActionResult> Create([Bind("IdVideogioco,IdUtenteNoleggiante,DataInizio,DataFine,IndirizzoSpedizione,CostoNoleggio, SpeseSpedizione")] NoleggioViewModel noleggioViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -77,10 +131,10 @@ namespace Nostalgame.Controllers
 
                 foreach (var error in errors)
                 {
-                    Console.WriteLine($"Campo: {error.Key}");
+                    _logger.LogError($"Campo: {error.Key}");
                     foreach (var errorMessage in error.Errors)
                     {
-                        Console.WriteLine($"Errore: {errorMessage.ErrorMessage}");
+                        _logger.LogError($"Errore: {errorMessage.ErrorMessage}");
                     }
                 }
             }
@@ -103,7 +157,7 @@ namespace Nostalgame.Controllers
                 return RedirectToAction(nameof(Payment), new { id = noleggio.IdNoleggio });
             }
 
-            ViewData["IdVideogioco"] = new SelectList(_context.Videogiochi, "IdVideogioco", "CasaProduttrice", noleggioViewModel.IdVideogioco);
+            ViewData["IdVideogioco"] = new SelectList(_context.Videogiochi, "IdVideogioco", "Titolo", noleggioViewModel.IdVideogioco);
             return View(noleggioViewModel);
         }
 
@@ -124,7 +178,7 @@ namespace Nostalgame.Controllers
 
 
         // POST: Noleggi/Charge - Effettua il pagamento tramite Stripe e salva il Noleggio nel database 
-
+        //utilizzo FromBody per ricevere i dati in formato JSON - in questo modo posso inviare i dati tramite una richiesta AJAX, ovvero senza ricaricare la pagina
         [HttpPost]
         public async Task<IActionResult> Charge([FromBody] ChargeRequest request)
         {
@@ -149,14 +203,18 @@ namespace Nostalgame.Controllers
                 return Json(new { status = "error", message = "Noleggio non trovato" });
             }
 
+            //paymentIntent è l'oggetto che rappresenta il pagamento da effettuare tramite Stripe
+
             var paymentIntent = paymentIntents.Create(new PaymentIntentCreateOptions
-            {
-                Amount = (long)noleggio.CostoNoleggio * 100, // Stripe richiede l'importo in centesimi
+            {   
+                //questi dati sono necessari per creare un pagamento tramite Stripe - l'importo è in centesimi
+                //addiziono il costo del noleggio e le spese di spedizione per il totale
+                Amount = (long)(noleggio.CostoNoleggio + noleggio.SpeseSpedizione) * 100, 
                 Currency = "eur",
                 Customer = customer.Id,
                 PaymentMethod = request.PaymentMethodId,
-                Confirm = true, // Conferma immediatamente il PaymentIntent
-                ReturnUrl = "https://localhost:7288/Noleggi/Index", // Aggiungi il tuo URL di ritorno qui
+                Confirm = true, 
+                ReturnUrl = "https://localhost:7288/Noleggi/Index", 
             });
 
 

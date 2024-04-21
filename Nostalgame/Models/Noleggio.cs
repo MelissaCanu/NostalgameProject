@@ -28,6 +28,10 @@ public class Noleggio
     [Column(TypeName = "decimal(18, 2)")]
     public decimal CostoNoleggio { get; set; }
 
+    [Required]
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal SpeseSpedizione { get; set; } // Nuovo campo per le spese di spedizione
+
     public string? StripePaymentId { get; set; }
 
     public Videogioco Videogioco { get; set; }

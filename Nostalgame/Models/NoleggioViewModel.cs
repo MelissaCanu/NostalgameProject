@@ -3,8 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 public class NoleggioViewModel
 {
-    public int IdNoleggio { get; set; }
-
     [Required]
     public int IdVideogioco { get; set; }
 
@@ -25,5 +23,7 @@ public class NoleggioViewModel
     [Column(TypeName = "decimal(18, 2)")]
     public decimal CostoNoleggio { get; set; }
 
-    public string? StripePaymentId { get; set; }
+    [Required]
+    [Column(TypeName = "decimal(18, 2)")]
+    public decimal SpeseSpedizione { get; set; }
 }

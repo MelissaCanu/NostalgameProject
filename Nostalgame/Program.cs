@@ -1,39 +1,52 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Nostalgame.Data;
 using Nostalgame.Models;
 using Stripe;
+using System.Globalization;
 
+// CreateBuilder è un metodo statico che crea un nuovo oggetto WebApplicationBuilder - serve per configurare l'applicazione web
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//AddControllersWithViews è un metodo di estensione che aggiunge i servizi MVC al contenitore di servizi
 builder.Services.AddControllersWithViews();
 
-//Adding services for Identity here
+// Aggiungo la configurazione della localizzazione qui - questa serve per uniformare il formato delle date e delle valute
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { CultureInfo.InvariantCulture };
+    options.DefaultRequestCulture = new RequestCulture(CultureInfo.InvariantCulture);
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
+//Aggiungo servizi per Identity
 builder.Services.AddIdentity<Utente, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
-    options.Tokens.ProviderMap.Remove("Default"); // Rimuove il provider di token predefinito
-    options.Tokens.AuthenticatorTokenProvider = null; // Imposta il provider di token dell'autenticatore su null
-    options.User.RequireUniqueEmail = true; // Richiede che ogni utente abbia un'email unica
-    options.SignIn.RequireConfirmedEmail = false; // Non richiede che l'email sia confermata per l'accesso
+    options.Tokens.ProviderMap.Remove("Default"); // Rimuovo il provider di token predefinito
+    options.Tokens.AuthenticatorTokenProvider = null; // Imposto il provider di token dell'autenticatore su null
+    options.User.RequireUniqueEmail = true; // Richiedo che ogni utente abbia un'email unica
+    options.SignIn.RequireConfirmedEmail = false; // Non richiedo che l'email sia confermata per l'accesso
 })
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
-//Adding DbContext here
+//Aggiungo il db context
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
+//qua var app è un oggetto WebApplication che rappresenta l'applicazione web, builder.Build() costruisce l'applicazione web
 var app = builder.Build();
 
-//Setting Stripe API Key
+//Setto la Stripe API Key
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
 
-// Configure the HTTP request pipeline.
+// Configuro le richieste HTTP - ovvero le richieste che arrivano al server da un client
+//App.Use è un metodo di estensione che aggiunge un middleware all'applicazione, ovvero un componente che gestisce le richieste HTTP
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler(errorApp =>
@@ -62,11 +75,12 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+//l'ordine è importante qui, in quanto il middleware di autenticazione deve essere eseguito prima del middleware di routing,
+//in modo che l'utente venga autenticato prima che la richiesta venga instradata al controller
 app.UseRouting();
 
 app.UseAuthorization();
 
-//Adding Authentication here
 app.UseAuthentication();
 
 app.MapControllerRoute(

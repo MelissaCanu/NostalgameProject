@@ -9,75 +9,19 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Titolo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Piattaforma)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CasaProduttrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descrizione)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Foto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Anno)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Disponibile)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Proprietario)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genere)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Titolo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Piattaforma)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CasaProduttrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Descrizione)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Foto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Anno)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Disponibile)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Proprietario.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genere.Nome)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdVideogioco">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdVideogioco">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdVideogioco">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4">
+            <div class="card">
+                <img class="card-img-top" src="@item.Foto" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Titolo</h5>
+                    <p class="card-text">@item.Descrizione</p>
+                    <a asp-action="Details" asp-route-id="@item.IdVideogioco" class="btn btn-primary">Dettagli</a>
+                    <a asp-action="Create" asp-controller="Noleggi" asp-route-idVideogioco="@item.IdVideogioco" class="btn btn-success">Noleggia</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -15,21 +15,26 @@
 
             <div class="form-group">
                 <label asp-for="IdVideogioco" class="control-label"></label>
-                <select asp-for="IdVideogioco" class="form-control" asp-items="ViewBag.IdVideogioco"></select>
+                <input asp-for="IdVideogioco" class="form-control" readonly />
+                <input type="hidden" asp-for="IdVideogioco" />
             </div>
+            <input type="hidden" asp-for="IdVideogioco" />
             <div class="form-group">
                 <label asp-for="IdUtenteNoleggiante" class="control-label"></label>
-                <input asp-for="IdUtenteNoleggiante" class="form-control" />
+                <input asp-for="IdUtenteNoleggiante" class="form-control" readonly />
+                <input type="hidden" asp-for="IdUtenteNoleggiante" />
                 <span asp-validation-for="IdUtenteNoleggiante" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DataInizio" class="control-label"></label>
-                <input asp-for="DataInizio" class="form-control" />
+                <input asp-for="DataInizio" class="form-control" readonly />
+                <input type="hidden" asp-for="DataInizio" />
                 <span asp-validation-for="DataInizio" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DataFine" class="control-label"></label>
-                <input asp-for="DataFine" class="form-control" />
+                <input asp-for="DataFine" class="form-control" readonly />
+                <input type="hidden" asp-for="DataFine" />
                 <span asp-validation-for="DataFine" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -39,8 +44,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="CostoNoleggio" class="control-label"></label>
-                <input asp-for="CostoNoleggio" class="form-control" />
-                <span asp-validation-for="CostoNoleggio" class="text-danger"></span>
+                <p>@Model.CostoNoleggio</p>
+                <input asp-for="CostoNoleggio" type="hidden" id="CostoNoleggio" />
+            </div>
+            <div class="form-group">
+                <label asp-for="SpeseSpedizione" class="control-label"></label>
+                <p>@Model.SpeseSpedizione</p>
+                <input asp-for="SpeseSpedizione" type="hidden" id="SpeseSpedizione" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
