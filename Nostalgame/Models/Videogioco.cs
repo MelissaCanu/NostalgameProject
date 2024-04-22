@@ -37,6 +37,9 @@ namespace Nostalgame.Models
         [Required]
         public bool Disponibile { get; set; }
 
+        [DataType(DataType.Date)]
+        public DateTime? DataCreazione { get; set; }
+
         [Required]
         public int IdGenere { get; set; }
 

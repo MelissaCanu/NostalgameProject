@@ -80,13 +80,19 @@ namespace Nostalgame.Controllers
 
             // Recupera l'oggetto Videogioco dal database
             var videogioco = await _context.Videogiochi.FindAsync(idVideogioco);
+            _logger.LogInformation("Inizio metodo Create con idVideogioco: {idVideogioco}", idVideogioco);
+
 
             // Verifica se l'oggetto Videogioco è null
             if (videogioco == null)
             {
+                _logger.LogWarning("Videogioco con id {idVideogioco} non trovato", idVideogioco);
+
                 // Gestisci il caso in cui non esiste un Videogioco con l'IdVideogioco fornito
                 return NotFound("Videogioco non trovato");
             }
+            _logger.LogInformation("Videogioco con id {idVideogioco} trovato", idVideogioco);
+
 
             // Verifica se il videogioco è disponibile
             if (!videogioco.Disponibile)

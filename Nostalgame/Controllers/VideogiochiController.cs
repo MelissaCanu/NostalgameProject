@@ -58,6 +58,7 @@ namespace Nostalgame.Controllers
                 }
             }
 
+            videogiochi = videogiochi.Include(v => v.Noleggi);
             return View(await videogiochi.ToListAsync());
         }
 
@@ -112,6 +113,9 @@ namespace Nostalgame.Controllers
                     Disponibile = videogiocoViewModel.Disponibile,
                     IdGenere = videogiocoViewModel.IdGenere,
                     IdProprietario = videogiocoViewModel.IdProprietario,
+                    DataCreazione = DateTime.Now
+                   
+
                 };
 
                 if (videogiocoViewModel.File != null)

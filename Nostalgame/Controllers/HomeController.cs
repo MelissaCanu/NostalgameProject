@@ -23,11 +23,12 @@ namespace Nostalgame.Controllers
         {   
             //guid serve a randomizzare l'ordine dei videogiochi, take prende i primi 20, tolistasync li trasforma in lista
             var videogiochi = await _context.Videogiochi.OrderBy(v => Guid.NewGuid()).Take(20).ToListAsync();
-            var giochiAppenaAggiunti = await _context.Videogiochi.OrderByDescending(v => v.DataCreazione).Take(5).ToListAsync();
+            var giochiAppenaAggiunti = await _context.Videogiochi.OrderByDescending(v => v.DataCreazione).Take(9).ToListAsync();
 
             var model = new HomeViewModel
             {
-                TuttiVideogiochi = videogiochi
+                TuttiVideogiochi = videogiochi,
+                GiochiAppenaAggiunti = giochiAppenaAggiunti
             };
 
             return View(model);
