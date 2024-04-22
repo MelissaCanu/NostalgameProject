@@ -88,6 +88,12 @@ namespace Nostalgame.Controllers
                 return NotFound("Videogioco non trovato");
             }
 
+            // Verifica se il videogioco è disponibile
+            if (!videogioco.Disponibile)
+            {
+                // Gestisci il caso in cui il videogioco non è disponibile
+                return BadRequest("Questo videogioco non è attualmente disponibile per il noleggio");
+            }
 
             // Crea un nuovo modello di noleggio
             var noleggioViewModel = new NoleggioViewModel();
@@ -150,7 +156,18 @@ namespace Nostalgame.Controllers
                     DataFine = noleggioViewModel.DataFine,
                     IndirizzoSpedizione = noleggioViewModel.IndirizzoSpedizione,
                     CostoNoleggio = noleggioViewModel.CostoNoleggio,
+                    SpeseSpedizione = noleggioViewModel.SpeseSpedizione
                 };
+
+                // Trova il videogioco associato al noleggio
+                var videogioco = await _context.Videogiochi.FindAsync(noleggio.IdVideogioco);
+
+                // Imposta il videogioco come non disponibile
+                if (videogioco != null)
+                {
+                    videogioco.Disponibile = false;
+                    _context.Update(videogioco);
+                }
 
                 _context.Add(noleggio);
                 await _context.SaveChangesAsync();

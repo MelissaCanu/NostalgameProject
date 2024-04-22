@@ -73,6 +73,8 @@ if (!app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
+
+//questo middleware serve per utilizzare i file statici come immagini, fogli di stile e script JavaScript
 app.UseStaticFiles();
 
 //l'ordine è importante qui, in quanto il middleware di autenticazione deve essere eseguito prima del middleware di routing,

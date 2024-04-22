@@ -22,7 +22,10 @@ namespace Nostalgame.Controllers
         // GET: Videogiochi
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Videogiochi.Include(v => v.Genere).Include(v => v.Proprietario);
+            var applicationDbContext = _context.Videogiochi
+         .Include(v => v.Genere)
+         .Include(v => v.Proprietario)
+         .Include(v => v.Noleggi); // Include i noleggi per ogni videogioco
             return View(await applicationDbContext.ToListAsync());
         }
 
