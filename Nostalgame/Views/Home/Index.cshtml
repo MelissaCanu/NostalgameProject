@@ -1,7 +1,29 @@
-﻿@{
+﻿@model Nostalgame.Models.HomeViewModel
+<style>
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-color: purple; /* Cambia questo colore come preferisci */
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 5%;
+    }
+
+    .carousel-control-prev {
+        margin-left: -5%;
+    }
+
+    .carousel-control-next {
+        margin-right: -5%;
+    }
+</style>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
+<!--messaggio di successo per il login-->
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success">
@@ -9,8 +31,45 @@
     </div>
 }
 
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Carosello per tutti i videogiochi -->
+<div id="videogiochiCarosello" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        @for (int i = 0; i < Model.TuttiVideogiochi.Count; i += 3)
+        {
+            <div class="carousel-item @(i == 0 ? "active" : "")">
+                <div class="row">
+                    @for (int j = 0; j < 3; j++)
+                    {
+                        if (i + j < Model.TuttiVideogiochi.Count)
+                        {
+                            var videogioco = Model.TuttiVideogiochi[i + j];
+                            <div class="col-md-4">
+                                <div class="card" style="width: 100%; max-width: 18rem;">
+                                    <img src="@videogioco.Foto" class="card-img-top" alt="@videogioco.Titolo">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@videogioco.Titolo</h5>
+                                        <p class="card-text">@videogioco.Descrizione</p>
+                                        <a href="@Url.Action("Details", "Videogiochi", new { id = videogioco.IdVideogioco })" class="btn btn-primary">Vai ai dettagli</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#videogiochiCarosello" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Precedente</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#videogiochiCarosello" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Successivo</span>
+    </button>
 </div>
+
+<a href="@Url.Action("Index", "Videogiochi")" class="btn btn-primary">Vedi altro</a>
+
+<!-- Carosello per i giochi appena aggiunti -->
+

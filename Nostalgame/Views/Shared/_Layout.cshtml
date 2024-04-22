@@ -19,19 +19,33 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Menu
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Videogiochi" asp-action="Index">Videogiochi</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Noleggi" asp-action="Index">Noleggi</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Avatars" asp-action="Index">Avatar</a></li>
+                            </ul>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Videogiochi" asp-action="Index">Videogiochi</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Noleggi" asp-action="Index">Noleggi</a>
-                        </li>                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Avatars" asp-action="Index">Avatar</a>
-                        </li>
-                        <li class="nav-item">
+                    <form class="d-flex me-2" asp-controller="Videogiochi" asp-action="Index">
+                        <div class="input-group border rounded shadow">
+                            <select class="form-control me-2" name="searchField">
+                                <option value="titolo">Titolo</option>
+                                <option value="piattaforma">Piattaforma</option>
+                                <option value="casaProduttrice">Casa Produttrice</option>
+                                <option value="anno">Anno</option>
+                                <option value="genere">Genere</option>
+                            </select>
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchString">
+                            <button class="btn btn-outline-success" type="submit">Cerca</button>
+                        </div>
+                    </form>
+                    </ul>
+                    <div class="d-flex justify-content-end">
+                        <div>
                             @if (User.Identity.IsAuthenticated)
                             {
                                 <form method="post" asp-controller="Account" asp-action="Logout">
@@ -42,7 +56,8 @@
                             {
                                 <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
                             }
-                        </li>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>

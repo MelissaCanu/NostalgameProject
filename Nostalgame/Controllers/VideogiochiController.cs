@@ -7,26 +7,58 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Nostalgame.Data;
 using Nostalgame.Models;
+using Microsoft.AspNetCore.Hosting;
+
 
 namespace Nostalgame.Controllers
 {
     public class VideogiochiController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly ILogger<AvatarsController> _logger;
 
-        public VideogiochiController(ApplicationDbContext context)
+
+        public VideogiochiController(ApplicationDbContext context, IWebHostEnvironment hostingEnvironment, ILogger<AvatarsController> logger)
         {
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
+            _logger = logger;
         }
 
-        // GET: Videogiochi
-        public async Task<IActionResult> Index()
+        //GET - Videogiochi/Index
+        public async Task<IActionResult> Index(string searchField, string searchString)
         {
-            var applicationDbContext = _context.Videogiochi
-         .Include(v => v.Genere)
-         .Include(v => v.Proprietario)
-         .Include(v => v.Noleggi); // Include i noleggi per ogni videogioco
-            return View(await applicationDbContext.ToListAsync());
+            var videogiochi = from v in _context.Videogiochi
+                              select v;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                var lowerSearchString = searchString.ToLowerInvariant();
+                switch (searchField)
+                {
+                    case "titolo":
+                        videogiochi = videogiochi.Where(v => EF.Functions.Like(v.Titolo, $"%{lowerSearchString}%"));
+                        break;
+                    case "piattaforma":
+                        videogiochi = videogiochi.Where(v => EF.Functions.Like(v.Piattaforma, $"%{lowerSearchString}%"));
+                        break;
+                    case "casaProduttrice":
+                        videogiochi = videogiochi.Where(v => EF.Functions.Like(v.CasaProduttrice, $"%{lowerSearchString}%"));
+                        break;
+                    case "anno":
+                        if (int.TryParse(searchString, out int anno))
+                        {
+                            videogiochi = videogiochi.Where(v => v.Anno == anno);
+                        }
+                        break;
+                    case "genere":
+                        videogiochi = videogiochi.Where(v => EF.Functions.Like(v.Genere.Nome, $"%{lowerSearchString}%"));
+                        break;
+                }
+            }
+
+            return View(await videogiochi.ToListAsync());
         }
 
         // GET: Videogiochi/Details/5
@@ -57,23 +89,51 @@ namespace Nostalgame.Controllers
             return View();
         }
 
-        // POST: Videogiochi/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //POST: Videogiochi/Create
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdVideogioco,Titolo,Piattaforma,CasaProduttrice,Descrizione,Foto,Anno,Disponibile,IdGenere,IdProprietario")] Videogioco videogioco)
+        public async Task<IActionResult> Create(VideogiocoViewModel videogiocoViewModel)
         {
-            if (ModelState.IsValid)
+            if (videogiocoViewModel.File == null)
             {
+                ModelState.AddModelError("File", "Il campo file è obbligatorio");
+            }
+
+                if (ModelState.IsValid)
+            {
+                var videogioco = new Videogioco
+                {
+                    Titolo = videogiocoViewModel.Titolo,
+                    Piattaforma = videogiocoViewModel.Piattaforma,
+                    CasaProduttrice = videogiocoViewModel.CasaProduttrice,
+                    Descrizione = videogiocoViewModel.Descrizione,
+                    Anno = videogiocoViewModel.Anno,
+                    Disponibile = videogiocoViewModel.Disponibile,
+                    IdGenere = videogiocoViewModel.IdGenere,
+                    IdProprietario = videogiocoViewModel.IdProprietario,
+                };
+
+                if (videogiocoViewModel.File != null)
+                {
+                    var fileName = Path.GetFileName(videogiocoViewModel.File.FileName);
+                    var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "img/videogiochi", fileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await videogiocoViewModel.File.CopyToAsync(fileStream);
+                    }
+
+                    videogioco.Foto = "/img/videogiochi/" + fileName;
+                }
+
                 _context.Add(videogioco);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdGenere"] = new SelectList(_context.Generi, "IdGenere", "Nome", videogioco.IdGenere);
-            ViewData["IdProprietario"] = new SelectList(_context.Utenti, "Id", "Id", videogioco.IdProprietario);
-            return View(videogioco);
+            return View(videogiocoViewModel);
         }
+
+
 
         // GET: Videogiochi/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -88,33 +148,90 @@ namespace Nostalgame.Controllers
             {
                 return NotFound();
             }
+
+            var videogiocoViewModel = new VideogiocoViewModel
+            {
+                IdVideogioco = videogioco.IdVideogioco,
+                Titolo = videogioco.Titolo,
+                Piattaforma = videogioco.Piattaforma,
+                CasaProduttrice = videogioco.CasaProduttrice,
+                Descrizione = videogioco.Descrizione,
+                Anno = videogioco.Anno,
+                Disponibile = videogioco.Disponibile,
+                IdGenere = videogioco.IdGenere,
+                IdProprietario = videogioco.IdProprietario,
+                Foto = videogioco.Foto
+            };
+
             ViewData["IdGenere"] = new SelectList(_context.Generi, "IdGenere", "Nome", videogioco.IdGenere);
             ViewData["IdProprietario"] = new SelectList(_context.Utenti, "Id", "Id", videogioco.IdProprietario);
-            return View(videogioco);
+            return View(videogiocoViewModel);
         }
 
         // POST: Videogiochi/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdVideogioco,Titolo,Piattaforma,CasaProduttrice,Descrizione,Foto,Anno,Disponibile,IdGenere,IdProprietario")] Videogioco videogioco)
+        public async Task<IActionResult> Edit(int id, [Bind("IdVideogioco,Titolo,Piattaforma,CasaProduttrice,Descrizione,Anno,Disponibile,IdGenere,IdProprietario,File")] VideogiocoViewModel videogiocoViewModel)
         {
-            if (id != videogioco.IdVideogioco)
+            if (id != videogiocoViewModel.IdVideogioco)
             {
                 return NotFound();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Count > 0)
+                    .Select(x => new { x.Key, x.Value.Errors })
+                    .ToArray();
+                foreach (var error in errors)
+                {
+                    foreach (var subError in error.Errors)
+                    {
+                        var errorMessage = subError.ErrorMessage;
+                        var fieldName = error.Key;
+
+                        // Log the error
+                        _logger.LogError($"Campo: {fieldName} Errore: {errorMessage}");
+                    }
+                }
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
+                    Videogioco videogioco = new Videogioco
+                    {
+                        IdVideogioco = videogiocoViewModel.IdVideogioco,
+                        Titolo = videogiocoViewModel.Titolo,
+                        Piattaforma = videogiocoViewModel.Piattaforma,
+                        CasaProduttrice = videogiocoViewModel.CasaProduttrice,
+                        Descrizione = videogiocoViewModel.Descrizione,
+                        Anno = videogiocoViewModel.Anno,
+                        Disponibile = videogiocoViewModel.Disponibile,
+                        IdGenere = videogiocoViewModel.IdGenere,
+                        IdProprietario = videogiocoViewModel.IdProprietario,
+                    };
+
+                    if (videogiocoViewModel.File != null)
+                    {
+                        var fileName = Path.GetFileName(videogiocoViewModel.File.FileName);
+                        var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "img/videogiochi", fileName);
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await videogiocoViewModel.File.CopyToAsync(fileStream);
+                        }
+
+                        videogioco.Foto = "/img/videogiochi/" + fileName;
+                    }
+
                     _context.Update(videogioco);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VideogiocoExists(videogioco.IdVideogioco))
+                    if (!VideogiocoExists(videogiocoViewModel.IdVideogioco))
                     {
                         return NotFound();
                     }
@@ -125,9 +242,9 @@ namespace Nostalgame.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdGenere"] = new SelectList(_context.Generi, "IdGenere", "Nome", videogioco.IdGenere);
-            ViewData["IdProprietario"] = new SelectList(_context.Utenti, "Id", "Id", videogioco.IdProprietario);
-            return View(videogioco);
+            ViewData["IdGenere"] = new SelectList(_context.Generi, "IdGenere", "Nome", videogiocoViewModel.IdGenere);
+            ViewData["IdProprietario"] = new SelectList(_context.Utenti, "Id", "Id", videogiocoViewModel.IdProprietario);
+            return View(videogiocoViewModel);
         }
 
         // GET: Videogiochi/Delete/5

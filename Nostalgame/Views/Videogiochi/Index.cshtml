@@ -16,13 +16,13 @@
 {
     <div class="col-md-4">
         <div class="card position-relative">
-            <img class="card-img-top" src="@item.Foto" alt="Card image cap">
-                @if (!item.Disponibile)
+            <img src="@item.Foto" alt="Foto del videogioco" class="card-image" />
+            @if (!item.Disponibile)
                 {
                     var ultimoNoleggio = item.Noleggi.OrderByDescending(n => n.DataFine).FirstOrDefault();
                     if (ultimoNoleggio != null && ultimoNoleggio.DataFine > DateTime.Now)
                     {
-                    <span class="badge bg-secondary text-white position-absolute top-25 start-0 translate-middle-y px-3 py-2 w-100 opacity-75">Disponibile il @ultimoNoleggio.DataFine.ToShortDateString()</span>
+                    <span class="badge bg-secondary text-white position-absolute top-25 start-0 translate-middle-y px-3 py-2 w-100 opacity-75">Disponibile dal @ultimoNoleggio.DataFine.ToShortDateString()</span>
                     }
                 }
             <div class="card-body">

@@ -1,8 +1,4 @@
-﻿@model Nostalgame.Models.Videogioco
-
-@{
-    ViewData["Title"] = "Edit";
-}
+﻿@model Nostalgame.Models.VideogiocoViewModel
 
 <h1>Edit</h1>
 
@@ -10,7 +6,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="IdVideogioco" />
             <div class="form-group">
@@ -18,6 +14,8 @@
                 <input asp-for="Titolo" class="form-control" />
                 <span asp-validation-for="Titolo" class="text-danger"></span>
             </div>
+            <input type="hidden" asp-for="IdProprietario" />
+
             <div class="form-group">
                 <label asp-for="Piattaforma" class="control-label"></label>
                 <input asp-for="Piattaforma" class="form-control" />
@@ -34,9 +32,9 @@
                 <span asp-validation-for="Descrizione" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Foto" class="control-label"></label>
-                <input asp-for="Foto" class="form-control" />
-                <span asp-validation-for="Foto" class="text-danger"></span>
+                <label asp-for="File" class="control-label"></label>
+                <input asp-for="File" type="file" class="form-control" />
+                <span asp-validation-for="File" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Anno" class="control-label"></label>
@@ -51,12 +49,6 @@
             <div class="form-group">
                 <label asp-for="IdGenere" class="control-label"></label>
                 <select asp-for="IdGenere" class="form-control" asp-items="ViewBag.IdGenere"></select>
-                <span asp-validation-for="IdGenere" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdProprietario" class="control-label"></label>
-                <select asp-for="IdProprietario" class="form-control" asp-items="ViewBag.IdProprietario"></select>
-                <span asp-validation-for="IdProprietario" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -68,7 +60,3 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
