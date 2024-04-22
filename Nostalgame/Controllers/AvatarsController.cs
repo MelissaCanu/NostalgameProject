@@ -122,17 +122,25 @@ namespace Nostalgame.Controllers
             {
                 return NotFound();
             }
+
+            var avatarViewModel = new AvatarViewModel
+            {
+                IdAvatar = avatar.IdAvatar,
+                Nome = avatar.Nome,
+                IdGenere = avatar.IdGenere,
+                Foto = avatar.Foto
+            };
+
             ViewData["IdGenere"] = new SelectList(_context.Generi, "IdGenere", "Nome", avatar.IdGenere);
-            return View(avatar);
+            return View(avatarViewModel);
         }
 
         // POST: Avatars/Edit/5
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdAvatar,Nome,Foto,IdGenere")] Avatar avatar)
+        public async Task<IActionResult> Edit(int id, [Bind("IdAvatar,Nome,IdGenere,File")] AvatarViewModel avatarViewModel)
         {
-            if (id != avatar.IdAvatar)
+            if (id != avatarViewModel.IdAvatar)
             {
                 return NotFound();
             }
@@ -141,13 +149,20 @@ namespace Nostalgame.Controllers
             {
                 try
                 {
-                    if (avatar.File != null)
+                    Avatar avatar = new Avatar
                     {
-                        var fileName = Path.GetFileName(avatar.File.FileName);
+                        IdAvatar = avatarViewModel.IdAvatar,
+                        Nome = avatarViewModel.Nome,
+                        IdGenere = avatarViewModel.IdGenere,
+                    };
+
+                    if (avatarViewModel.File != null)
+                    {
+                        var fileName = Path.GetFileName(avatarViewModel.File.FileName);
                         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img", fileName);
                         using (var stream = System.IO.File.Create(filePath))
                         {
-                            await avatar.File.CopyToAsync(stream);
+                            await avatarViewModel.File.CopyToAsync(stream);
                         }
                         avatar.Foto = "/img/" + fileName;
                     }
@@ -156,7 +171,7 @@ namespace Nostalgame.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AvatarExists(avatar.IdAvatar))
+                    if (!AvatarExists(avatarViewModel.IdAvatar))
                     {
                         return NotFound();
                     }
@@ -167,8 +182,8 @@ namespace Nostalgame.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdGenere"] = new SelectList(_context.Generi, "IdGenere", "Nome", avatar.IdGenere);
-            return View(avatar);
+            ViewData["IdGenere"] = new SelectList(_context.Generi, "IdGenere", "Nome", avatarViewModel.IdGenere);
+            return View(avatarViewModel);
         }
 
         // GET: Avatars/Delete/5
@@ -187,7 +202,15 @@ namespace Nostalgame.Controllers
                 return NotFound();
             }
 
-            return View(avatar);
+            var avatarViewModel = new AvatarViewModel
+            {
+                IdAvatar = avatar.IdAvatar,
+                Nome = avatar.Nome,
+                IdGenere = avatar.IdGenere,
+                Foto = avatar.Foto
+            };
+
+            return View(avatarViewModel);
         }
 
         // POST: Avatars/Delete/5
@@ -199,11 +222,14 @@ namespace Nostalgame.Controllers
             if (avatar != null)
             {
                 _context.Avatars.Remove(avatar);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+
 
         private bool AvatarExists(int id)
         {
