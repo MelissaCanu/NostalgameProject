@@ -20,3 +20,21 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: dimgray;
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+}
+
+.carousel-control-prev {
+    margin-left: -5%;
+}
+
+.carousel-control-next {
+    margin-right: -5%;
+}

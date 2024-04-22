@@ -26,9 +26,9 @@
                 }
                 <div class="card-body">
                     <h5 class="card-title">@item.Titolo</h5>
-                    <p class="card-text">@item.Descrizione</p>
+                   
                     <a asp-action="Details" asp-route-id="@item.IdVideogioco" class="btn btn-primary">Dettagli</a>
-                    <a asp-action="Create" asp-controller="Noleggi" asp-route-idVideogioco="@item.IdVideogioco" class="btn opacity-75 @(item.Disponibile ? "btn-success" : "btn-dark")">Noleggia</a>
+                    <a asp-action="Create" asp-controller="Noleggi" asp-route-idVideogioco="@item.IdVideogioco" class="btn opacity-75 @(item.Disponibile ? "btn-success" : "btn-dark") @(item.Disponibile ? "" : "disabled") ">Noleggia</a>
                 </div>
             </div>
         </div>

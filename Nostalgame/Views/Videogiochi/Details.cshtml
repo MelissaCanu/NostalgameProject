@@ -6,67 +6,29 @@
 
 <h1>Details</h1>
 
-<div>
-    <h4>Videogioco</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Titolo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Titolo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Piattaforma)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Piattaforma)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CasaProduttrice)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CasaProduttrice)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Descrizione)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Descrizione)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Foto)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Foto)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Anno)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Anno)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Disponibile)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Disponibile)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Proprietario)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Proprietario.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Genere)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Genere.Nome)
-        </dd>
-    </dl>
+<div class="card mb-3">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="@Model.Foto" alt="Foto del videogioco" class="img-fluid">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">@Model.Titolo</h5>
+                <p class="card-text">@Model.Descrizione</p>
+                <p class="card-text"><small class="text-muted">Piattaforma: @Model.Piattaforma</small></p>
+                <p class="card-text"><small class="text-muted">Casa Produttrice: @Model.CasaProduttrice</small></p>
+                <p class="card-text"><small class="text-muted">Anno: @Model.Anno</small></p>
+                <p class="card-text"><small class="text-muted">Disponibile: @Model.Disponibile</small></p>
+                <p class="card-text"><small class="text-muted">Proprietario: @Model.Proprietario.Id</small></p>
+                <p class="card-text"><small class="text-muted">Genere: @Model.Genere.Nome</small></p>
+            </div>
+        </div>
+    </div>
 </div>
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.IdVideogioco">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.IdVideogioco" class="btn btn-primary">Edit</a> |
+    <a asp-action="Create" asp-controller="Noleggi" asp-route-idVideogioco="@Model.IdVideogioco" class="btn opacity-75 @(Model.Disponibile ? "btn-success" : "btn-dark") @(Model.Disponibile ? "" : "disabled") ">Noleggia</a>
+
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

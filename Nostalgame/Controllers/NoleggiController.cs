@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -35,12 +36,22 @@ namespace Nostalgame.Controllers
         }
 
 
-        // GET: Noleggi
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Noleggi.Include(n => n.Videogioco);
-            return View(await applicationDbContext.ToListAsync());
+            var userName = User.Identity.Name;
+
+            if (User.IsInRole("Admin"))
+            {
+                return View(await _context.Noleggi.ToListAsync());
+            }
+            else
+            {
+                var noleggiUtente = _context.Noleggi.Where(n => n.IdUtenteNoleggiante == userName);
+                return View(await noleggiUtente.ToListAsync());
+            }
         }
+
+
 
         // GET: Noleggi/Details/5
         public async Task<IActionResult> Details(int? id)
