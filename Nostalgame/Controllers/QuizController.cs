@@ -18,17 +18,9 @@ public class QuizController : Controller
 
     public IActionResult Index()
     {
-        // Verifica se l'utente ha già un avatar
-        var userId = _userManager.GetUserId(User);
-        var user = _context.Users.Find(userId);
-        if (user.IdAvatar != null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
-
-        // Mostra il quiz
-        return View();
+        return View(new QuizViewModel());
     }
+
 
     [HttpGet]
     public IActionResult Submit()

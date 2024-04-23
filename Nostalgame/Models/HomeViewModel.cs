@@ -7,5 +7,8 @@ namespace Nostalgame.Models
         public List<Videogioco> TuttiVideogiochi { get; set; }
         public List<Videogioco> GiochiAppenaAggiunti { get; set; }
         public List<Videogioco> GiochiPerGenere { get; set; }
+
+        public bool HasAvatar { get; set; }
+
     }
 }

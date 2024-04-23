@@ -41,4 +41,7 @@ public class QuizViewModel
     [Required]
     [Display(Name = "Domanda 10")]
     public string Domanda10 { get; set; }
+
+    public bool HasAvatar { get; internal set; }
+
 }
