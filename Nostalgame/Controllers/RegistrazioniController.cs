@@ -167,21 +167,40 @@ namespace Nostalgame.Controllers
                 return NotFound();
             }
 
-            var registrazione = await _context.Registrazioni.FindAsync(id);
+            var registrazione = await _context.Registrazioni
+                .Include(r => r.Abbonamento) // Include l'abbonamento
+                .Include(r => r.Utente) // Include l'utente
+                .FirstOrDefaultAsync(r => r.IdRegistrazione == id); // Trova la registrazione con l'ID specificato
+
             if (registrazione == null)
             {
                 return NotFound();
             }
 
-            registrazione.IdAbbonamento = viewModel.IdAbbonamento;
+            // Controlla se l'abbonamento è stato cambiato a Premium
+            var abbonamentoPrecedente = registrazione.Abbonamento;
+            var abbonamentoNuovo = await _context.Abbonamenti.FindAsync(viewModel.IdAbbonamento);
 
+            // Aggiorna l'abbonamento della registrazione
+            registrazione.IdAbbonamento = viewModel.IdAbbonamento;
+            registrazione.Abbonamento = abbonamentoNuovo;
+
+            // Salva le modifiche
             _context.Update(registrazione);
             await _context.SaveChangesAsync();
 
+            // Dopo aver salvato le modifiche, controlla se l'abbonamento è stato cambiato a Premium
+            if (abbonamentoPrecedente.TipoAbbonamento != "Premium" && abbonamentoNuovo.TipoAbbonamento == "Premium")
+            {
+                // Reindirizza alla pagina di pagamento
+                return RedirectToAction("Create", "PagamentoAbbonamenti", new { idUtente = registrazione.Utente.Id });
+            }
+
+            // Se non è stato cambiato a Premium, continua come prima
             return RedirectToAction(nameof(Index));
         }
 
-    // GET: Registrazioni/Delete/5
+        // GET: Registrazioni/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
