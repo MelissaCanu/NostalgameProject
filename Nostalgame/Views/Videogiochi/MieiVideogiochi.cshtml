@@ -1,16 +1,10 @@
 ﻿@model IEnumerable<Nostalgame.Models.Videogioco>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "I miei videogiochi";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create" class="btn btn-primary">Aggiungi un videogioco</a>
-    <a asp-action="MieiVideogiochi" class="btn btn-secondary">I miei videogiochi</a>
-
-</p>
+<h1>I miei videogiochi</h1>
 
 <div class="container-fluid">
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
@@ -31,7 +25,7 @@
                         <h5 class="card-title">@item.Titolo</h5>
 
                         <a asp-action="Details" asp-route-id="@item.IdVideogioco" class="btn btn-primary">Dettagli</a>
-                        <a asp-action="Create" asp-controller="Noleggi" asp-route-idVideogioco="@item.IdVideogioco" class="btn opacity-75 @(item.Disponibile ? "btn-success" : "btn-dark") @(item.Disponibile ? "" : "d-none") ">Noleggia</a>
+                        <a asp-action="Edit" asp-route-id="@item.IdVideogioco" class="btn btn-primary">Modifica</a>
                     </div>
                 </div>
             </div>

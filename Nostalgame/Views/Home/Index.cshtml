@@ -17,7 +17,7 @@
         <div class="col-md-6">
             <div class="card mt-4">
                 <div class="card-body">
-                    <h5 class="card-title">Quiz Avatar</h5>
+                    <h4  class="card-title">Qual'è il tuo avatar?</h4>
                     @if (!Model.HasAvatar)
                     {
                         <p class="card-text">Scopri quale avatar fa per te completando il nostro quiz!</p>
@@ -47,7 +47,7 @@
                             {
                                 var videogioco = Model.TuttiVideogiochi[i + j];
                                 <div class="col mb-4">
-                                    <div class="card" style="width: 100%; max-width: 18rem;">
+                                    <div class="card videogioco-card" style="width: 100%; max-width: 18rem;">
                                         <img src="@videogioco.Foto" class="card-img-top" alt="@videogioco.Titolo">
                                         <div class="card-body">
                                             <h5 class="card-title">@videogioco.Titolo</h5>
@@ -87,7 +87,7 @@
                             {
                                 var videogioco = Model.GiochiAppenaAggiunti[i + j];
                                 <div class="col mb-4">
-                                    <div class="card" style="width: 100%; max-width: 18rem;">
+                                    <div class="card videogioco-card" style="width: 100%; max-width: 18rem;">
                                         <img src="@videogioco.Foto" class="card-img-top" alt="@videogioco.Titolo">
                                         <div class="card-body">
                                             <h5 class="card-title">@videogioco.Titolo</h5>

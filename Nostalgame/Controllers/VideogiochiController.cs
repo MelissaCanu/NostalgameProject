@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Nostalgame.Data;
 using Nostalgame.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace Nostalgame.Controllers
@@ -17,13 +18,15 @@ namespace Nostalgame.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly ILogger<AvatarsController> _logger;
+        private readonly UserManager<Utente> _userManager;
 
 
-        public VideogiochiController(ApplicationDbContext context, IWebHostEnvironment hostingEnvironment, ILogger<AvatarsController> logger)
+        public VideogiochiController(ApplicationDbContext context, IWebHostEnvironment hostingEnvironment, ILogger<AvatarsController> logger, UserManager<Utente> userManager)
         {
             _context = context;
             _hostingEnvironment = hostingEnvironment;
             _logger = logger;
+            _userManager = userManager;
         }
 
         //GET - Videogiochi/Index
@@ -151,6 +154,12 @@ namespace Nostalgame.Controllers
             if (videogioco == null)
             {
                 return NotFound();
+            }
+
+            var userId = _userManager.GetUserId(User);
+            if (videogioco.IdProprietario != userId)
+            {
+                return Forbid(); // o return RedirectToAction("Index");
             }
 
             var videogiocoViewModel = new VideogiocoViewModel
@@ -285,6 +294,15 @@ namespace Nostalgame.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        // GET: Videogiochi/MieiVideogiochi - Visualizza i videogiochi dell'utente loggato
+        public async Task<IActionResult> MieiVideogiochi()
+        {
+            var userId = _userManager.GetUserId(User);
+            var mieiVideogiochi = _context.Videogiochi.Where(v => v.IdProprietario == userId);
+            return View(await mieiVideogiochi.ToListAsync());
+        }
+
 
         private bool VideogiocoExists(int id)
         {
