@@ -45,7 +45,8 @@ public class QuizController : Controller
         user.IdAvatar = idAvatar;
         await _context.SaveChangesAsync();
 
-        return RedirectToAction("Index", "Home");
+        // Reindirizza l'utente alla vista dell'avatar
+        return RedirectToAction("MostraAvatar");
     }
 
 
@@ -136,6 +137,23 @@ public class QuizController : Controller
             default:
                 return 8; // Default in caso di pareggio
         }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> MostraAvatar()
+    {
+        var userId = _userManager.GetUserId(User);
+        var user = await _context.Users.FindAsync(userId);
+
+        var avatar = await _context.Avatars.FindAsync(user.IdAvatar);
+
+        var model = new MostraAvatarViewModel
+        {
+            Nome = avatar.Nome,
+            ImmagineAvatar = avatar.Foto
+        };
+
+        return View(model);
     }
 
 
