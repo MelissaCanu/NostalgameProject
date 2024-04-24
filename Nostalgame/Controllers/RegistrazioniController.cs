@@ -320,6 +320,7 @@ namespace Nostalgame.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
 
         // GET: Registrazioni/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -340,6 +341,8 @@ namespace Nostalgame.Controllers
 
             return View(registrazione);
         }
+
+        [Authorize(Roles = "Admin")]
 
         // POST: Registrazioni/Delete/5
 

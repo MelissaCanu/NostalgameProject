@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -230,6 +231,7 @@ namespace Nostalgame.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
 
         // GET: PagamentoAbbonamenti/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -248,9 +250,9 @@ namespace Nostalgame.Controllers
             return View(pagamentoAbbonamento);
         }
 
+        [Authorize(Roles = "Admin")]
+
         // POST: PagamentoAbbonamenti/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdPagamentoAbbonamento,IdUtente,IdAbbonamento,DataPagamento,ImportoPagato")] PagamentoAbbonamento pagamentoAbbonamento)
@@ -284,6 +286,8 @@ namespace Nostalgame.Controllers
             return View(pagamentoAbbonamento);
         }
 
+        [Authorize(Roles = "Admin")]
+
         // GET: PagamentoAbbonamenti/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -302,6 +306,8 @@ namespace Nostalgame.Controllers
 
             return View(pagamentoAbbonamento);
         }
+
+        [Authorize(Roles = "Admin")]
 
         // POST: PagamentoAbbonamenti/Delete/5
         [HttpPost, ActionName("Delete")]

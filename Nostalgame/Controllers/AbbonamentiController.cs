@@ -11,6 +11,8 @@ using Nostalgame.Models;
 
 namespace Nostalgame.Controllers
 {
+    [Authorize(Roles = "Admin")]
+
     public class AbbonamentiController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -117,7 +119,6 @@ namespace Nostalgame.Controllers
             return View(abbonamento);
         }
 
-        [Authorize(Roles = "Admin")]
 
 
         // GET: Abbonamenti/Delete/5

@@ -28,7 +28,6 @@ namespace Nostalgame.Controllers
 
         [Authorize(Roles = "Admin")]
 
-
         // GET: Generi/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -49,16 +48,15 @@ namespace Nostalgame.Controllers
 
         [Authorize(Roles = "Admin")]
 
-
         // GET: Generi/Create
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
+
         // POST: Generi/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdGenere,Nome")] Genere genere)
@@ -73,7 +71,6 @@ namespace Nostalgame.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-
 
         // GET: Generi/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -95,8 +92,6 @@ namespace Nostalgame.Controllers
         [Authorize(Roles = "Admin")]
 
         // POST: Generi/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdGenere,Nome")] Genere genere)
@@ -130,7 +125,6 @@ namespace Nostalgame.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-
 
         // GET: Generi/Delete/5
         public async Task<IActionResult> Delete(int? id)
