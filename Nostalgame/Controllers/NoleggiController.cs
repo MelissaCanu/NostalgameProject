@@ -119,7 +119,7 @@ namespace Nostalgame.Controllers
             // Imposta l'ID del videogioco e l'ID dell'utente noleggiante nel modello
             noleggioViewModel.IdVideogioco = idVideogioco;
             noleggioViewModel.IdUtenteNoleggiante = user.UserName;
-            noleggioViewModel.DataInizio = DateTime.Now.AddDays(3);
+            noleggioViewModel.DataInizio = DateTime.Now;
             noleggioViewModel.DataFine = DateTime.Now.AddDays(10); //imposto data fine a 7 gg da data inizio
 
             // Verifica se l'utente ha un abbonamento premium
