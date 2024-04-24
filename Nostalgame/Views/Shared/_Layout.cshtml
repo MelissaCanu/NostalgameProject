@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using Nostalgame.Data
+
+@inject UserManager<Utente> UserManager
+@inject SignInManager<Utente> SignInManager
+@inject ApplicationDbContext DbContext
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -8,11 +15,13 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Nostalgame.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="d-flex flex-column h-100">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3s">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Nostalgame</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/img/logo/logo.png" alt="Logo" class="d-inline-block align-top logo-image" width="70" height="60">
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -27,52 +36,72 @@
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Videogiochi" asp-action="Index">Videogiochi</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Noleggi" asp-action="Index">Noleggi</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Avatars" asp-action="Index">Avatar</a></li>
+                                @if (User.Identity.IsAuthenticated && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin")))
+                                {
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Avatars" asp-action="Index">Avatar</a></li>
+                                }
                             </ul>
                         </li>
-                    <form class="d-flex me-2" asp-controller="Videogiochi" asp-action="Index">
-                        <div class="input-group border rounded shadow">
-                            <select class="form-control me-2" name="searchField">
-                                <option value="titolo">Titolo</option>
-                                <option value="piattaforma">Piattaforma</option>
-                                <option value="casaProduttrice">Casa Produttrice</option>
-                                <option value="anno">Anno</option>
-                                <option value="genere">Genere</option>
-                            </select>
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchString">
-                            <button class="btn btn-outline-success" type="submit">Cerca</button>
-                        </div>
-                    </form>
+                        <form class="d-flex me-2" asp-controller="Videogiochi" asp-action="Index">
+                            <div class="input-group border rounded shadow">
+                                <select class="form-control me-2" name="searchField">
+                                    <option value="titolo">Titolo</option>
+                                    <option value="piattaforma">Piattaforma</option>
+                                    <option value="casaProduttrice">Casa Produttrice</option>
+                                    <option value="anno">Anno</option>
+                                    <option value="genere">Genere</option>
+                                </select>
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchString">
+                                <button class="btn btn-outline-success" type="submit">Cerca</button>
+                            </div>
+                        </form>
                     </ul>
                     <div class="d-flex justify-content-end">
                         <div>
-                            @if (User.Identity.IsAuthenticated)
+                            @if (SignInManager.IsSignedIn(User))
                             {
-                                <form method="post" asp-controller="Account" asp-action="Logout">
-                                    <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-                                </form>
+                                var user = await UserManager.GetUserAsync(User);
+                                if (user != null)
+                                {
+                                    var avatar = DbContext.Avatars.FirstOrDefault(a => a.IdAvatar == user.IdAvatar);
+                                    var registrazione = DbContext.Registrazioni.FirstOrDefault(r => r.IdUtente == user.Id);
+                                    <div class="d-flex align-items-center">
+                                        <div class="dropdown">
+                                            @if (avatar != null)
+                                            {
+                                                <a class="dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <img src="@avatar.Foto" alt="Avatar" class="rounded-circle me-2" width="70" height="70">
+                                                </a>
+                                            }
+                                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                @if (registrazione != null)
+                                                {
+                                                    <li><a class="dropdown-item" asp-controller="Registrazioni" asp-action="Details" asp-route-id="@registrazione.IdRegistrazione">Il mio profilo</a></li>
+                                                }
+
+                                            </ul>
+                                        </div>
+                                        <form method="post" asp-controller="Account" asp-action="Logout">
+                                            <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                                        </form>
+                                    </div>
+                                }
                             }
                             else
                             {
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+                                <a class="nav-link btn btn-link text-dark" asp-controller="Account" asp-action="Login">Login</a>
+                                <a class="nav-link btn btn-link text-dark" asp-controller="Registrazioni" asp-action="Create">Registrati</a>
                             }
+
                         </div>
                     </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - Nostalgame - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    <main role="main" class="pb-3 flex-grow-1">
+        @RenderBody()
+    </main>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

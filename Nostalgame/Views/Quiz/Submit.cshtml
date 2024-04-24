@@ -1,115 +1,73 @@
 ﻿@model QuizViewModel
 
 <form asp-action="Submit" method="post">
-    <div class="form-group">
-        <label>1.	Preferisci giochi con un ritmo lento e rilassato o giochi adrenalinici e veloci?</label>
-        <div>
-            <label><input type="radio" asp-for="Domanda1" value="Platform" /> Rilassato</label>
-            <label><input type="radio" asp-for="Domanda1" value="Azione" /> Adrenalinico</label>
-            <label><input type="radio" asp-for="Domanda1" value="RPG" /> Dipende dal mio umore</label>
-            <label><input type="radio" asp-for="Domanda1" value="Horror" /> Preferisco i giochi spaventosi</label>
-            <label><input type="radio" asp-for="Domanda1" value="Sparatutto" /> Mi piacciono i giochi competitivi</label>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                @for (int i = 0; i < 10; i++)
+                {
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Domanda @(i + 1)</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">@GetQuestionText(i + 1)</p>
+                            <div>
+                                @for (int j = 0; j < 5; j++)
+                                {
+                                    <label class="radio-card">
+                                        <input type="radio" asp-for="@Model.Domande[i]" value="@Model.Risposte[i * 5 + j]" /> @Model.Risposte[i * 5 + j]
+                                    </label>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <button type="submit" class="btn btn-primary mt-3">Invia</button>
+            </div>
         </div>
     </div>
-
-    <div class="form-group">
-        <label>2.	Cosa ti piace di più in un videogioco?</label>
-        <div>
-            <label><input type="radio" asp-for="Domanda2" value="Platform" /> Esplorare mondi colorati e fantasiosi</label>
-            <label><input type="radio" asp-for="Domanda2" value="Azione" /> Combattere contro nemici e boss</label>
-            <label><input type="radio" asp-for="Domanda2" value="RPG" /> Immergermi in una storia coinvolgente</label>
-            <label><input type="radio" asp-for="Domanda2" value="Horror" /> Sentire l'adrenalina della paura</label>
-            <label><input type="radio" asp-for="Domanda2" value="Sparatutto" /> Competere con altri giocatori</label>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label>3.	Quale ambiente di gioco preferisci?</label>
-        <div>
-            <label><input type="radio" asp-for="Domanda3" value="Platform" /> Mondi fantastici e colorati</label>
-            <label><input type="radio" asp-for="Domanda3" value="Azione" /> Ambienti urbani o futuristici</label>
-            <label><input type="radio" asp-for="Domanda3" value="RPG" /> Mondi vasti e dettagliati da esplorare</label>
-            <label><input type="radio" asp-for="Domanda3" value="Horror" /> Ambienti oscuri e spaventosi</label>
-            <label><input type="radio" asp-for="Domanda3" value="Sparatutto" /> Campi di battaglia realistici</label>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label>4.	Cosa ti piace di più fare in un videogioco?</label>
-        <div>
-            <label><input type="radio" asp-for="Domanda4" value="Platform" /> Saltare da piattaforma a piattaforma</label>
-            <label><input type="radio" asp-for="Domanda4" value="Azione" /> Combattere in battaglie intense</label>
-            <label><input type="radio" asp-for="Domanda4" value="RPG" /> Sviluppare il mio personaggio e la mia storia</label>
-            <label><input type="radio" asp-for="Domanda4" value="Horror" /> Risolvere enigmi sotto pressione</label>
-            <label><input type="radio" asp-for="Domanda4" value="Sparatutto" /> Migliorare le mie abilità di mira</label>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label>5.	Quale tipo di trama preferisci in un videogioco?</label>
-        <div>
-            <label><input type="radio" asp-for="Domanda5" value="Platform" /> Storie semplici e divertenti</label>
-            <label><input type="radio" asp-for="Domanda5" value="Azione" /> Storie d'azione e avventura</label>
-            <label><input type="radio" asp-for="Domanda5" value="RPG" /> Storie complesse con molte scelte</label>
-            <label><input type="radio" asp-for="Domanda5" value="Horror" /> Storie horror e misteriose</label>
-            <label><input type="radio" asp-for="Domanda5" value="Sparatutto" /> Storie di guerra e conflitto</label>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label>6.	Quale tipo di sfida preferisci in un videogioco?</label>
-        <div>
-            <label><input type="radio" asp-for="Domanda6" value="Platform" /> Sfide di abilità e tempismo</label>
-            <label><input type="radio" asp-for="Domanda6" value="Azione" /> Sfide di combattimento e strategia</label>
-            <label><input type="radio" asp-for="Domanda6" value="RPG" /> Sfide di strategia e pianificazione</label>
-            <label><input type="radio" asp-for="Domanda6" value="Horror" /> Sfide di sopravvivenza e risoluzione di enigmi</label>
-            <label><input type="radio" asp-for="Domanda6" value="Sparatutto" /> Sfide di precisione e reattività</label>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label>7.	Quale tipo di personaggio preferisci controllare in un videogioco?</label>
-        <div>
-            <label><input type="radio" asp-for="Domanda7" value="Platform" /> Personaggi agili e veloci</label>
-            <label><input type="radio" asp-for="Domanda7" value="Azione" /> Personaggi forti e potenti</label>
-            <label><input type="radio" asp-for="Domanda7" value="RPG" /> Personaggi che posso personalizzare</label>
-            <label><input type="radio" asp-for="Domanda7" value="Horror" /> Personaggi normali in situazioni straordinarie</label>
-            <label><input type="radio" asp-for="Domanda7" value="Sparatutto" /> Personaggi militari o soldati</label>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label>8.	Quale tipo di grafica preferisci in un videogioco?</label>
-        <div>
-            <label><input type="radio" asp-for="Domanda8" value="Platform" /> Grafica colorata e cartoonesca</label>
-            <label><input type="radio" asp-for="Domanda8" value="Azione" /> Grafica dettagliata e realistica</label>
-            <label><input type="radio" asp-for="Domanda8" value="RPG" /> Grafica artistica e unica</label>
-            <label><input type="radio" asp-for="Domanda8" value="Horror" /> Grafica oscura e spaventosa</label>
-            <label><input type="radio" asp-for="Domanda8" value="Sparatutto" /> Grafica realistica e dettagliata</label>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label>9.	Quale tipo di gameplay preferisci in un videogioco?</label>
-        <div>
-            <label><input type="radio" asp-for="Domanda9" value="Platform" /> Gameplay basato su abilità e tempismo</label>
-            <label><input type="radio" asp-for="Domanda9" value="Azione" /> Gameplay basato su azione e combattimento</label>
-            <label><input type="radio" asp-for="Domanda9" value="RPG" /> Gameplay basato su scelte e strategia</label>
-            <label><input type="radio" asp-for="Domanda9" value="Horror" /> Gameplay basato su sopravvivenza e paura</label>
-            <label><input type="radio" asp-for="Domanda9" value="Sparatutto" /> Gameplay basato su precisione e competizione</label>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label>10.	Quale tipo di atmosfera preferisci in un videogioco?</label>
-        <div>
-            <label><input type="radio" asp-for="Domanda10" value="Platform" /> Atmosfera allegra e divertente</label>
-            <label><input type="radio" asp-for="Domanda10" value="Azione" /> Atmosfera emozionante e intensa</label>
-            <label><input type="radio" asp-for="Domanda10" value="RPG" /> Atmosfera immersiva e coinvolgente</label>
-            <label><input type="radio" asp-for="Domanda10" value="Horror" /> Atmosfera spaventosa e tesa</label>
-            <label><input type="radio" asp-for="Domanda10" value="Sparatutto" /> Atmosfera competitiva e intensa</label>
-        </div>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Invia</button>
 </form>
+
+<style>
+    .radio-card {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .card {
+        margin-bottom: 20px;
+    }
+</style>
+
+@functions {
+    public string GetQuestionText(int questionNumber)
+    {
+        switch (questionNumber)
+        {
+            case 1:
+                return "Preferisci giochi con un ritmo lento e rilassato o giochi adrenalinici e veloci?";
+            case 2:
+                return "Cosa ti piace di più in un videogioco?";
+            case 3:
+                return "Quale ambiente di gioco preferisci?";
+            case 4:
+                return "Cosa ti piace di più fare in un videogioco?";
+            case 5:
+                return "Quale tipo di trama preferisci?";
+            case 6:
+                return "Quale tipo di sfida preferisci?";
+            case 7:
+                return "Quale tipo di personaggio preferisci controllare?";
+            case 8:
+                return "Quale tipo di grafica preferisci?";
+            case 9:
+                return "Quale tipo di gameplay preferisci?";
+            case 10:
+                return "Quale tipo di atmosfera preferisci?";
+            default:
+                return "";
+        }
+    }
+}

@@ -6,6 +6,14 @@
 
 <h1>Index</h1>
 
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success my-2">
+        @TempData["Message"]
+    </div>
+}
+
+
 <table class="table">
     <thead>
         <tr>
@@ -37,37 +45,68 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdUtenteNoleggiante)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataInizio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataFine)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IndirizzoSpedizione)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CostoNoleggio)
-            </td> <td>
-                @Html.DisplayFor(modelItem => item.SpeseSpedizione)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StripePaymentId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Videogioco.CasaProduttrice)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdNoleggio">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdNoleggio">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdNoleggio">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdUtenteNoleggiante)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataInizio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DataFine)
+                    @if (item.DataFine < DateTime.Now)
+                    {
+                        <span class="badge bg-success">Restituito il: @item.DataFine.ToShortDateString()</span>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IndirizzoSpedizione)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CostoNoleggio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SpeseSpedizione)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StripePaymentId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Videogioco.Titolo)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdNoleggio">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.IdNoleggio">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdNoleggio">Delete</a>
+                    
+
+@*                     @if(item.Videogioco.Disponibile == false)
+ *@                    {
+
+                    <a asp-action="Restituisci" asp-route-id="@item.IdNoleggio" class="btn btn-primary">Restituisci</a>
+
+                    @* } *@
+
+                        
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const restituisciButtons = document.querySelectorAll('.restituisci-button');
+
+        restituisciButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                const conferma = confirm('Sei sicuro di voler restituire questo videogioco?');
+                if (!conferma) {
+                    event.preventDefault();
+                }
+            });
+        });
+    });
+</script>

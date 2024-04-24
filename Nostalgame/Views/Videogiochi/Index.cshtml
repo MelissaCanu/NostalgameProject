@@ -7,30 +7,32 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Aggiungi un videogioco</a>
+    <a asp-action="Create" class"btn btn-dark">Aggiungi un videogioco</a>
 </p>
 
-<div class="row">
-    @foreach (var item in Model)
-    {
-        <div class="col-lg-2 col-md-4 col-sm-6">
-            <div class="card position-relative">
-                <img src="@item.Foto" alt="Foto del videogioco" class="card-image" />
-                @if (!item.Disponibile)
-                {
-                    var ultimoNoleggio = item.Noleggi.OrderByDescending(n => n.DataFine).FirstOrDefault();
-                    if (ultimoNoleggio != null && ultimoNoleggio.DataFine > DateTime.Now)
+<div class="container-fluid">
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
+        @foreach (var item in Model)
+        {
+            <div class="col mb-4">
+                <div class="card position-relative">
+                    <img src="@item.Foto" alt="Foto del videogioco" class="card-image" />
+                    @if (!item.Disponibile)
                     {
-                        <span class="badge bg-warning text-white position-absolute top-25 start-0 translate-middle-y px-3 py-2 w-100">Disponibile dal @ultimoNoleggio.DataFine.ToShortDateString()</span>
+                        var ultimoNoleggio = item.Noleggi.OrderByDescending(n => n.DataFine).FirstOrDefault();
+                        if (ultimoNoleggio != null && ultimoNoleggio.DataFine > DateTime.Now)
+                        {
+                            <span class="badge bg-warning text-white position-absolute top-25 start-0 translate-middle-y px-3 py-2 w-100">Disponibile dal @ultimoNoleggio.DataFine.ToShortDateString()</span>
+                        }
                     }
-                }
-                <div class="card-body">
-                    <h5 class="card-title">@item.Titolo</h5>
-                   
-                    <a asp-action="Details" asp-route-id="@item.IdVideogioco" class="btn btn-primary">Dettagli</a>
-                    <a asp-action="Create" asp-controller="Noleggi" asp-route-idVideogioco="@item.IdVideogioco" class="btn opacity-75 @(item.Disponibile ? "btn-success" : "btn-dark") @(item.Disponibile ? "" : "d-none") ">Noleggia</a>
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Titolo</h5>
+
+                        <a asp-action="Details" asp-route-id="@item.IdVideogioco" class="btn btn-primary">Dettagli</a>
+                        <a asp-action="Create" asp-controller="Noleggi" asp-route-idVideogioco="@item.IdVideogioco" class="btn opacity-75 @(item.Disponibile ? "btn-success" : "btn-dark") @(item.Disponibile ? "" : "d-none") ">Noleggia</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>

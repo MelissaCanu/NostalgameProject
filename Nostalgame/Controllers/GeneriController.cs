@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,9 @@ namespace Nostalgame.Controllers
             return View(await _context.Generi.ToListAsync());
         }
 
+        [Authorize(Roles = "Admin")]
+
+
         // GET: Generi/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -42,6 +46,9 @@ namespace Nostalgame.Controllers
 
             return View(genere);
         }
+
+        [Authorize(Roles = "Admin")]
+
 
         // GET: Generi/Create
         public IActionResult Create()
@@ -65,6 +72,9 @@ namespace Nostalgame.Controllers
             return View(genere);
         }
 
+        [Authorize(Roles = "Admin")]
+
+
         // GET: Generi/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -80,6 +90,9 @@ namespace Nostalgame.Controllers
             }
             return View(genere);
         }
+
+
+        [Authorize(Roles = "Admin")]
 
         // POST: Generi/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -116,6 +129,9 @@ namespace Nostalgame.Controllers
             return View(genere);
         }
 
+        [Authorize(Roles = "Admin")]
+
+
         // GET: Generi/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -133,6 +149,9 @@ namespace Nostalgame.Controllers
 
             return View(genere);
         }
+
+
+        [Authorize(Roles = "Admin")]
 
         // POST: Generi/Delete/5
         [HttpPost, ActionName("Delete")]

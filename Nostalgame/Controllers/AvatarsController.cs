@@ -8,9 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using Nostalgame.Data;
 using Nostalgame.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Nostalgame.Controllers
 {
+    //Autorizzazione solo per gli utenti con ruolo Admin
+    [Authorize(Roles = "Admin")]
     public class AvatarsController : Controller
     {
         //qua inietto i servizi necessari per il funzionamento del controller

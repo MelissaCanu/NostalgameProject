@@ -32,6 +32,17 @@ builder.Services.AddIdentity<Utente, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+//Configuro i Cookie 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    // Cookie settings
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromDays(14); // Imposto la durata del cookie a 14 giorni
+
+    options.LoginPath = "/Account/Login"; //Path di default se l'utente non è autenticato
+    options.AccessDeniedPath = "/Account/Login"; // Path di default se l'utente non ha i permessi
+    options.SlidingExpiration = true;
+});
 
 //Aggiungo il db context
 
@@ -41,52 +52,65 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //qua var app è un oggetto WebApplication che rappresenta l'applicazione web, builder.Build() costruisce l'applicazione web
 var app = builder.Build();
 
-//Setto la Stripe API Key
-StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
-
-// Configuro le richieste HTTP - ovvero le richieste che arrivano al server da un client
-//App.Use è un metodo di estensione che aggiunge un middleware all'applicazione, ovvero un componente che gestisce le richieste HTTP
-
-if (!app.Environment.IsDevelopment())
+// Ottiengo il contesto del database e i servizi UserManager e RoleManager dal provider di servizi
+using (var scope = app.Services.CreateScope())
 {
-    app.UseExceptionHandler(errorApp =>
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    var userManager = services.GetRequiredService<UserManager<Utente>>();
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+    // Mi assicuro che il database sia stato creato
+    context.Database.EnsureCreated();
+
+
+    //Setto la Stripe API Key
+    StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["SecretKey"];
+
+    // Configuro le richieste HTTP - ovvero le richieste che arrivano al server da un client
+    //App.Use è un metodo di estensione che aggiunge un middleware all'applicazione, ovvero un componente che gestisce le richieste HTTP
+
+    if (!app.Environment.IsDevelopment())
     {
-        errorApp.Run(async context =>
+        app.UseExceptionHandler(errorApp =>
         {
-            context.Response.StatusCode = 500;
-            context.Response.ContentType = "text/html";
-
-            var exceptionHandlerPathFeature =
-                context.Features.Get<IExceptionHandlerPathFeature>();
-
-            if (exceptionHandlerPathFeature?.Error is Exception exception)
+            errorApp.Run(async context =>
             {
-                var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-                logger.LogError(exception, "Un'eccezione non gestita si è verificata");
-            }
+                context.Response.StatusCode = 500;
+                context.Response.ContentType = "text/html";
 
-            await context.Response.WriteAsync("Si è verificato un errore. Contatta l'amministratore del sistema.");
+                var exceptionHandlerPathFeature =
+                    context.Features.Get<IExceptionHandlerPathFeature>();
+
+                if (exceptionHandlerPathFeature?.Error is Exception exception)
+                {
+                    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(exception, "Un'eccezione non gestita si è verificata");
+                }
+
+                await context.Response.WriteAsync("Si è verificato un errore. Contatta l'amministratore del sistema.");
+            });
         });
-    });
-    app.UseHsts();
+        app.UseHsts();
+    }
+
+
+    app.UseHttpsRedirection();
+
+    //questo middleware serve per utilizzare i file statici come immagini, fogli di stile e script JavaScript
+    app.UseStaticFiles();
+
+    //l'ordine è importante qui, in quanto il middleware di autenticazione deve essere eseguito prima del middleware di routing,
+    //in modo che l'utente venga autenticato prima che la richiesta venga instradata al controller
+    app.UseRouting();
+
+    app.UseAuthentication();
+
+    app.UseAuthorization();
+
+    app.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+
+    app.Run();
 }
-
-
-app.UseHttpsRedirection();
-
-//questo middleware serve per utilizzare i file statici come immagini, fogli di stile e script JavaScript
-app.UseStaticFiles();
-
-//l'ordine è importante qui, in quanto il middleware di autenticazione deve essere eseguito prima del middleware di routing,
-//in modo che l'utente venga autenticato prima che la richiesta venga instradata al controller
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.UseAuthentication();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.Run();

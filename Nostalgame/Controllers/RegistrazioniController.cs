@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Nostalgame.Data;
 using Nostalgame.Models;
 using Stripe;
@@ -62,10 +63,7 @@ namespace Nostalgame.Controllers
             return View();
         }
 
-
         // POST: Registrazioni/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 
         [HttpPost]
         public async Task<IActionResult> Create(RegistrazioneViewModel model)
@@ -112,6 +110,12 @@ namespace Nostalgame.Controllers
                 _context.Add(model.Registrazione);
                 await _context.SaveChangesAsync();
 
+                // Se l'utente ha selezionato un abbonamento premium, reindirizza alla pagina di pagamento
+                if (abbonamento.IdAbbonamento == 1) // 1 è l'ID per l'abbonamento premium
+                {
+                    return RedirectToAction("Create", "PagamentoAbbonamenti", new { id = user.Id });
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             else
@@ -126,8 +130,7 @@ namespace Nostalgame.Controllers
             return View(model);
         }
 
-
-        // GET: Registrazioni/Edit/5
+        //GET - cambia tipo abbonamento
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -140,49 +143,43 @@ namespace Nostalgame.Controllers
             {
                 return NotFound();
             }
+
+            var viewModel = new RegistrazioneEditViewModel
+            {
+                IdRegistrazione = registrazione.IdRegistrazione,
+                IdAbbonamento = registrazione.IdAbbonamento
+            };
+
             ViewData["IdAbbonamento"] = new SelectList(_context.Abbonamenti, "IdAbbonamento", "TipoAbbonamento", registrazione.IdAbbonamento);
-            ViewData["IdUtente"] = new SelectList(_context.Utenti, "Id", "Id", registrazione.IdUtente);
-            return View(registrazione);
+            return View(viewModel);
         }
 
-        // POST: Registrazioni/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //POST - cambia tipo abbonamento
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdRegistrazione,IdUtente,IdAbbonamento,Nome,Cognome,Indirizzo,Citta,Email")] Registrazione registrazione)
+        public async Task<IActionResult> Edit(int id, RegistrazioneEditViewModel viewModel)
         {
-            if (id != registrazione.IdRegistrazione)
+            if (id != viewModel.IdRegistrazione)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var registrazione = await _context.Registrazioni.FindAsync(id);
+            if (registrazione == null)
             {
-                try
-                {
-                    _context.Update(registrazione);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RegistrazioneExists(registrazione.IdRegistrazione))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            ViewData["IdAbbonamento"] = new SelectList(_context.Abbonamenti, "IdAbbonamento", "TipoAbbonamento", registrazione.IdAbbonamento);
-            ViewData["IdUtente"] = new SelectList(_context.Utenti, "Id", "Id", registrazione.IdUtente);
-            return View(registrazione);
+
+            registrazione.IdAbbonamento = viewModel.IdAbbonamento;
+
+            _context.Update(registrazione);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Registrazioni/Delete/5
+    // GET: Registrazioni/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

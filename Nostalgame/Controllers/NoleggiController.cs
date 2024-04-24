@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -46,7 +47,7 @@ namespace Nostalgame.Controllers
             }
             else
             {
-                var noleggiUtente = _context.Noleggi.Where(n => n.IdUtenteNoleggiante == userName);
+                var noleggiUtente = _context.Noleggi.Where(n => n.IdUtenteNoleggiante == userName).Include(n => n.Videogioco);
                 return View(await noleggiUtente.ToListAsync());
             }
         }
@@ -118,8 +119,8 @@ namespace Nostalgame.Controllers
             // Imposta l'ID del videogioco e l'ID dell'utente noleggiante nel modello
             noleggioViewModel.IdVideogioco = idVideogioco;
             noleggioViewModel.IdUtenteNoleggiante = user.UserName;
-            noleggioViewModel.DataInizio = DateTime.Now;
-            noleggioViewModel.DataFine = DateTime.Now.AddDays(7); //imposto data fine a 7 gg da data inizio
+            noleggioViewModel.DataInizio = DateTime.Now.AddDays(3);
+            noleggioViewModel.DataFine = DateTime.Now.AddDays(10); //imposto data fine a 7 gg da data inizio
 
             // Verifica se l'utente ha un abbonamento premium
             if (registrazione.Abbonamento.TipoAbbonamento == "Premium")
@@ -267,6 +268,8 @@ namespace Nostalgame.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
+
 
         // GET: Noleggi/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -284,6 +287,8 @@ namespace Nostalgame.Controllers
             ViewData["IdVideogioco"] = new SelectList(_context.Videogiochi, "IdVideogioco", "CasaProduttrice", noleggio.IdVideogioco);
             return View(noleggio);
         }
+
+        [Authorize(Roles = "Admin")]
 
         // POST: Noleggi/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -321,6 +326,8 @@ namespace Nostalgame.Controllers
             return View(noleggio);
         }
 
+        [Authorize(Roles = "Admin")]
+
         // GET: Noleggi/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -340,20 +347,36 @@ namespace Nostalgame.Controllers
             return View(noleggio);
         }
 
+
+        [Authorize(Roles = "Admin")]
+
+
         // POST: Noleggi/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var noleggio = await _context.Noleggi.FindAsync(id);
-            if (noleggio != null)
-            {
-                _context.Noleggi.Remove(noleggio);
-            }
-
+            var videogioco = await _context.Videogiochi.FindAsync(noleggio.IdVideogioco);
+            videogioco.Disponibile = true;
+            _context.Noleggi.Remove(noleggio);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        // GET: Noleggi/Restituisci/5
+        public async Task<IActionResult> Restituisci(int id)
+        {
+            var noleggio = await _context.Noleggi.FindAsync(id);
+            var videogioco = await _context.Videogiochi.FindAsync(noleggio.IdVideogioco);
+            videogioco.Disponibile = true;
+            noleggio.DataFine = DateTime.Now; // Aggiorna la data di fine del noleggio
+            await _context.SaveChangesAsync();
+
+            TempData["Message"] = "Hai terminato correttamente il noleggio! Riceverai un'email con le istruzioni per il ritiro del videogioco a breve!";
+            return RedirectToAction(nameof(Index));
+        }
+
 
         private bool NoleggioExists(int id)
         {

@@ -6,6 +6,13 @@
 
 <h1>Details</h1>
 
+@if (Model.Abbonamento != null && Model.Abbonamento.TipoAbbonamento == "Standard")
+{
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.IdRegistrazione" class="btn btn-primary">Effettua l'upgrade</a>
+    </div>
+}
+
 <div>
     <h4>Registrazione</h4>
     <hr />
@@ -55,6 +62,8 @@
     </dl>
 </div>
 <div>
+    <a asp-action="EditUser" asp-route-id="@Model.IdRegistrazione" class="btn btn-primary">Modifica Utente</a>
+
     <a asp-action="Edit" asp-route-id="@Model?.IdRegistrazione">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
