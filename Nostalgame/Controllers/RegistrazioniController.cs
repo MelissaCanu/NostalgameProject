@@ -200,6 +200,122 @@ namespace Nostalgame.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        //cambio dettagli registrazione.cs
+
+        public async Task<IActionResult> EditDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var registrazione = await _context.Registrazioni.FindAsync(id);
+            if (registrazione == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new RegistrazioneDetailsViewModel
+            {
+                IdRegistrazione = registrazione.IdRegistrazione,
+                Nome = registrazione.Nome,
+                Cognome = registrazione.Cognome,
+                Indirizzo = registrazione.Indirizzo,
+                Citta = registrazione.Citta,
+                Email = registrazione.Email
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditDetails(int id, RegistrazioneDetailsViewModel viewModel)
+        {
+            if (id != viewModel.IdRegistrazione)
+            {
+                return NotFound();
+            }
+
+            var registrazione = await _context.Registrazioni.FindAsync(id);
+            if (registrazione == null)
+            {
+                return NotFound();
+            }
+
+            registrazione.Nome = viewModel.Nome;
+            registrazione.Cognome = viewModel.Cognome;
+            registrazione.Indirizzo = viewModel.Indirizzo;
+            registrazione.Citta = viewModel.Citta;
+            registrazione.Email = viewModel.Email;
+
+            _context.Update(registrazione);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        //cambio username e password
+        public async Task<IActionResult> ChangeUsernamePassword()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var viewModel = new ChangeUsernamePasswordViewModel
+            {
+                CurrentUsername = user.UserName
+            };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeUsernamePassword(ChangeUsernamePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound($"Impossibile caricare l'utente con ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            if (model.CurrentUsername != user.UserName)
+            {
+                ModelState.AddModelError(string.Empty, "L'username corrente non è corretto.");
+                return View(model);
+            }
+
+            var passwordCheck = await _userManager.CheckPasswordAsync(user, model.CurrentPassword);
+            if (!passwordCheck)
+            {
+                ModelState.AddModelError(string.Empty, "La password corrente non è corretta.");
+                return View(model);
+            }
+
+            var changeUsernameResult = await _userManager.SetUserNameAsync(user, model.NewUsername);
+            if (!changeUsernameResult.Succeeded)
+            {
+                ModelState.AddModelError(string.Empty, "Errore nel cambiamento dell'username.");
+                return View(model);
+            }
+
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (!changePasswordResult.Succeeded)
+            {
+                ModelState.AddModelError(string.Empty, "Errore nel cambiamento della password.");
+                return View(model);
+            }
+
+            await _signInManager.RefreshSignInAsync(user);
+            return RedirectToAction(nameof(Index));
+        }
+
+
+
         // GET: Registrazioni/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
