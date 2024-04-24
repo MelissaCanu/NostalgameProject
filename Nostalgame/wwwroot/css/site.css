@@ -6,6 +6,7 @@
     --bs-light: white;
     --bs-body-bg: var(--bs-viola);
     --bs-rosa: #F6A7D6;
+    --bs-turchese-scuro: #5cb8b2;
 }
 
 html {
@@ -29,6 +30,14 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Minecraft', monospace;
+    margin-block: 1.5rem;
+    text-align: center;
+}
+
+h1, h2 {
+    color: black;
+    font-weight: bold;
+    text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
 }
 
 main {
@@ -74,6 +83,7 @@ main {
     background-color: var(--bs-rosa) !important;
     border: none !important;
     transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
+    margin: 0.5rem;
 }
 
     .btn:hover {
@@ -86,6 +96,8 @@ main {
 .card {
     background-color: var(--bs-primary) !important;
     transition: background 0.3s ease-in-out, transform 0.4s ease-in-out;
+    padding-inline: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
 
@@ -126,7 +138,7 @@ input, select {
 }
 
 /* Cambia il colore del testo del dropdown menu a bianco */
-.nav-item.dropdown .dropdown-toggle {
+    .nav-item.dropdown .dropdown-toggle {
     color: white !important;
 }
 

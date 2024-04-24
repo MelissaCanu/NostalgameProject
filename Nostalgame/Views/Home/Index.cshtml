@@ -34,7 +34,7 @@
     </div>
 
     <!-- Carosello per tutti i videogiochi -->
-    <h2 class="text-black">Tutti i videogiochi</h2>
+    <h2>Tutti i videogiochi</h2>
     <div id="videogiochiCarosello" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             @for (int i = 0; i < Model.TuttiVideogiochi.Count; i += 5)
@@ -74,7 +74,7 @@
     <a href="@Url.Action("Index", "Videogiochi")" class="btn btn-primary">Vedi altro</a>
 
     <!-- Carosello per i giochi appena aggiunti -->
-    <h2 class="text-black">Aggiunti di recente</h2>
+    <h2>Aggiunti di recente</h2>
     <div id="giochiAppenaAggiuntiCarosello" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             @for (int i = 0; i < Model.GiochiAppenaAggiunti.Count; i += 5)

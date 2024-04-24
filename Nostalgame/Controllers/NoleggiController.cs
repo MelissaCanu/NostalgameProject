@@ -36,7 +36,6 @@ namespace Nostalgame.Controllers
             public int IdNoleggio { get; set; }
         }
 
-        [Authorize(Roles = "Admin")]
 
         public async Task<IActionResult> Index()
         {

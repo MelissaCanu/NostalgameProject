@@ -77,15 +77,18 @@
                     @Html.DisplayFor(modelItem => item.Videogioco.Titolo)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.IdNoleggio">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.IdNoleggio">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.IdNoleggio">Delete</a>
-
-                    @if (item.DataFine > DateTime.Now)
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.IdNoleggio">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.IdNoleggio">Delete</a>
+                    }
+                    <a asp-action="Details" asp-route-id="@item.IdNoleggio">Details</a>
+                    @if (!User.IsInRole("Admin") && item.DataFine > DateTime.Now)
                     {
                         <a asp-action="Restituisci" asp-route-id="@item.IdNoleggio" class="btn btn-primary">Restituisci</a>
                     }
                 </td>
+
 
             </tr>
         }
