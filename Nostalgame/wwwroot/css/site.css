@@ -20,11 +20,15 @@ html {
 
 body {
     background-color: var(--bs-body-bg);
-    /*    margin-bottom: 60px;*/
+    font-family: 'Courier New', monospace;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
     overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Minecraft', monospace;
 }
 
 main {
