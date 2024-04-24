@@ -23,6 +23,7 @@ namespace Nostalgame.Controllers
             _userManager = userManager;
         }
 
+        [AllowAnonymous]
         // GET - Login
         [HttpGet]
         public IActionResult Login()
@@ -30,8 +31,8 @@ namespace Nostalgame.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         // POST - Login
-
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {

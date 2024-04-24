@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Nostalgame.Controllers
 {
@@ -21,6 +22,8 @@ namespace Nostalgame.Controllers
             _logger = logger;
             _userManager = userManager;
         }
+
+        [AllowAnonymous]
 
         public async Task<IActionResult> Index()
         {

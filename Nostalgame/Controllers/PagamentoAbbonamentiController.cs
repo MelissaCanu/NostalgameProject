@@ -144,7 +144,7 @@ namespace Nostalgame.Controllers
             {
                 new SubscriptionItemOptions
                 {
-                    Price = "price_1P6vs7Rs6OMBWVDjmYkq6Ksf", // Sostituisci con l'ID del prezzo Stripe dell'abbonamento
+                    Price = "price_1P6vs7Rs6OMBWVDjmYkq6Ksf", // ID del prezzo Stripe dell'abbonamento
                     Quantity = 1,
                 },
             },
@@ -168,8 +168,8 @@ namespace Nostalgame.Controllers
                 _context.Add(pagamentoAbbonamento);
                 await _context.SaveChangesAsync();
 
-                // Reindirizza l'utente all'azione Index
-                return RedirectToAction(nameof(Index));
+                // Reindirizza l'utente alla vista Details per il pagamento appena completato
+                return RedirectToAction("Details", new { id = pagamentoAbbonamento.IdPagamentoAbbonamento });
             }
 
             // Se il modello non è valido, restituisci la vista con il modello originale

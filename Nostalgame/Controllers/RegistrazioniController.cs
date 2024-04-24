@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -54,6 +55,7 @@ namespace Nostalgame.Controllers
             return View(registrazione);
         }
 
+        [AllowAnonymous]
         // GET: Registrazioni/Create
         public IActionResult Create()
         {
@@ -63,6 +65,7 @@ namespace Nostalgame.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         // POST: Registrazioni/Create
 
         [HttpPost]
@@ -118,7 +121,9 @@ namespace Nostalgame.Controllers
                     return RedirectToAction("Create", "PagamentoAbbonamenti", new { idUtente = user.Id });
                 }
 
-                return RedirectToAction(nameof(Index));
+                // Reindirizza alla vista Details per l'utente registrato/loggato
+                return RedirectToAction("Details", new { id = model.Registrazione.IdRegistrazione });
+
             }
             else
             {

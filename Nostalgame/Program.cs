@@ -6,12 +6,21 @@ using Nostalgame.Data;
 using Nostalgame.Models;
 using Stripe;
 using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+
 
 // CreateBuilder è un metodo statico che crea un nuovo oggetto WebApplicationBuilder - serve per configurare l'applicazione web
 var builder = WebApplication.CreateBuilder(args);
 
 //AddControllersWithViews è un metodo di estensione che aggiunge i servizi MVC al contenitore di servizi
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    var policy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+    options.Filters.Add(new AuthorizeFilter(policy));
+});
 
 // Aggiungo la configurazione della localizzazione qui - questa serve per uniformare il formato delle date e delle valute
 builder.Services.Configure<RequestLocalizationOptions>(options =>
