@@ -53,10 +53,17 @@ namespace Nostalgame.Controllers
         }
 
         // GET: PagamentoAbbonamenti/Create
-        public IActionResult Create()
+        public IActionResult Create(string idUtente)
         {
             // Ottieni l'ID dell'utente correntemente loggato
             var userId = _userManager.GetUserId(User);
+
+            // Verifica se l'utente correntemente loggato corrisponde all'ID dell'utente passato come parametro
+            if (userId != idUtente)
+            {
+                // Se non corrispondono, reindirizza l'utente a una pagina di errore o alla pagina di login
+                return RedirectToAction("Login", "Account");
+            }
 
             // Trova l'utente corrispondente
             var utente = _context.Utenti.Find(userId);

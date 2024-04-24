@@ -18,13 +18,13 @@ namespace Nostalgame.Controllers
         private readonly UserManager<Utente> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<RegistrazioniController> _logger;
-
-        public RegistrazioniController(UserManager<Utente> userManager, ApplicationDbContext context, ILogger<RegistrazioniController> logger)
+        private readonly SignInManager<Utente> _signInManager;
+        public RegistrazioniController(UserManager<Utente> userManager, ApplicationDbContext context, ILogger<RegistrazioniController> logger, SignInManager<Utente> signInManager)
         {
             _userManager = userManager;
             _context = context;
             _logger = logger;
-
+            _signInManager = signInManager;
         }
 
         // GET: Registrazioni
@@ -96,6 +96,7 @@ namespace Nostalgame.Controllers
 
             if (result.Succeeded)
             {
+                await _signInManager.SignInAsync(user, isPersistent: false);
                 var abbonamento = _context.Abbonamenti.Find(model.Registrazione.IdAbbonamento);
                 if (abbonamento == null)
                 {
@@ -111,9 +112,10 @@ namespace Nostalgame.Controllers
                 await _context.SaveChangesAsync();
 
                 // Se l'utente ha selezionato un abbonamento premium, reindirizza alla pagina di pagamento
-                if (abbonamento.IdAbbonamento == 1) // 1 è l'ID per l'abbonamento premium
+                if (model.Registrazione.IdAbbonamento == 1)
                 {
-                    return RedirectToAction("Create", "PagamentoAbbonamenti", new { id = user.Id });
+                    // Reindirizza alla pagina di pagamento dell'abbonamento
+                    return RedirectToAction("Create", "PagamentoAbbonamenti", new { idUtente = user.Id });
                 }
 
                 return RedirectToAction(nameof(Index));
