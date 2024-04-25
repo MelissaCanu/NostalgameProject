@@ -13,34 +13,35 @@
     </div>
 }
 
+<div class="card regind-card mb-3">
+    <div class="card-body">
+        <form asp-action="Index" method="get">
+            <div class="form-row">
+                <div class="form-group mb-2 col-6">
+                    <input type="text" class="form-control form-control-sm" id="userNameSearchString" name="userNameSearchString" placeholder="Cerca per UserName">
+                </div>
+                <div class="form-group mb-2 col-6">
+                    <input type="text" class="form-control form-control-sm" id="videogameSearchString" name="videogameSearchString" placeholder="Cerca per nome videogioco">
+                </div>
+                <div class="col-2">
+                    <button type="submit" class="btn btn-primary mb-2">Cerca</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdUtenteNoleggiante)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataInizio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataFine)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IndirizzoSpedizione)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CostoNoleggio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SpeseSpedizione)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StripePaymentId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Videogioco)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.IdUtenteNoleggiante)</th>
+            <th>@Html.DisplayNameFor(model => model.DataInizio)</th>
+            <th>@Html.DisplayNameFor(model => model.DataFine)</th>
+            <th>@Html.DisplayNameFor(model => model.IndirizzoSpedizione)</th>
+            <th>@Html.DisplayNameFor(model => model.CostoNoleggio)</th>
+            <th>@Html.DisplayNameFor(model => model.SpeseSpedizione)</th>
+            <th>@Html.DisplayNameFor(model => model.StripePaymentId)</th>
+            <th>@Html.DisplayNameFor(model => model.Videogioco)</th>
             <th></th>
         </tr>
     </thead>
@@ -48,12 +49,8 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IdUtenteNoleggiante)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DataInizio)
-                </td>
+                <td>@Html.DisplayFor(modelItem => item.IdUtenteNoleggiante)</td>
+                <td>@Html.DisplayFor(modelItem => item.DataInizio)</td>
                 <td>
                     @Html.DisplayFor(modelItem => item.DataFine)
                     @if (item.DataFine < DateTime.Now)
@@ -61,35 +58,23 @@
                         <span class="badge bg-success">Restituito il: @item.DataFine.ToShortDateString()</span>
                     }
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IndirizzoSpedizione)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CostoNoleggio)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SpeseSpedizione)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StripePaymentId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Videogioco.Titolo)
-                </td>
+                <td>@Html.DisplayFor(modelItem => item.IndirizzoSpedizione)</td>
+                <td>@Html.DisplayFor(modelItem => item.CostoNoleggio)</td>
+                <td>@Html.DisplayFor(modelItem => item.SpeseSpedizione)</td>
+                <td>@Html.DisplayFor(modelItem => item.StripePaymentId)</td>
+                <td>@Html.DisplayFor(modelItem => item.Videogioco.Titolo)</td>
                 <td>
                     @if (User.IsInRole("Admin"))
                     {
-                        <a asp-action="Edit" asp-route-id="@item.IdNoleggio">Modifica</a>
-                        <a asp-action="Delete" asp-route-id="@item.IdNoleggio">Elimina</a>
+                        <a asp-action="Edit" asp-route-id="@item.IdNoleggio" class="btn btn-primary">Modifica</a>
+                        <a asp-action="Delete" asp-route-id="@item.IdNoleggio" class="btn btn-danger">Elimina</a>
                     }
-                    <a asp-action="Details" asp-route-id="@item.IdNoleggio">Dettagli</a>
+                    <a asp-action="Details" asp-route-id="@item.IdNoleggio" class="btn btn-secondary">Dettagli</a>
                     @if (!User.IsInRole("Admin") && item.DataFine > DateTime.Now)
                     {
                         <a asp-action="Restituisci" asp-route-id="@item.IdNoleggio" class="btn btn-primary">Restituisci</a>
                     }
                 </td>
-
-
             </tr>
         }
     </tbody>

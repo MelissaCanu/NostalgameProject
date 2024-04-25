@@ -29,15 +29,26 @@ namespace Nostalgame.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        // GET: Registrazioni
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string emailSearchString, string usernameSearchString)
         {
             var applicationDbContext = _context.Registrazioni.Include(r => r.Abbonamento).Include(r => r.Utente);
-            return View(await applicationDbContext.ToListAsync());
-        }
 
-        // GET: Registrazioni/Details/5
-        public async Task<IActionResult> Details(int? id)
+            IQueryable<Registrazione> registrazioni = applicationDbContext;
+
+            if (!String.IsNullOrEmpty(emailSearchString))
+            {
+                registrazioni = registrazioni.Where(s => s.Email.Contains(emailSearchString));
+            }
+
+            if (!String.IsNullOrEmpty(usernameSearchString))
+            {
+                registrazioni = registrazioni.Where(s => s.Utente.UserName.Contains(usernameSearchString));
+            }
+
+            return View(await registrazioni.OrderBy(r => r.Cognome).ToListAsync());
+        }
+            // GET: Registrazioni/Details/5
+            public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {

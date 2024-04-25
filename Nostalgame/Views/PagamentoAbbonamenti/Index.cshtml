@@ -6,48 +6,32 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Crea</a>
-</p>
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdAbbonamento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataPagamento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImportoPagato)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Utente)
-            </th>
+            <th>Tipo Abbonamento</th>
+            <th>Data Pagamento</th>
+            <th>Importo Pagato</th>
+            <th>ID Utente</th>
+            <th>UserName</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdAbbonamento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataPagamento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImportoPagato)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Utente.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdPagamentoAbbonamento">Modifica</a> |
-                <a asp-action="Details" asp-route-id="@item.IdPagamentoAbbonamento">Dettagli</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdPagamentoAbbonamento">Elimina</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Abbonamento.TipoAbbonamento)</td>
+                <td>@Html.DisplayFor(modelItem => item.DataPagamento)</td>
+                <td>@Html.DisplayFor(modelItem => item.ImportoPagato)</td>
+                <td>@Html.DisplayFor(modelItem => item.Utente.Id)</td>
+                <td>@Html.DisplayFor(modelItem => item.Utente.UserName)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdPagamentoAbbonamento" class="btn btn-primary">Modifica</a>
+                    <a asp-action="Details" asp-route-id="@item.IdPagamentoAbbonamento" class="btn btn-secondary">Dettagli</a>
+                    <a asp-action="Delete" asp-route-id="@item.IdPagamentoAbbonamento" class="btn btn-danger">Elimina</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

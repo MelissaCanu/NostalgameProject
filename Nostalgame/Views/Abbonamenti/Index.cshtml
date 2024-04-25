@@ -9,33 +9,18 @@
 <p>
     <a asp-action="Create">Crea</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.TipoAbbonamento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CostoMensile)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TipoAbbonamento)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.CostoMensile)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdAbbonamento">Modifica</a> |
-                <a asp-action="Details" asp-route-id="@item.IdAbbonamento">Dettagli</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdAbbonamento">Elimina</a>
-            </td>
-        </tr>
+
+@foreach (var item in Model)
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">@Html.DisplayFor(modelItem => item.TipoAbbonamento)</h5>
+            <p class="card-text">
+                <strong>Costo Mensile:</strong> @Html.DisplayFor(modelItem => item.CostoMensile)
+            </p>
+            <a asp-action="Edit" asp-route-id="@item.IdAbbonamento" class="btn btn-primary">Modifica</a>
+            <a asp-action="Details" asp-route-id="@item.IdAbbonamento" class="btn btn-secondary">Dettagli</a>
+            <a asp-action="Delete" asp-route-id="@item.IdAbbonamento" class="btn btn-danger">Elimina</a>
+        </div>
+    </div>
 }
-    </tbody>
-</table>

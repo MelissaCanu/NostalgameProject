@@ -37,22 +37,34 @@ namespace Nostalgame.Controllers
         }
 
 
-        public async Task<IActionResult> Index()
+        // GET - Noleggi/Index
+        public async Task<IActionResult> Index(string userNameSearchString, string videogameSearchString)
         {
             var userName = User.Identity.Name;
+            IQueryable<Noleggio> noleggi;
 
             if (User.IsInRole("Admin"))
             {
-                var noleggi = _context.Noleggi.Include(n => n.Videogioco);
-
-                return View(await noleggi.ToListAsync()); // Uso 'noleggi' invece di '_context.Noleggi', perché 'noleggi' è una variabile locale che ho creato per visualizzare i dati nella vista
+                noleggi = _context.Noleggi.Include(n => n.Videogioco);
             }
             else
             {
-                var noleggiUtente = _context.Noleggi.Where(n => n.IdUtenteNoleggiante == userName).Include(n => n.Videogioco);
-                return View(await noleggiUtente.ToListAsync());
+                noleggi = _context.Noleggi.Where(n => n.IdUtenteNoleggiante == userName).Include(n => n.Videogioco);
             }
+
+            if (!String.IsNullOrEmpty(userNameSearchString))
+            {
+                noleggi = noleggi.Where(n => n.IdUtenteNoleggiante.Contains(userNameSearchString));
+            }
+
+            if (!String.IsNullOrEmpty(videogameSearchString))
+            {
+                noleggi = noleggi.Where(n => n.Videogioco.Titolo.Contains(videogameSearchString));
+            }
+
+            return View(await noleggi.ToListAsync());
         }
+
 
 
 

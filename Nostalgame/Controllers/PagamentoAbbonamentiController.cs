@@ -30,8 +30,8 @@ namespace Nostalgame.Controllers
         // GET: PagamentoAbbonamenti
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.PagamentiAbbonamenti.Include(p => p.Utente);
-            return View(await applicationDbContext.ToListAsync());
+            var applicationDbContext = _context.PagamentiAbbonamenti.Include(p => p.Utente).Include(p => p.Abbonamento);
+            return View(await applicationDbContext.OrderByDescending(p => p.IdPagamentoAbbonamento).ToListAsync());
         }
 
         // GET: PagamentoAbbonamenti/Details/5

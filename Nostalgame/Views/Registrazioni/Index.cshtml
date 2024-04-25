@@ -8,67 +8,59 @@
 
 <a class="btn btn-success" asp-area="" asp-controller="PagamentoAbbonamenti" asp-action="Index">Storico Pagamento Abbonamenti</a>
 
+<div class="card regind-card mb-3">
+    <div class="card-body">
+        <form asp-action="Index" method="get">
+            <div class="form-row">
+                <div class="form-group mb-2 col-5">
+                    <input type="text" class="form-control form-control-sm" id="emailSearchString" name="emailSearchString" placeholder="Cerca per email">
+                </div>
+                <div class="form-group mb-2 col-5">
+                    <input type="text" class="form-control form-control-sm" id="usernameSearchString" name="usernameSearchString" placeholder="Cerca per username">
+                </div>
+                <div class="col-2">
+                    <button type="submit" class="btn btn-primary mb-2">Cerca</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Crea</a>
-</p>
-<table class="table">
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Registrazioni</h2>
+    <a class="btn btn-primary" asp-action="Create">Crea un nuovo utente</a>
+</div>
+
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cognome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Indirizzo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Citta)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Utente)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Abbonamento)
-            </th>
+            <th>Nome</th>
+            <th>UserName</th>
+            <th>Indirizzo</th>
+            <th>Città</th>
+            <th>Email</th>
+            <th>ID Utente</th>
+            <th>Tipo Abbonamento</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cognome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Indirizzo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Citta)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Utente.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Abbonamento.TipoAbbonamento)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdRegistrazione">Modifica</a> |
-                <a asp-action="Details" asp-route-id="@item.IdRegistrazione">Dettagli</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdRegistrazione">Elmina</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Nome) @Html.DisplayFor(modelItem => item.Cognome)</td>
+                <td>@Html.DisplayFor(modelItem => item.Utente.UserName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Indirizzo)</td>
+                <td>@Html.DisplayFor(modelItem => item.Citta)</td>
+                <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                <td>@Html.DisplayFor(modelItem => item.Utente.Id)</td>
+                <td>@Html.DisplayFor(modelItem => item.Abbonamento.TipoAbbonamento)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdRegistrazione" class="btn btn-primary">Modifica</a>
+                    <a asp-action="Details" asp-route-id="@item.IdRegistrazione" class="btn btn-secondary">Dettagli</a>
+                    <a asp-action="Delete" asp-route-id="@item.IdRegistrazione" class="btn btn-danger">Elmina</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
