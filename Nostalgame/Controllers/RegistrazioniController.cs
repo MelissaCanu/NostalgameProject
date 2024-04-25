@@ -28,6 +28,7 @@ namespace Nostalgame.Controllers
             _signInManager = signInManager;
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Registrazioni
         public async Task<IActionResult> Index()
         {
@@ -266,6 +267,14 @@ namespace Nostalgame.Controllers
         public async Task<IActionResult> ChangeUsernamePassword()
         {
             var user = await _userManager.GetUserAsync(User);
+            var registrazione = await _context.Registrazioni.FirstOrDefaultAsync(r => r.IdUtente == user.Id);
+            if (registrazione == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.IdRegistrazione = registrazione.IdRegistrazione;
+
             var viewModel = new ChangeUsernamePasswordViewModel
             {
                 CurrentUsername = user.UserName

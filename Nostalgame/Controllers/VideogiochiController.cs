@@ -89,7 +89,7 @@ namespace Nostalgame.Controllers
         public IActionResult Create()
         {
             ViewData["IdGenere"] = new SelectList(_context.Generi, "IdGenere", "Nome");
-            ViewData["IdProprietario"] = new SelectList(_context.Utenti, "Id", "Id");
+            ViewData["IdProprietario"] = _userManager.GetUserId(User); // Passa l'ID dell'utente alla vista
             return View();
         }
 
@@ -115,7 +115,7 @@ namespace Nostalgame.Controllers
                     Anno = videogiocoViewModel.Anno,
                     Disponibile = videogiocoViewModel.Disponibile,
                     IdGenere = videogiocoViewModel.IdGenere,
-                    IdProprietario = videogiocoViewModel.IdProprietario,
+                    IdProprietario = _userManager.GetUserId(User),//imposto l'id dell'utente loggato come proprietario del videogioco
                     DataCreazione = DateTime.Now
                    
 

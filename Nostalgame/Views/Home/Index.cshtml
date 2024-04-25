@@ -15,7 +15,7 @@
 
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card mt-4">
+            <div class="card mt-4 mb-2">
                 <div class="card-body">
                     <h4  class="card-title">Qual'è il tuo avatar?</h4>
                     @if (!Model.HasAvatar)
@@ -34,7 +34,8 @@
     </div>
 
     <!-- Carosello per tutti i videogiochi -->
-    <h2>Tutti i videogiochi</h2>
+    <div class="carousel-container">
+    <h2>TUTTI I VIDEOGIOCHI</h2>
     <div id="videogiochiCarosello" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             @for (int i = 0; i < Model.TuttiVideogiochi.Count; i += 5)
@@ -72,9 +73,11 @@
     </div>
 
     <a href="@Url.Action("Index", "Videogiochi")" class="btn btn-primary">Vedi altro</a>
+</div>
 
     <!-- Carosello per i giochi appena aggiunti -->
-    <h2>Aggiunti di recente</h2>
+    <div class="carousel-container">
+    <h2>AGGIUNTI DI RECENTE</h2>
     <div id="giochiAppenaAggiuntiCarosello" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             @for (int i = 0; i < Model.GiochiAppenaAggiunti.Count; i += 5)
@@ -110,4 +113,5 @@
             <span class="visually-hidden">Successivo</span>
         </button>
     </div>
+</div>
 </div>

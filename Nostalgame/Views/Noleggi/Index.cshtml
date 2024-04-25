@@ -79,10 +79,10 @@
                 <td>
                     @if (User.IsInRole("Admin"))
                     {
-                        <a asp-action="Edit" asp-route-id="@item.IdNoleggio">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@item.IdNoleggio">Delete</a>
+                        <a asp-action="Edit" asp-route-id="@item.IdNoleggio">Modifica</a>
+                        <a asp-action="Delete" asp-route-id="@item.IdNoleggio">Elimina</a>
                     }
-                    <a asp-action="Details" asp-route-id="@item.IdNoleggio">Details</a>
+                    <a asp-action="Details" asp-route-id="@item.IdNoleggio">Dettagli</a>
                     @if (!User.IsInRole("Admin") && item.DataFine > DateTime.Now)
                     {
                         <a asp-action="Restituisci" asp-route-id="@item.IdNoleggio" class="btn btn-primary">Restituisci</a>

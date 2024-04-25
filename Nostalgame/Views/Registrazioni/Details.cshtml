@@ -4,9 +4,9 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Dettagli</h1>
 
-<div class="card">
+<div class="card regdet-card">
     <div class="card-header">
         <a asp-action="EditDetails" asp-route-id="@Model.IdRegistrazione" class="btn btn-primary">Modifica Dati Personali</a>
         <a asp-action="Edit" asp-route-id="@Model?.IdRegistrazione" class="btn btn-primary">Gestisci Abbonamento</a>
@@ -65,4 +65,4 @@
     </div>
 </div>
 
-<a asp-action="Index" class="btn btn-primary mt-3">Back to List</a>
+<a asp-action="Index" class="btn btn-primary mt-3">Indietro</a>

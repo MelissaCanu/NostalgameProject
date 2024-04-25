@@ -3,7 +3,7 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Crea</a>
 </p>
 <table class="table">
     <thead>
@@ -22,9 +22,9 @@
                 <td>@Html.DisplayFor(modelItem => item.Genere.Nome)</td>
                 <td><img src="@item.Foto" alt="@item.Nome" width="100" height="100" /></td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.IdAvatar">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.IdAvatar">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.IdAvatar">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.IdAvatar">Modifica</a> |
+                    <a asp-action="Details" asp-route-id="@item.IdAvatar">Dettagli</a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdAvatar">Elimina</a>
                 </td>
             </tr>
         }

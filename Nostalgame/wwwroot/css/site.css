@@ -110,6 +110,11 @@ main {
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5) !important; 
 }
 
+    .card.regdet-card {
+        transition: none;
+        transform: none;
+    }
+
 
     .navbar.navbar-light {
         background-color: var(--bs-primary) !important;
@@ -129,18 +134,6 @@ input, select {
 }
 
 
-.dropdown-menu {
-    padding: 15px;
-}
-
-.dropdown-item {
-    color: black;
-}
-
-/* Cambia il colore del testo del dropdown menu a bianco */
-    .nav-item.dropdown .dropdown-toggle {
-    color: white !important;
-}
 
 /* Cambia il colore di sfondo del dropdown menu a un viola più scuro */
 .dropdown-menu {
@@ -148,18 +141,35 @@ input, select {
     padding: 15px;
 }
 
+
 /* Cambia il colore del testo degli elementi del dropdown menu a bianco */
 .dropdown-item {
     color: white !important;
 }
 
-.nav-link.dropdown-toggle {
+.dropdown-toggle {
     color: white !important;
     font-weight: bold;
     font-size: 1.2rem;
     text-transform: uppercase;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); 
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.8);
 }
+
+
+.avatar-dropdown::after {
+    display: none;
+}
+
+.avatar-dropdown {
+    display: inline-block;
+}
+
+    .avatar-dropdown:hover {
+        transform: scale(1.05);
+        transition: transform 0.3s ease-in-out;
+        z-index: 1;
+    }
+
 
 /* Cambia il colore di sfondo dell'elemento del dropdown quando ci passi sopra */
 .dropdown-item:hover {
@@ -224,3 +234,10 @@ input, select {
     animation-iteration-count: infinite;
 }
 
+.carousel-container {
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
