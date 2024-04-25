@@ -39,8 +39,7 @@
                                 @if (User.Identity.IsAuthenticated && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin")))
                                 {
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Avatars" asp-action="Index">Avatar</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Registrazioni" asp-action="Index">Registrazioni</a></li>
-                                }
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Registrazioni" asp-action="Index">Utenti</a></li>                                }
                             </ul>
                         </li>
                         <form class="d-flex me-2" asp-controller="Videogiochi" asp-action="Index">

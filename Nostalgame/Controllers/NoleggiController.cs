@@ -43,7 +43,9 @@ namespace Nostalgame.Controllers
 
             if (User.IsInRole("Admin"))
             {
-                return View(await _context.Noleggi.ToListAsync());
+                var noleggi = _context.Noleggi.Include(n => n.Videogioco);
+
+                return View(await noleggi.ToListAsync()); // Uso 'noleggi' invece di '_context.Noleggi', perché 'noleggi' è una variabile locale che ho creato per visualizzare i dati nella vista
             }
             else
             {
