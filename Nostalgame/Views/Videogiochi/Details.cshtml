@@ -19,8 +19,19 @@
                 <p class="card-text"><small class="text-muted">Casa Produttrice: @Model.CasaProduttrice</small></p>
                 <p class="card-text"><small class="text-muted">Anno: @Model.Anno</small></p>
                 <p class="card-text"><small class="text-muted">Disponibile: @Model.Disponibile</small></p>
-                <p class="card-text"><small class="text-muted">Proprietario: @Model.Proprietario.Id</small></p>
-                <p class="card-text"><small class="text-muted">Genere: @Model.Genere.Nome</small></p>
+                <p class="card-text">
+                    <small class="text-muted">
+                        Proprietario:
+                        @if (ViewData["UserRole"] as string == "Admin")
+                        {
+                            @: @Model.Proprietario.Id
+                        }
+                        else
+                        {
+                            @: @Model.Proprietario.UserName
+                        }
+                    </small>
+                </p>                <p class="card-text"><small class="text-muted">Genere: @Model.Genere.Nome</small></p>
             </div>
         </div>
     </div>
