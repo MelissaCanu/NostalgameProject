@@ -43,5 +43,12 @@ public class Noleggio
     [Display(Name = "ID Pagamento Stripe")]
     public string? StripePaymentId { get; set; }
 
+    public enum StatoNoleggio
+    {
+        InSospeso,
+        Pagato
+    }
+    public StatoNoleggio Stato { get; set; }
+
     public Videogioco Videogioco { get; set; }
 }

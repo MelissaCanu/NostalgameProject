@@ -26,4 +26,9 @@ public class NoleggioViewModel
     [Required]
     [Column(TypeName = "decimal(18, 2)")]
     public decimal SpeseSpedizione { get; set; }
+
+    public Noleggio.StatoNoleggio Stato { get; set; }
+
+
+
 }

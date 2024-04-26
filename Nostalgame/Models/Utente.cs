@@ -21,7 +21,6 @@ namespace Nostalgame.Models
         public virtual ICollection<Videogioco> Videogiochi { get; set; }
 
 
-        public virtual CarrelloNoleggio CarrelloNoleggio { get; set; }
 
     }
 

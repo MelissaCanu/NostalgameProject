@@ -4,6 +4,13 @@
     ViewData["Title"] = "Index";
 }
 
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["Message"]
+    </div>
+}
+
 @if (User.IsInRole("Admin"))
 {
     <h1>Noleggi</h1>
@@ -13,12 +20,6 @@ else
     <h1>I tuoi noleggi</h1>
 }
 
-@if (TempData["Message"] != null)
-{
-    <div class="alert alert-success my-2">
-        @TempData["Message"]
-    </div>
-}
 
 @if (User.IsInRole("Admin"))
 {
@@ -73,6 +74,14 @@ else
                 <td>@String.Format("{0:C}", item.SpeseSpedizione)</td>
                 <td>@Html.DisplayFor(modelItem => item.StripePaymentId)</td>
                 <td>@Html.DisplayFor(modelItem => item.Videogioco.Titolo)</td>
+                <td>
+                    @if (item.Stato == Noleggio.StatoNoleggio.InSospeso)
+                    {
+                        <a onclick="return confirm('Sei sicuro di voler completare il pagamento per questo noleggio?');" asp-action="Payment" asp-route-id="@item.IdNoleggio" class="btn btn-success">Completa Pagamento</a>
+                        <a onclick="return confirm('Sei sicuro di voler annullare questo noleggio?');" asp-action="Cancel" asp-route-id="@item.IdNoleggio" class="btn btn-danger">Annulla noleggio</a>
+
+                    }
+                </td>
                 <td>
                     @if (User.IsInRole("Admin"))
                     {

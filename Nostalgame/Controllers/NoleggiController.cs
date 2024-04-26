@@ -65,6 +65,15 @@ namespace Nostalgame.Controllers
             // Ordina i noleggi per data da più recente a meno recente
             noleggi = noleggi.OrderByDescending(n => n.DataInizio);
 
+            var noleggiInSospeso = await _context.Noleggi
+        .Where(n => n.IdUtenteNoleggiante == userName && n.Stato == Noleggio.StatoNoleggio.InSospeso)
+        .ToListAsync();
+
+            if (noleggiInSospeso.Count > 0)
+            {
+                TempData["Message"] = "Hai dei noleggi in sospeso. Per favore, completa il pagamento.";
+            }
+
             return View(await noleggi.ToListAsync());
         }
 
@@ -163,23 +172,7 @@ namespace Nostalgame.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdVideogioco,IdUtenteNoleggiante,DataInizio,DataFine,IndirizzoSpedizione,CostoNoleggio, SpeseSpedizione")] NoleggioViewModel noleggioViewModel)
         {
-            if (!ModelState.IsValid)
-            {
-                // Log degli errori di validazione del modello
-                var errors = ModelState
-                    .Where(x => x.Value.Errors.Count > 0)
-                    .Select(x => new { x.Key, x.Value.Errors });
-
-                foreach (var error in errors)
-                {
-                    _logger.LogError($"Campo: {error.Key}");
-                    foreach (var errorMessage in error.Errors)
-                    {
-                        _logger.LogError($"Errore: {errorMessage.ErrorMessage}");
-                    }
-                }
-            }
-
+    
             if (ModelState.IsValid)
             {
                 var noleggio = new Noleggio
@@ -191,7 +184,8 @@ namespace Nostalgame.Controllers
                     DataFine = noleggioViewModel.DataFine,
                     IndirizzoSpedizione = noleggioViewModel.IndirizzoSpedizione,
                     CostoNoleggio = noleggioViewModel.CostoNoleggio,
-                    SpeseSpedizione = noleggioViewModel.SpeseSpedizione
+                    SpeseSpedizione = noleggioViewModel.SpeseSpedizione,
+                    Stato = Noleggio.StatoNoleggio.InSospeso
                 };
 
                 // Trova il videogioco associato al noleggio
@@ -246,7 +240,6 @@ namespace Nostalgame.Controllers
             var customer = customers.Create(new CustomerCreateOptions
             {
                 Email = request.StripeEmail,
-                
             });
 
             var noleggio = await _context.Noleggi.FindAsync(request.IdNoleggio);
@@ -255,24 +248,20 @@ namespace Nostalgame.Controllers
                 return Json(new { status = "error", message = "Noleggio non trovato" });
             }
 
-            //paymentIntent è l'oggetto che rappresenta il pagamento da effettuare tramite Stripe
-
             var paymentIntent = paymentIntents.Create(new PaymentIntentCreateOptions
-            {   
-                //questi dati sono necessari per creare un pagamento tramite Stripe - l'importo è in centesimi
-                //addiziono il costo del noleggio e le spese di spedizione per il totale
-                Amount = (long)(noleggio.CostoNoleggio + noleggio.SpeseSpedizione) * 100, 
+            {
+                Amount = (long)(noleggio.CostoNoleggio + noleggio.SpeseSpedizione) * 100,
                 Currency = "eur",
                 Customer = customer.Id,
                 PaymentMethod = request.PaymentMethodId,
-                Confirm = true, 
-                ReturnUrl = "https://localhost:7288/Noleggi/Index", 
+                Confirm = true,
+                ReturnUrl = "https://localhost:7288/Noleggi/Index",
             });
-
 
             if (paymentIntent.Status == "succeeded")
             {
                 noleggio.StripePaymentId = paymentIntent.Id;
+                noleggio.Stato = Noleggio.StatoNoleggio.Pagato;
                 _context.Update(noleggio);
                 await _context.SaveChangesAsync();
                 TempData["PaymentSuccess"] = true;
@@ -284,6 +273,7 @@ namespace Nostalgame.Controllers
                 return Json(new { status = "error", message = "Il pagamento non è riuscito" });
             }
         }
+
 
         [Authorize(Roles = "Admin")]
 
@@ -394,10 +384,34 @@ namespace Nostalgame.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: Noleggi/Cancel/5 annulla noleggio senza pagare
+        public async Task<IActionResult> Cancel(int id)
+        {
+            var noleggio = await _context.Noleggi.FindAsync(id);
+            if (noleggio == null || noleggio.Stato != Noleggio.StatoNoleggio.InSospeso)
+            {
+                return NotFound();
+            }
+
+            var videogioco = await _context.Videogiochi.FindAsync(noleggio.IdVideogioco);
+            if (videogioco != null)
+            {
+                videogioco.Disponibile = true;
+                _context.Update(videogioco);
+            }
+
+            _context.Noleggi.Remove(noleggio);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
 
         private bool NoleggioExists(int id)
         {
             return _context.Noleggi.Any(e => e.IdNoleggio == id);
         }
+
+
     }
 }
