@@ -62,6 +62,9 @@ namespace Nostalgame.Controllers
                 noleggi = noleggi.Where(n => n.Videogioco.Titolo.Contains(videogameSearchString));
             }
 
+            // Ordina i noleggi per data da più recente a meno recente
+            noleggi = noleggi.OrderByDescending(n => n.DataInizio);
+
             return View(await noleggi.ToListAsync());
         }
 
