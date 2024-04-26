@@ -2,6 +2,34 @@
 
 <div class="container">
     <h1>@Model.Nome</h1>
-    <img src="@Model.ImmagineAvatar" alt="Avatar" width="150" height="150" />
-</div>
+    <img src="@Model.ImmagineAvatar" class="avatar-image" alt="Avatar" width="150" height="150" />
 
+    <div class="card my-3">
+        <div class="card-body">
+    @switch (Model.Nome)
+    {
+        case "Ozzy":
+            <p>Incontra Ozzy, il tuo avatar platform! Ozzy è sempre pronto a saltare in azione, correndo e saltando attraverso i livelli con abilità e precisione. Con Ozzy al tuo fianco, ogni sfida sarà un'avventura!</p>
+            break;
+        case "Jillian":
+            <p>Ecco Jillian, il tuo avatar d'azione! Jillian ama l'avventura e l'emozione, sempre pronta a lanciarsi in nuove sfide. Con Jillian al tuo fianco, non ci sarà mai un momento di noia!</p>
+            break;
+        case "Fritz":
+            <p>Saluta Fritz, il tuo avatar RPG! Fritz ama immergersi in mondi fantastici e vivere storie epiche. Con Fritz al tuo fianco, ogni gioco sarà un viaggio indimenticabile!</p>
+            break;
+        case "Bellatrix":
+            <p>Questa è Bellatrix, il tuo avatar horror! Bellatrix non ha paura di affrontare le sue paure e sopravvivere agli incubi. Con Bellatrix al tuo fianco, potrai affrontare qualsiasi cosa!</p>
+            break;
+        case "Ghosty":
+            <p>Conosci Ghosty, il tuo avatar sparatutto! Ghosty ha una mira infallibile e non manca mai il bersaglio. Con Ghosty al tuo fianco, sarai sempre al top!</p>
+            break;
+        case "Dafne":
+            <p>Benvenuta Dafne, il tuo avatar tuttofare! Dafne ama esplorare tutti i generi di giochi e trovare i suoi preferiti. Con Dafne al tuo fianco, avrai sempre qualcosa di nuovo da scoprire!</p>
+            break;
+        default:
+            <p>Questo è il tuo avatar, pronto a accompagnarti nell'avventura di questa fantastica app. Divertiti a giocare!</p>
+            break;
+    }
+    </div>
+    </div>
+</div>

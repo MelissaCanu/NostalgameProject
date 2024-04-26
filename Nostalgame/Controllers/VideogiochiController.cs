@@ -83,7 +83,9 @@ namespace Nostalgame.Controllers
             }
             var user = await _userManager.GetUserAsync(User);
             var roles = await _userManager.GetRolesAsync(user);
+
             ViewData["UserRole"] = roles.FirstOrDefault();
+            ViewData["UserId"] = _userManager.GetUserId(User);
 
             return View(videogioco);
         }

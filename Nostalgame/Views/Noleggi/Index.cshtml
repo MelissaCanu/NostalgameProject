@@ -4,7 +4,14 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+@if (User.IsInRole("Admin)"))
+{
+ <h1>Noleggi</h1>   
+}
+else
+{
+    <h1>I tuoi noleggi</h1>
+}
 
 @if (TempData["Message"] != null)
 {
@@ -13,6 +20,8 @@
     </div>
 }
 
+@if (User.IsInRole("Admin"))
+{
 <div class="card regind-card mb-3">
     <div class="card-body">
         <form asp-action="Index" method="get">
@@ -30,6 +39,7 @@
         </form>
     </div>
 </div>
+}
 
 <table class="table table-striped">
     <thead>
@@ -59,8 +69,8 @@
                     }
                 </td>
                 <td>@Html.DisplayFor(modelItem => item.IndirizzoSpedizione)</td>
-                <td>@Html.DisplayFor(modelItem => item.CostoNoleggio)</td>
-                <td>@Html.DisplayFor(modelItem => item.SpeseSpedizione)</td>
+                <td>@String.Format("{0:C}", item.CostoNoleggio)</td>
+                <td>@String.Format("{0:C}", item.SpeseSpedizione)</td>
                 <td>@Html.DisplayFor(modelItem => item.StripePaymentId)</td>
                 <td>@Html.DisplayFor(modelItem => item.Videogioco.Titolo)</td>
                 <td>

@@ -149,7 +149,7 @@ namespace Nostalgame.Controllers
             return View(model);
         }
 
-        //GET - cambia tipo abbonamento
+        // GET: Registrazioni/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -157,10 +157,20 @@ namespace Nostalgame.Controllers
                 return NotFound();
             }
 
-            var registrazione = await _context.Registrazioni.FindAsync(id);
+            // Include l'abbonamento quando recuperi la registrazione
+            var registrazione = await _context.Registrazioni
+                .Include(r => r.Abbonamento) // Include l'abbonamento
+                .FirstOrDefaultAsync(r => r.IdRegistrazione == id);
+            
             if (registrazione == null)
             {
                 return NotFound();
+            }
+
+            // Se l'utente ha già un abbonamento Premium, reindirizza alla vista Details
+            if (registrazione.Abbonamento.TipoAbbonamento == "Premium")
+            {
+                return RedirectToAction("Details", new { id = id });
             }
 
             var viewModel = new RegistrazioneEditViewModel
@@ -169,7 +179,6 @@ namespace Nostalgame.Controllers
                 IdAbbonamento = registrazione.IdAbbonamento
             };
 
-            ViewData["IdAbbonamento"] = new SelectList(_context.Abbonamenti, "IdAbbonamento", "TipoAbbonamento", registrazione.IdAbbonamento);
             return View(viewModel);
         }
 
@@ -194,27 +203,28 @@ namespace Nostalgame.Controllers
                 return NotFound();
             }
 
-            // Controlla se l'abbonamento è stato cambiato a Premium
-            var abbonamentoPrecedente = registrazione.Abbonamento;
-            var abbonamentoNuovo = await _context.Abbonamenti.FindAsync(viewModel.IdAbbonamento);
+            // Se l'utente ha già un abbonamento Premium, reindirizza alla vista Details
+            if (registrazione.Abbonamento.TipoAbbonamento == "Premium")
+            {
+                return RedirectToAction("Details", new { id = id });
+            }
 
-            // Aggiorna l'abbonamento della registrazione
-            registrazione.IdAbbonamento = viewModel.IdAbbonamento;
-            registrazione.Abbonamento = abbonamentoNuovo;
+            // Aggiorna l'abbonamento della registrazione a Premium
+            var abbonamentoPremium = await _context.Abbonamenti.FirstOrDefaultAsync(a => a.TipoAbbonamento == "Premium");
+            if (abbonamentoPremium == null)
+            {
+                return NotFound();
+            }
+
+            registrazione.IdAbbonamento = abbonamentoPremium.IdAbbonamento;
+            registrazione.Abbonamento = abbonamentoPremium;
 
             // Salva le modifiche
             _context.Update(registrazione);
             await _context.SaveChangesAsync();
 
-            // Dopo aver salvato le modifiche, controlla se l'abbonamento è stato cambiato a Premium
-            if (abbonamentoPrecedente.TipoAbbonamento != "Premium" && abbonamentoNuovo.TipoAbbonamento == "Premium")
-            {
-                // Reindirizza alla pagina di pagamento
-                return RedirectToAction("Create", "PagamentoAbbonamenti", new { idUtente = registrazione.Utente.Id });
-            }
-
-            // Se non è stato cambiato a Premium, continua come prima
-            return RedirectToAction(nameof(Index));
+            // Reindirizza alla pagina di pagamento
+            return RedirectToAction("Create", "PagamentoAbbonamenti", new { idUtente = registrazione.Utente.Id });
         }
 
 
@@ -270,33 +280,36 @@ namespace Nostalgame.Controllers
             _context.Update(registrazione);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", new { id = id });
         }
 
 
         //cambio username e password
         public async Task<IActionResult> ChangeUsernamePassword()
         {
+
             var user = await _userManager.GetUserAsync(User);
             var registrazione = await _context.Registrazioni.FirstOrDefaultAsync(r => r.IdUtente == user.Id);
+
             if (registrazione == null)
             {
                 return NotFound();
             }
 
-            ViewBag.IdRegistrazione = registrazione.IdRegistrazione;
-
             var viewModel = new ChangeUsernamePasswordViewModel
             {
-                CurrentUsername = user.UserName
+                CurrentUsername = user.UserName,
+                IdRegistrazione = registrazione.IdRegistrazione
             };
             return View(viewModel);
         }
+    
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeUsernamePassword(ChangeUsernamePasswordViewModel model)
-        {
+        {   
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -336,7 +349,7 @@ namespace Nostalgame.Controllers
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", new { id = model.IdRegistrazione });
         }
 
 

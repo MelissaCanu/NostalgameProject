@@ -9,14 +9,21 @@
 <div class="card regdet-card">
     <div class="card-header">
         <a asp-action="EditDetails" asp-route-id="@Model.IdRegistrazione" class="btn btn-primary">Modifica Dati Personali</a>
-        <a asp-action="Edit" asp-route-id="@Model?.IdRegistrazione" class="btn btn-primary">Gestisci Abbonamento</a>
-        <a asp-action="ChangeUsernamePassword" class="btn btn-primary">Cambia Username o Password</a>
+        @if (Model.Abbonamento.TipoAbbonamento != "Premium")
+        {
+            <a asp-action="Edit" asp-route-id="@Model.IdRegistrazione" class="btn btn-primary">Effettua l'upgrade</a>
+        }        <a asp-action="ChangeUsernamePassword" class="btn btn-primary">Cambia Username o Password</a>
     </div>
     <div class="card-body">
         <h4>Registrazione</h4>
         <hr />
         <dl class="row">
             <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Utente.UserName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Utente.UserName)
+            </dd><dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Nome)
             </dt>
             <dd class="col-sm-10">
