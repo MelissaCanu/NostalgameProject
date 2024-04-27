@@ -45,6 +45,26 @@ namespace Nostalgame.Controllers
             return View(model);
         }
 
+        // GET: videogioco random
+        public async Task<IActionResult> RandomGame()
+        {
+            var videogiochiDisponibili = await _context.Videogiochi
+                .Where(v => v.Disponibile)
+                .ToListAsync();
+
+            if (!videogiochiDisponibili.Any())
+            {
+                // Gestisci il caso in cui non ci sono videogiochi disponibili
+                return View("NoGamesAvailable");
+            }
+
+            var random = new Random();
+            var randomGame = videogiochiDisponibili[random.Next(videogiochiDisponibili.Count)];
+
+            return PartialView("_RandomGame", randomGame);
+        }
+
+
 
         public IActionResult Privacy()
         {

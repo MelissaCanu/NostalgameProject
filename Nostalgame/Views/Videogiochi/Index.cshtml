@@ -24,7 +24,7 @@
                         var ultimoNoleggio = item.Noleggi.OrderByDescending(n => n.DataFine).FirstOrDefault();
                         if (ultimoNoleggio != null && ultimoNoleggio.DataFine > DateTime.Now)
                         {
-                            <span class="badge bg-warning text-white position-absolute top-25 start-0 translate-middle-y px-3 py-2 w-100">Disponibile dal @ultimoNoleggio.DataFine.ToShortDateString()</span>
+                            <span class="badge bg-dark text-white position-absolute top-25 start-0 translate-middle-y px-3 py-2 w-100">Disponibile dal @ultimoNoleggio.DataFine.ToShortDateString()</span>
                         }
                     }
                     <div class="card-body">

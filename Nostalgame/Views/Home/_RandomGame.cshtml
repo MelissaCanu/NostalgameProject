@@ -1,0 +1,9 @@
+﻿@model Nostalgame.Models.Videogioco
+
+<div class="card videogioco-card bounce-in" style="width: 100%; max-width: 18rem;">
+    <img src="@Model.Foto" class="card-img-top" alt="@Model.Titolo">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Titolo</h5>
+        <a href="@Url.Action("Details", "Videogiochi", new { id = Model.IdVideogioco })" class="btn btn-primary">Vai ai dettagli</a>
+    </div>
+</div>

@@ -7,6 +7,9 @@
     --bs-body-bg: var(--bs-viola);
     --bs-rosa: #F6A7D6;
     --bs-turchese-scuro: #5cb8b2;
+     --loading-color-start: #dab9f7; /* Viola più chiaro */
+    --loading-color-middle: #9e70d9; /* Il tuo colore viola */
+    --loading-color-end: #6a3db8; /* Viola più scuro */
 }
 
 html {
@@ -29,13 +32,11 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Minecraft', monospace;
     margin-block: 1.5rem;
     text-align: center;
+    color: white;
+    font-weight: bold;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7);
 }
 
-h1, h2, h3, h4 {
-    color: black;
-    font-weight: bold;
-    text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
-}
 
 main {
     flex: 1;
@@ -306,4 +307,52 @@ input, select {
 
 .footer[b-u8xib925b7] {
     position: static !important;
+}
+
+
+/*animazione barra di caricamento*/
+
+@keyframes loading-animation {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 100% 0;
+    }
+}
+
+.loading-bar {
+    height: 50px;
+    width: 100%;
+    background: linear-gradient(90deg, var(--loading-color-start) 25%, var(--loading-color-middle) 50%, var(--loading-color-end) 75%);
+    background-size: 200% 100%;
+    animation: loading-animation 10s linear infinite;
+}
+
+/*animazione card casuale*/
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.1);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.bounce-in {
+    animation: bounceIn 1s;
+}
+
+.random-game-container {
+    display: flex;
+    justify-content: center;
 }

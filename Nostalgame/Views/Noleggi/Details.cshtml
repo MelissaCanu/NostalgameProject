@@ -4,87 +4,86 @@
     ViewData["Title"] = "Details";
 }
 
-@if (TempData["PaymentSuccess"] != null && (bool)TempData["PaymentSuccess"] == true)
-{
-    <div class="alert alert-success">
-        Il pagamento è stato effettuato con successo! Verrai reindirizzato a "I tuoi noleggi" tra 10 secondi.
+<div class="card">
+    <div class="card-body">
+        @if (TempData["PaymentSuccess"] != null && (bool)TempData["PaymentSuccess"] == true)
+        {
+            <div class="alert alert-success">
+                Il pagamento è stato effettuato con successo! Verrai reindirizzato a "I tuoi noleggi" tra 10 secondi.
+            </div>
+
+            <div id="loadingBar" class="loading-bar"></div>
+
+            <script>
+                var secondsRemaining = 10;
+
+                var intervalId = setInterval(function () {
+                    secondsRemaining--;
+
+                    if (secondsRemaining <= 0) {
+                        clearInterval(intervalId);
+                        window.location.href = '@Url.Action("Index", "Noleggi")';
+                    }
+                }, 1000);
+
+            </script>
+        }
+
+        <h1 class="card-title">Dettagli noleggio</h1>
+        <div class="form-group">
+            <strong>Stato:</strong>
+            @Html.DisplayFor(model => model.Stato)
+        </div>
+        <div>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.IdUtenteNoleggiante)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.IdUtenteNoleggiante)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.DataInizio)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.DataInizio)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.DataFine)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.DataFine)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.IndirizzoSpedizione)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.IndirizzoSpedizione)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.CostoNoleggio)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.CostoNoleggio) €
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.StripePaymentId)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.StripePaymentId)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Videogioco)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Videogioco.Titolo)
+                </dd>
+            </dl>
+        </div>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model?.IdNoleggio">Modifica</a> |
+            <a asp-action="Index">Indietro</a>
+        </div>
     </div>
-
-    <progress id="progressBar" value="10" max="10"></progress>
-    <p id="countdown">10</p>
-
-    <script>
-        var progressBar = document.getElementById('progressBar');
-        var countdown = document.getElementById('countdown');
-        var secondsRemaining = 10;
-
-        var intervalId = setInterval(function () {
-            secondsRemaining--;
-            progressBar.value = secondsRemaining;
-            countdown.textContent = secondsRemaining;
-
-            if (secondsRemaining <= 0) {
-                clearInterval(intervalId);
-                window.location.href = '@Url.Action("Index", "Noleggi")';
-            }
-        }, 1000);
-    </script>
-}
-
-
-<h1>Dettagli noleggio</h1>
-<div class="form-group">
-    <strong>Stato:</strong>
-    @Html.DisplayFor(model => model.Stato)
-</div>
-<div>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdUtenteNoleggiante)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdUtenteNoleggiante)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DataInizio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DataInizio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DataFine)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DataFine)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IndirizzoSpedizione)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IndirizzoSpedizione)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CostoNoleggio) 
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CostoNoleggio) €
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StripePaymentId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StripePaymentId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Videogioco)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Videogioco.Titolo)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.IdNoleggio">Modifica</a> |
-    <a asp-action="Index">Indietro</a>
 </div>

@@ -35,6 +35,17 @@
         </div>
     </div>
 
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <button id="randomGameButton" class="btn btn-primary">Mostra un gioco casuale</button>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div id="randomGameContainer" class="random-game-container" style="display: none;"></div>
+        </div>
+    </div>
+
     <!-- Carosello per tutti i videogiochi -->
     <div class="carousel-container">
     <h2>TUTTI I VIDEOGIOCHI</h2>
@@ -117,3 +128,15 @@
     </div>
 </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#randomGameButton').click(function () {
+                $.get('@Url.Action("RandomGame", "Home")', function (data) {
+                    $('#randomGameContainer').html(data).show().addClass('fade-in');
+                });
+            });
+        });
+    </script>
+}
