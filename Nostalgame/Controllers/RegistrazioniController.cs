@@ -228,6 +228,63 @@ namespace Nostalgame.Controllers
         }
 
 
+        //GET- downgrade
+
+        public async Task<IActionResult> Downgrade(int id)
+        {
+            // Recupera la registrazione con l'ID specificato
+            var registrazione = await _context.Registrazioni
+                .Include(r => r.Abbonamento) // Include l'abbonamento
+                .Include(r => r.Utente) // Include l'utente
+                .FirstOrDefaultAsync(r => r.IdRegistrazione == id); // Trova la registrazione con l'ID specificato
+
+            if (registrazione == null)
+            {
+                return NotFound();
+            }
+
+            // Recupera l'utente
+            var user = registrazione.Utente;
+
+            // Recupera il pagamento abbonamento associato all'utente
+            var pagamentoAbbonamento = await _context.PagamentiAbbonamenti
+                .FirstOrDefaultAsync(p => p.IdUtente == user.Id);
+
+            if (pagamentoAbbonamento == null)
+            {
+                return NotFound();
+            }
+
+            // Recupera la sottoscrizione Stripe dell'utente
+            var subscriptionService = new SubscriptionService();
+            var subscription = subscriptionService.Get(pagamentoAbbonamento.StripeSubscriptionId);
+
+            // Annulla la sottoscrizione Stripe
+            if (subscription != null)
+            {
+                subscriptionService.Cancel(subscription.Id, new SubscriptionCancelOptions());
+            }
+
+            // Aggiorna il tipo di abbonamento nel database a Standard
+            var abbonamentoStandard = await _context.Abbonamenti.FirstOrDefaultAsync(a => a.TipoAbbonamento == "Standard");
+            if (abbonamentoStandard == null)
+            {
+                return NotFound();
+            }
+
+            registrazione.IdAbbonamento = abbonamentoStandard.IdAbbonamento;
+            registrazione.Abbonamento = abbonamentoStandard;
+
+            // Salva le modifiche
+            _context.Update(registrazione);
+            await _context.SaveChangesAsync();
+
+            // Reindirizza l'utente alla pagina di dettaglio
+            return RedirectToAction("Details", new { id = id });
+        }
+
+
+
         //cambio dettagli registrazione.cs
 
         public async Task<IActionResult> EditDetails(int? id)

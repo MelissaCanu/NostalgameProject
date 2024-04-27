@@ -12,7 +12,13 @@
         @if (Model.Abbonamento.TipoAbbonamento != "Premium")
         {
             <a asp-action="Edit" asp-route-id="@Model.IdRegistrazione" class="btn btn-primary">Effettua l'upgrade</a>
-        }        <a asp-action="ChangeUsernamePassword" class="btn btn-primary">Cambia Username o Password</a>
+        }       
+        @if (Model.Abbonamento.TipoAbbonamento == "Premium")
+        {
+            <a asp-action="Downgrade" asp-route-id="@Model.IdRegistrazione" class="btn btn-primary">Torna a Standard</a>
+        }
+        
+        <a asp-action="ChangeUsernamePassword" class="btn btn-primary">Cambia Username o Password</a>
     </div>
     <div class="card-body">
         <hr />
