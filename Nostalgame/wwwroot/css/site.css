@@ -356,3 +356,10 @@ input, select {
     display: flex;
     justify-content: center;
 }
+
+/*badge*/
+
+.badge-viola {
+    background-color: var(--bs-viola) !important;
+    color: white !important;
+}

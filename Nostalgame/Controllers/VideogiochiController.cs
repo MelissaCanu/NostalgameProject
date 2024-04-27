@@ -32,6 +32,8 @@ namespace Nostalgame.Controllers
         //GET - Videogiochi/Index
         public async Task<IActionResult> Index(string searchField, string searchString)
         {
+            var userId = _userManager.GetUserId(User);
+            ViewData["UserId"] = userId;
             var videogiochi = from v in _context.Videogiochi
                               select v;
 

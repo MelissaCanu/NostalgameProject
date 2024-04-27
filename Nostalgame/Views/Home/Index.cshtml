@@ -15,11 +15,12 @@
         </div>
     }
 
+    <!--Quiz-->
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card mt-4 mb-2">
                 <div class="card-body">
-                    <h4  class="card-title">Qual'è il tuo avatar?</h4>
+                    <h4 class="card-title">Qual'è il tuo avatar?</h4>
                     @if (!Model.HasAvatar)
                     {
                         <p class="card-text">Scopri quale avatar fa per te completando il nostro quiz!</p>
@@ -35,6 +36,7 @@
         </div>
     </div>
 
+    <!-- Gioco casuale -->
     <div class="row justify-content-center">
         <div class="col-md-6 text-center">
             <button id="randomGameButton" class="btn btn-primary">Mostra un gioco casuale</button>
@@ -48,87 +50,90 @@
 
     <!-- Carosello per tutti i videogiochi -->
     <div class="carousel-container">
-    <h2>TUTTI I VIDEOGIOCHI</h2>
-    <div id="videogiochiCarosello" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @for (int i = 0; i < Model.TuttiVideogiochi.Count; i += 5)
-            {
-                <div class="carousel-item @(i == 0 ? "active" : "")">
-                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
-                        @for (int j = 0; j < 5; j++)
-                        {
-                            if (i + j < Model.TuttiVideogiochi.Count)
+        <h2>TUTTI I VIDEOGIOCHI</h2>
+        <div id="videogiochiCarosello" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                @for (int i = 0; i < Model.TuttiVideogiochi.Count; i += 5)
+                {
+                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
+                            @for (int j = 0; j < 5; j++)
                             {
-                                var videogioco = Model.TuttiVideogiochi[i + j];
-                                <div class="col mb-4">
-                                    <div class="card videogioco-card" style="width: 100%; max-width: 18rem;">
-                                        <img src="@videogioco.Foto" class="card-img-top" alt="@videogioco.Titolo">
-                                        <div class="card-body">
-                                            <h5 class="card-title">@videogioco.Titolo</h5>
-                                            <a href="@Url.Action("Details", "Videogiochi", new { id = videogioco.IdVideogioco })" class="btn btn-primary">Vai ai dettagli</a>
+                                if (i + j < Model.TuttiVideogiochi.Count)
+                                {
+                                    var videogioco = Model.TuttiVideogiochi[i + j];
+                                    <div class="col mb-4">
+                                        <div class="card videogioco-card" style="width: 100%; max-width: 18rem;">
+                                            <img src="@videogioco.Foto" class="card-img-top" alt="@videogioco.Titolo">
+                                            <div class="card-body">
+                                                <span class="badge badge-viola">@videogioco.Piattaforma</span>
+                                                <h5 class="card-title">@videogioco.Titolo</h5>
+                                                <a href="@Url.Action("Details", "Videogiochi", new { id = videogioco.IdVideogioco })" class="btn btn-primary">Vai ai dettagli</a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                }
                             }
-                        }
+                        </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#videogiochiCarosello" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Precedente</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#videogiochiCarosello" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Successivo</span>
+            </button>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#videogiochiCarosello" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Precedente</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#videogiochiCarosello" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Successivo</span>
-        </button>
-    </div>
 
-    <a href="@Url.Action("Index", "Videogiochi")" class="btn btn-primary">Vedi altro</a>
-</div>
+        <a href="@Url.Action("Index", "Videogiochi")" class="btn btn-primary">Vedi altro</a>
+    </div>
 
     <!-- Carosello per i giochi appena aggiunti -->
     <div class="carousel-container">
-    <h2>AGGIUNTI DI RECENTE</h2>
-    <div id="giochiAppenaAggiuntiCarosello" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @for (int i = 0; i < Model.GiochiAppenaAggiunti.Count; i += 5)
-            {
-                <div class="carousel-item @(i == 0 ? "active" : "")">
-                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
-                        @for (int j = 0; j < 5; j++)
-                        {
-                            if (i + j < Model.GiochiAppenaAggiunti.Count)
+        <h2>AGGIUNTI DI RECENTE</h2>
+        <div id="giochiAppenaAggiuntiCarosello" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                @for (int i = 0; i < Model.GiochiAppenaAggiunti.Count; i += 5)
+                {
+                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
+                            @for (int j = 0; j < 5; j++)
                             {
-                                var videogioco = Model.GiochiAppenaAggiunti[i + j];
-                                <div class="col mb-4">
-                                    <div class="card videogioco-card" style="width: 100%; max-width: 18rem;">
-                                        <img src="@videogioco.Foto" class="card-img-top" alt="@videogioco.Titolo">
-                                        <div class="card-body">
-                                            <h5 class="card-title">@videogioco.Titolo</h5>
-                                            <a href="@Url.Action("Details", "Videogiochi", new { id = videogioco.IdVideogioco })" class="btn btn-primary">Vai ai dettagli</a>
+                                if (i + j < Model.GiochiAppenaAggiunti.Count)
+                                {
+                                    var videogioco = Model.GiochiAppenaAggiunti[i + j];
+                                    <div class="col mb-4">
+                                        <div class="card videogioco-card" style="width: 100%; max-width: 18rem;">
+                                            <img src="@videogioco.Foto" class="card-img-top" alt="@videogioco.Titolo">
+                                            <div class="card-body">
+                                                <span class="badge badge-viola">@videogioco.Piattaforma</span>
+                                                <h5 class="card-title">@videogioco.Titolo</h5>
+                                                <a href="@Url.Action("Details", "Videogiochi", new { id = videogioco.IdVideogioco })" class="btn btn-primary">Vai ai dettagli</a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                }
                             }
-                        }
+                        </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#giochiAppenaAggiuntiCarosello" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Precedente</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#giochiAppenaAggiuntiCarosello" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Successivo</span>
+            </button>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#giochiAppenaAggiuntiCarosello" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Precedente</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#giochiAppenaAggiuntiCarosello" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Successivo</span>
-        </button>
     </div>
 </div>
-</div>
 
+<!-- Script per il gioco casuale -->
 @section Scripts {
     <script>
         $(document).ready(function () {

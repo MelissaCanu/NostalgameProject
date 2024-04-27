@@ -28,10 +28,17 @@
                         }
                     }
                     <div class="card-body">
+                        <span class="badge badge-viola">@item.Piattaforma</span>
+
                         <h5 class="card-title">@item.Titolo</h5>
 
                         <a asp-action="Details" asp-route-id="@item.IdVideogioco" class="btn btn-primary">Dettagli</a>
-                        <a asp-action="Create" asp-controller="Noleggi" asp-route-idVideogioco="@item.IdVideogioco" class="btn opacity-75 @(item.Disponibile ? "btn-success" : "btn-dark") @(item.Disponibile ? "" : "d-none") ">Noleggia</a>
+                       
+                        @if (ViewData["UserId"] as string != item.IdProprietario)
+                        {
+                            <a asp-action="Create" asp-controller="Noleggi" asp-route-idVideogioco="@item.IdVideogioco" class="btn opacity-75 @(item.Disponibile ? "btn-success" : "btn-dark") @(item.Disponibile ? "" : "d-none") ">Noleggia</a>
+                        }
+
                     </div>
                 </div>
             </div>
