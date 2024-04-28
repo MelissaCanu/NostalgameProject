@@ -39,7 +39,18 @@
     <!-- Gioco casuale -->
     <div class="row justify-content-center mb-3">
         <div class="col-md-6 text-center">
-
+            <div class="card mt-4 mb-2">
+                <div class="card-body">
+                    <h4 class="card-title">Sorprendimi!</h4>
+                    <!-- Select per la piattaforma -->
+                    <select id="platformSelect" class="form-select mb-3">
+                        <option value="">Tutte le piattaforme</option>
+                        @foreach (var piattaforma in Model.Piattaforme)
+                        {
+                            <option value="@piattaforma">@piattaforma</option>
+                        }
+                    </select>
+            <!--dado-->
             <div class="row justify-content-center">
                 <div class="col-6">
                     <div class="container-dice">
@@ -86,6 +97,8 @@
             </div>
         </div>
     </div>
+</div>
+</div>
 
 
     <!-- Carosello per tutti i videogiochi -->
@@ -173,12 +186,13 @@
     </div>
 </div>
 
-<!-- Script per il gioco casuale -->
+<!-- Script per il gioco casuale e piattaforma filtro -->
 @section Scripts {
     <script>
         $(document).ready(function () {
             $('.dice').click(function () {
-                $.get('@Url.Action("RandomGame", "Home")', function (data) {
+                var platform = $('#platformSelect').val();
+                $.get('@Url.Action("RandomGame", "Home")', { piattaforma: platform }, function (data) {
                     $('#randomGameContainer').html(data).show().addClass('fade-in');
                 });
 
@@ -189,6 +203,7 @@
                 }, 1);
             });
         });
+
     </script>
 }
 

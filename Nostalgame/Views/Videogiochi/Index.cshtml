@@ -15,6 +15,8 @@
 <div class="container-fluid">
     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
         @foreach (var item in Model)
+                    if (ViewData["UserId"] as string != item.IdProprietario)
+            {
         {
             <div class="col mb-4">
                 <div class="card position-relative videogioco-card">
@@ -43,5 +45,6 @@
                 </div>
             </div>
         }
+            }
     </div>
 </div>

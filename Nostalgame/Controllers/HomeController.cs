@@ -31,6 +31,10 @@ namespace Nostalgame.Controllers
             var userId = _userManager.GetUserId(User);
             var user = await _context.Users.FindAsync(userId);
 
+            //recupero le piattaforme per il filtro per il random game
+            var piattaforme = await _context.Videogiochi.Select(v => v.Piattaforma).Distinct().ToListAsync();
+
+
             //guid serve a randomizzare l'ordine dei videogiochi, take prende i primi 20, tolistasync li trasforma in lista
             var videogiochi = await _context.Videogiochi.OrderBy(v => Guid.NewGuid()).Take(20).ToListAsync();
             var giochiAppenaAggiunti = await _context.Videogiochi.OrderByDescending(v => v.DataCreazione).Take(9).ToListAsync();
@@ -39,17 +43,19 @@ namespace Nostalgame.Controllers
             {
                 TuttiVideogiochi = videogiochi,
                 GiochiAppenaAggiunti = giochiAppenaAggiunti,
-                HasAvatar = user != null && user.IdAvatar != null // Imposta HasAvatar a true se l'utente ha un avatar
+                HasAvatar = user != null && user.IdAvatar != null, // Imposta HasAvatar a true se l'utente ha un avatar
+                Piattaforme = piattaforme // Aggiungo le piattaforme al modello
+
             };
 
             return View(model);
         }
 
         // GET: videogioco random
-        public async Task<IActionResult> RandomGame()
+        public async Task<IActionResult> RandomGame(string piattaforma)
         {
             var videogiochiDisponibili = await _context.Videogiochi
-                .Where(v => v.Disponibile)
+                .Where(v => v.Disponibile && (string.IsNullOrEmpty(piattaforma) || v.Piattaforma == piattaforma))
                 .ToListAsync();
 
             if (!videogiochiDisponibili.Any())
