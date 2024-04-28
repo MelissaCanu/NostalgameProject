@@ -16,7 +16,7 @@
     }
 
     <!--Quiz-->
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mb-3">
         <div class="col-md-6">
             <div class="card mt-4 mb-2">
                 <div class="card-body">
@@ -37,16 +37,56 @@
     </div>
 
     <!-- Gioco casuale -->
-    <div class="row justify-content-center">
+    <div class="row justify-content-center mb-3">
         <div class="col-md-6 text-center">
-            <button id="randomGameButton" class="btn btn-primary">Mostra un gioco casuale</button>
+
+            <div class="row justify-content-center">
+                <div class="col-6">
+                    <div class="container-dice">
+                        <div class="dice">
+                            <div class="one">
+                                <span></span>
+                            </div>
+                            <div class="two">
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <div class="three">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <div class="four">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <div class="five">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <div class="six">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div id="randomGameContainer"></div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div id="randomGameContainer" class="random-game-container" style="display: none;"></div>
-        </div>
-    </div>
+
 
     <!-- Carosello per tutti i videogiochi -->
     <div class="carousel-container">
@@ -137,11 +177,18 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $('#randomGameButton').click(function () {
+            $('.dice').click(function () {
                 $.get('@Url.Action("RandomGame", "Home")', function (data) {
                     $('#randomGameContainer').html(data).show().addClass('fade-in');
                 });
+
+                var roll = Math.floor(Math.random() * 6 + 1);
+                $(this).attr("class", "dice");
+                setTimeout(function () {
+                    $(".dice").addClass("roll-" + roll);
+                }, 1);
             });
         });
     </script>
 }
+

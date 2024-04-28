@@ -38,9 +38,10 @@ namespace Nostalgame.Controllers
 
 
         // GET - Noleggi/Index
-        public async Task<IActionResult> Index(string userNameSearchString, string videogameSearchString)
+        public async Task<IActionResult> Index(string userNameSearchString, string videogameSearchString, bool? disponibile)
         {
             var userName = User.Identity.Name;
+            //IQueryable è una interfaccia che rappresenta una sequenza di elementi che possono essere letti in modo asincrono 
             IQueryable<Noleggio> noleggi;
 
             if (User.IsInRole("Admin"))
@@ -61,6 +62,10 @@ namespace Nostalgame.Controllers
             {
                 noleggi = noleggi.Where(n => n.Videogioco.Titolo.Contains(videogameSearchString));
             }
+            if (disponibile.HasValue)
+            {
+                noleggi = noleggi.Where(n => n.Videogioco.Disponibile == disponibile.Value);
+            }
 
             // Ordina i noleggi per data da più recente a meno recente
             noleggi = noleggi.OrderByDescending(n => n.DataInizio);
@@ -68,6 +73,10 @@ namespace Nostalgame.Controllers
             var noleggiInSospeso = await _context.Noleggi
         .Where(n => n.IdUtenteNoleggiante == userName && n.Stato == Noleggio.StatoNoleggio.InSospeso)
         .ToListAsync();
+
+            // Raggruppa i noleggi per videogioco e seleziona il noleggio più recente per ogni gruppo
+            noleggi = noleggi.GroupBy(n => n.Videogioco.IdVideogioco)
+                             .Select(g => g.OrderByDescending(n => n.DataInizio).First());
 
             if (noleggiInSospeso.Count > 0)
             {
@@ -172,7 +181,7 @@ namespace Nostalgame.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdVideogioco,IdUtenteNoleggiante,DataInizio,DataFine,IndirizzoSpedizione,CostoNoleggio, SpeseSpedizione")] NoleggioViewModel noleggioViewModel)
         {
-    
+
             if (ModelState.IsValid)
             {
                 var noleggio = new Noleggio

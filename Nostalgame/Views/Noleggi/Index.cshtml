@@ -23,36 +23,47 @@ else
 
 @if (User.IsInRole("Admin"))
 {
-<div class="card regind-card mb-3">
-    <div class="card-body">
-        <form asp-action="Index" method="get">
-            <div class="form-row">
-                <div class="form-group mb-2 col-6">
-                    <input type="text" class="form-control form-control-sm" id="userNameSearchString" name="userNameSearchString" placeholder="Cerca per UserName">
+    <div class="card regind-card mb-3">
+        <div class="card-body">
+            <form asp-action="Index" method="get">
+                <div class="form-row">
+                    <div class="form-group mb-2 col-6">
+                        <input type="text" class="form-control form-control-sm" id="userNameSearchString" name="userNameSearchString" placeholder="Cerca per UserName">
+                    </div>
+                    <div class="form-group mb-2 col-6">
+                        <input type="text" class="form-control form-control-sm" id="videogameSearchString" name="videogameSearchString" placeholder="Cerca per nome videogioco">
+                    </div>
+                    <div class="form-group mb-2 col-6">
+                        <label for="disponibile">Stato noleggio:</label>
+                        <select class="form-control form-control-sm" id="disponibile" name="disponibile">
+                            <option value="">Seleziona uno stato</option>
+                            <option value="true">Restituito</option>
+                            <option value="false">In corso</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-primary mb-2">Cerca</button>
+                    </div>
                 </div>
-                <div class="form-group mb-2 col-6">
-                    <input type="text" class="form-control form-control-sm" id="videogameSearchString" name="videogameSearchString" placeholder="Cerca per nome videogioco">
-                </div>
-                <div class="col-2">
-                    <button type="submit" class="btn btn-primary mb-2">Cerca</button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 }
 
+@if (User.IsInRole("Admin"))
+{
 <table class="table table-striped">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(model => model.IdUtenteNoleggiante)</th>
+            <th>Foto</th>
+            <th>Videogioco</th>
             <th>@Html.DisplayNameFor(model => model.DataInizio)</th>
             <th>@Html.DisplayNameFor(model => model.DataFine)</th>
             <th>@Html.DisplayNameFor(model => model.IndirizzoSpedizione)</th>
             <th>@Html.DisplayNameFor(model => model.CostoNoleggio)</th>
             <th>@Html.DisplayNameFor(model => model.SpeseSpedizione)</th>
             <th>@Html.DisplayNameFor(model => model.StripePaymentId)</th>
-            <th>@Html.DisplayNameFor(model => model.Videogioco)</th>
             <th></th>
         </tr>
     </thead>
@@ -61,6 +72,10 @@ else
         {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.IdUtenteNoleggiante)</td>
+                <td>
+                    <img src="@item.Videogioco.Foto" alt="@item.Videogioco.Titolo" width="100" height="100" />
+                </td>
+                <td>@Html.DisplayFor(modelItem => item.Videogioco.Titolo)</td>
                 <td>@Html.DisplayFor(modelItem => item.DataInizio)</td>
                 <td>
                     @Html.DisplayFor(modelItem => item.DataFine)
@@ -73,7 +88,6 @@ else
                 <td>@String.Format("{0:C}", item.CostoNoleggio)</td>
                 <td>@String.Format("{0:C}", item.SpeseSpedizione)</td>
                 <td>@Html.DisplayFor(modelItem => item.StripePaymentId)</td>
-                <td>@Html.DisplayFor(modelItem => item.Videogioco.Titolo)</td>
                 <td>
                     @if (item.Stato == Noleggio.StatoNoleggio.InSospeso)
                     {
@@ -98,6 +112,63 @@ else
         }
     </tbody>
 </table>
+}
+else
+{
+    <div class="card regind-card mb-3">
+        <div class="card-body">
+            <form asp-action="Index" method="get">
+                <div class="form-row">
+                    <div class="form-group mb-2 col-6">
+                        <label for="disponibile">Stato noleggio</label>
+                        <select class="form-control form-control-sm" id="disponibile" name="disponibile">
+                            <option value="">Seleziona uno stato:</option>
+                            <option value="true">Restituito</option>
+                            <option value="false">In corso</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-primary mb-2">Cerca</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-sm-12">
+                <div class="card mb-4">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img src="@item.Videogioco.Foto" class="card-img" alt="@item.Videogioco.Titolo">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">@Html.DisplayFor(modelItem => item.Videogioco.Titolo)</h5>
+                                <p class="card-text">
+                                    <strong>@Html.DisplayNameFor(model => model.DataInizio):</strong> @Html.DisplayFor(modelItem => item.DataInizio)<br />
+                                    <strong>@Html.DisplayNameFor(model => model.DataFine):</strong> @Html.DisplayFor(modelItem => item.DataFine)<br />
+                                    <strong>@Html.DisplayNameFor(model => model.IndirizzoSpedizione):</strong> @Html.DisplayFor(modelItem => item.IndirizzoSpedizione)<br />
+                                    <strong>@Html.DisplayNameFor(model => model.CostoNoleggio):</strong> @String.Format("{0:C}", item.CostoNoleggio)<br />
+                                    <strong>@Html.DisplayNameFor(model => model.SpeseSpedizione):</strong> @String.Format("{0:C}", item.SpeseSpedizione)<br />
+                                    <strong>@Html.DisplayNameFor(model => model.StripePaymentId):</strong> @Html.DisplayFor(modelItem => item.StripePaymentId)
+                                </p>
+                                <a href="@Url.Action("Details", "Noleggi", new { id = item.IdNoleggio })" class="btn btn-primary">Dettagli</a>
+                                @if (!User.IsInRole("Admin") && item.DataFine > DateTime.Now)
+                                {
+                                    <a asp-action="Restituisci" asp-route-id="@item.IdNoleggio" class="btn btn-primary">Restituisci</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+}
 
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
@@ -113,3 +184,4 @@ else
         });
     });
 </script>
+

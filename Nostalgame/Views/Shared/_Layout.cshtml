@@ -17,19 +17,20 @@
 </head>
 <body class="d-flex flex-column h-100">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3s">
+        <nav class="navbar navbar-expand-lg navbar-toggleable-sm navbar-dark border-bottom box-shadow mb-3s">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="~/img/logo/logo.png" alt="Logo" class="d-inline-block align-top logo-image" id="logo" width="70" height="60">
                 </a>
+                <span class="navbar-brand">Nostalgame</span>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="navbar-collapse collapse d-lg-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 order-1 order-lg-1 mb-2 mb-lg-0">
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle dropdown-menutoggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Menu
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -39,61 +40,58 @@
                                 @if (User.Identity.IsAuthenticated && (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin")))
                                 {
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Avatars" asp-action="Index">Avatar</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Registrazioni" asp-action="Index">Utenti</a></li>                                }
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Registrazioni" asp-action="Index">Utenti</a></li>
+                                }
                             </ul>
                         </li>
-                        <form class="d-flex me-2" asp-controller="Videogiochi" asp-action="Index">
-                            <div class="input-group border rounded shadow">
-                                <select class="form-control me-2" name="searchField">
-                                    <option value="titolo">Titolo</option>
-                                    <option value="piattaforma">Piattaforma</option>
-                                    <option value="casaProduttrice">Casa Produttrice</option>
-                                    <option value="anno">Anno</option>
-                                    <option value="genere">Genere</option>
-                                </select>
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchString">
-                                <button class="btn btn-outline-success" type="submit">Cerca</button>
-                            </div>
-                        </form>
                     </ul>
-                    <div class="d-flex justify-content-end">
-                        <div>
-                            @if (SignInManager.IsSignedIn(User))
-                            {
-                                var user = await UserManager.GetUserAsync(User);
-                                if (user != null)
-                                {
-                                    var avatar = DbContext.Avatars.FirstOrDefault(a => a.IdAvatar == user.IdAvatar);
-                                    var registrazione = DbContext.Registrazioni.FirstOrDefault(r => r.IdUtente == user.Id);
-                                    <div class="d-flex align-items-center">
-                                        <div class="dropdown">
-                                            @if (avatar != null)
-                                            {
-                                                <a class="dropdown-toggle avatar-dropdown" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <img src="@avatar.Foto" alt="Avatar" class="rounded-circle me-2" width="70" height="70">
-                                                </a>
-                                            }
-                                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                                @if (registrazione != null)
-                                                {
-                                                    <li><a class="dropdown-item" asp-controller="Registrazioni" asp-action="Details" asp-route-id="@registrazione.IdRegistrazione">Il mio profilo</a></li>
-                                                }
-
-                                            </ul>
-                                        </div>
-                                        <form method="post" asp-controller="Account" asp-action="Logout">
-                                            <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-                                        </form>
-                                    </div>
-                                }
-                            }
-                            else
-                            {
-                                <a class="nav-link btn btn-link text-dark my-2" asp-controller="Account" asp-action="Login">Login</a>
-                                <a class="nav-link btn btn-link text-dark" asp-controller="Registrazioni" asp-action="Create">Registrati</a>
-                            }
-
+                    <form class="d-flex me-2 order-3 order-lg-2 mb-2 mb-lg-0" asp-controller="Videogiochi" asp-action="Index">
+                        <div class="input-group border rounded shadow">
+                            <select class="form-control me-2" name="searchField">
+                                <option value="titolo">Titolo</option>
+                                <option value="piattaforma">Piattaforma</option>
+                                <option value="casaProduttrice">Casa Produttrice</option>
+                                <option value="anno">Anno</option>
+                                <option value="genere">Genere</option>
+                            </select>
+                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searchString">
+                            <button class="btn btn-outline-success btn-search" type="submit">Cerca</button>
                         </div>
+                    </form>
+                    <div class="d-flex justify-content-end order-2 order-lg-3 mb-2 mb-lg-0">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            var user = await UserManager.GetUserAsync(User);
+                            if (user != null)
+                            {
+                                var avatar = DbContext.Avatars.FirstOrDefault(a => a.IdAvatar == user.IdAvatar);
+                                var registrazione = DbContext.Registrazioni.FirstOrDefault(r => r.IdUtente == user.Id);
+                                <div class="d-flex align-items-center">
+                                    <div class="dropdown">
+                                        @if (avatar != null)
+                                        {
+                                            <a class="dropdown-toggle avatar-dropdown" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <img src="@avatar.Foto" alt="Avatar" class="rounded-circle me-2" width="70" height="70">
+                                            </a>
+                                        }
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            @if (registrazione != null)
+                                            {
+                                                <li><a class="dropdown-item" asp-controller="Registrazioni" asp-action="Details" asp-route-id="@registrazione.IdRegistrazione">Il mio profilo</a></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                    <form method="post" asp-controller="Account" asp-action="Logout">
+                                        <button type="submit" class="nav-link btn btn-link text-dark btn-logout">Logout</button>
+                                    </form>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <a class="nav-link btn btn-link text-dark my-2 btn-login" asp-controller="Account" asp-action="Login">Login</a>
+                            <a class="nav-link btn btn-link text-dark btn-register" asp-controller="Registrazioni" asp-action="Create">Registrati</a>
+                        }
                     </div>
                 </div>
             </div>
@@ -119,4 +117,3 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
