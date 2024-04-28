@@ -257,15 +257,33 @@ namespace Nostalgame.Controllers
 
             // Recupera la sottoscrizione Stripe dell'utente
             var subscriptionService = new SubscriptionService();
-            var subscription = subscriptionService.Get(pagamentoAbbonamento.StripeSubscriptionId);
+            Subscription subscription = null;
+
+            try
+            {
+                subscription = subscriptionService.Get(pagamentoAbbonamento.StripeSubscriptionId);
+            }
+            catch (StripeException ex)
+            {
+                _logger.LogError(ex, "Errore nel recupero della sottoscrizione Stripe");
+            }
 
             // Annulla la sottoscrizione Stripe
             if (subscription != null)
             {
-                subscriptionService.Cancel(subscription.Id, new SubscriptionCancelOptions());
+                try
+                {
+                    subscriptionService.Cancel(subscription.Id, new SubscriptionCancelOptions());
+                }
+                catch (StripeException ex)
+                {
+                    _logger.LogError(ex, "Errore nell'annullamento della sottoscrizione Stripe con ID {SubscriptionId}", subscription.Id);
+                    // Gestisci l'errore come preferisci
+                }
             }
 
-            // Aggiorna il tipo di abbonamento nel database a Standard
+
+            // Aggiorna l'abbonamento della registrazione a Standard
             var abbonamentoStandard = await _context.Abbonamenti.FirstOrDefaultAsync(a => a.TipoAbbonamento == "Standard");
             if (abbonamentoStandard == null)
             {
