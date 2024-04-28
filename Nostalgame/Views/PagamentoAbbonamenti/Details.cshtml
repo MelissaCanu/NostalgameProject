@@ -36,6 +36,17 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.IdPagamentoAbbonamento">Modifica</a> |
-    <a asp-action="Index">Indietro</a>
+    @if (User.IsInRole("Admin")) // Se l'utente è un amministratore
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.IdPagamentoAbbonamento">Modifica</a>
+ 
+    }
+    @if (User.IsInRole("Admin")) // Se l'utente è un amministratore
+    {
+        <a asp-action="Index">Indietro</a>
+    }
+    else // Se l'utente non è un amministratore
+    {
+        <a asp-action="Index" asp-controller="Home">Torna alla Home</a>
+    }
 </div>

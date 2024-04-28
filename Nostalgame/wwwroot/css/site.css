@@ -84,6 +84,12 @@ main {
 .navbar {
     background-color: var(--bs-primary);
 }
+.navbar-brand{
+font-family: 'Minecraft', monospace;
+    font-size: 1.5rem;
+    color: var(--bs-light);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
 
 .btn {
     background-color: var(--bs-rosa) !important;
@@ -165,7 +171,7 @@ input, select {
 
 /* Cambia il colore di sfondo del dropdown menu a un viola più scuro */
 .dropdown-menu {
-    background-color: #5d4b7a !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
     padding: 15px;
 }
 
@@ -179,21 +185,23 @@ input, select {
     font-family: 'Roboto', monospace;
     color: white;
     font-weight: bolder;
-    font-size: 1.3rem;
+    font-size: 1rem;
     text-transform: uppercase;
     text-shadow: 1px 1px 1px gray;
 }
 
 .dropdown-menutoggle {
-    background-color: #5d4b7a !important;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--bs-light)!important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5)!important;
     border-radius: 5px;
     margin-right: 10px;
-    vertical-align:bottom;
-
+    vertical-align: bottom;
+    padding-inline: 5px;
 }
 
 .avatar-dropdown::after {
-    display: none;
+  
 }
 
 .avatar-dropdown {
@@ -435,6 +443,11 @@ input, select {
     background: linear-gradient(to right, var(--bs-rosa), var(--bs-viola));
     color: white !important;
     border: none !important;
+}
+
+input.btn {
+    color: white !important;
+    background: linear-gradient(to right, #6495ED, #4169E1);
 }
 
 /*animazione dado*/

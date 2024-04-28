@@ -50,6 +50,15 @@ namespace Nostalgame.Controllers
                 return NotFound();
             }
 
+            // Ottieni l'ID dell'utente corrente
+            var userId = _userManager.GetUserId(User);
+            // Trova la registrazione per l'utente corrente
+            var registrazione = await _context.Registrazioni.FirstOrDefaultAsync(r => r.IdUtente == userId);
+
+
+            // Passa l'ID della registrazione alla vista
+            ViewData["RegistrazioneId"] = registrazione?.IdRegistrazione;
+
             return View(pagamentoAbbonamento);
         }
 
@@ -71,6 +80,8 @@ namespace Nostalgame.Controllers
 
             // Trova la registrazione dell'utente
             var registrazione = _context.Registrazioni.FirstOrDefault(r => r.IdUtente == userId);
+            // Passa l'ID della registrazione alla vista
+            ViewData["IdRegistrazione"] = registrazione?.IdRegistrazione;
 
             // Trova l'abbonamento dell'utente
             var abbonamento = _context.Abbonamenti.FirstOrDefault(a => a.IdAbbonamento == registrazione.IdAbbonamento);
@@ -169,8 +180,21 @@ namespace Nostalgame.Controllers
                 _context.Add(pagamentoAbbonamento);
                 await _context.SaveChangesAsync();
 
-                // Reindirizza l'utente alla vista Details per il pagamento appena completato
-                return RedirectToAction("Details", new { id = pagamentoAbbonamento.IdPagamentoAbbonamento });
+                // Trova la registrazione dell'utente
+                var registrazione = _context.Registrazioni.FirstOrDefault(r => r.IdUtente == pagamentoAbbonamento.IdUtente);
+                // Aggiorna l'abbonamento della registrazione a Premium
+                var abbonamentoPremium = await _context.Abbonamenti.FirstOrDefaultAsync(a => a.TipoAbbonamento == "Premium");
+                if (abbonamentoPremium != null)
+                {
+                    registrazione.IdAbbonamento = abbonamentoPremium.IdAbbonamento;
+                    registrazione.Abbonamento = abbonamentoPremium;
+
+                    // Salva le modifiche
+                    _context.Update(registrazione);
+                    await _context.SaveChangesAsync();
+                }
+                     // Reindirizza l'utente alla vista Details per il pagamento appena completato
+                    return RedirectToAction("Details", new { id = pagamentoAbbonamento.IdPagamentoAbbonamento });
             }
 
             // Se il modello non è valido, restituisci la vista con il modello originale

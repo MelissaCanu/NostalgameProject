@@ -64,6 +64,8 @@ namespace Nostalgame.Controllers
                 return NotFound();
             }
 
+
+
             return View(registrazione);
         }
 
@@ -209,16 +211,6 @@ namespace Nostalgame.Controllers
                 return RedirectToAction("Details", new { id = id });
             }
 
-            // Aggiorna l'abbonamento della registrazione a Premium
-            var abbonamentoPremium = await _context.Abbonamenti.FirstOrDefaultAsync(a => a.TipoAbbonamento == "Premium");
-            if (abbonamentoPremium == null)
-            {
-                return NotFound();
-            }
-
-            registrazione.IdAbbonamento = abbonamentoPremium.IdAbbonamento;
-            registrazione.Abbonamento = abbonamentoPremium;
-
             // Salva le modifiche
             _context.Update(registrazione);
             await _context.SaveChangesAsync();
@@ -228,7 +220,7 @@ namespace Nostalgame.Controllers
         }
 
 
-        //GET- downgrade
+        //downgrade
 
         public async Task<IActionResult> Downgrade(int id)
         {
@@ -261,11 +253,13 @@ namespace Nostalgame.Controllers
 
             try
             {
+                _logger.LogInformation("Recupero la sottoscrizione Stripe con ID {SubscriptionId}", pagamentoAbbonamento.StripeSubscriptionId);
                 subscription = subscriptionService.Get(pagamentoAbbonamento.StripeSubscriptionId);
             }
             catch (StripeException ex)
             {
-                _logger.LogError(ex, "Errore nel recupero della sottoscrizione Stripe");
+                _logger.LogError(ex, "Errore nel recupero della sottoscrizione Stripe con ID {SubscriptionId}", pagamentoAbbonamento.StripeSubscriptionId);
+                return BadRequest("Errore nel recupero della sottoscrizione Stripe");
             }
 
             // Annulla la sottoscrizione Stripe
@@ -273,15 +267,21 @@ namespace Nostalgame.Controllers
             {
                 try
                 {
-                    subscriptionService.Cancel(subscription.Id, new SubscriptionCancelOptions());
+                    _logger.LogInformation("Annullamento della sottoscrizione Stripe con ID {SubscriptionId}", subscription.Id);
+                    var options = new SubscriptionCancelOptions { InvoiceNow = true, Prorate = true };
+                    subscriptionService.Cancel(subscription.Id, options);
                 }
                 catch (StripeException ex)
                 {
                     _logger.LogError(ex, "Errore nell'annullamento della sottoscrizione Stripe con ID {SubscriptionId}", subscription.Id);
-                    // Gestisci l'errore come preferisci
+                    return BadRequest("Errore nell'annullamento della sottoscrizione Stripe");
                 }
             }
-
+            else
+            {
+                _logger.LogWarning("Nessuna sottoscrizione Stripe trovata con ID {SubscriptionId}", pagamentoAbbonamento.StripeSubscriptionId);
+                return NotFound("Nessuna sottoscrizione Stripe trovata");
+            }
 
             // Aggiorna l'abbonamento della registrazione a Standard
             var abbonamentoStandard = await _context.Abbonamenti.FirstOrDefaultAsync(a => a.TipoAbbonamento == "Standard");
@@ -376,6 +376,8 @@ namespace Nostalgame.Controllers
                 CurrentUsername = user.UserName,
                 IdRegistrazione = registrazione.IdRegistrazione
             };
+            ViewBag.IdRegistrazione = registrazione.IdRegistrazione; // Passo l'ID della registrazione alla vista
+
             return View(viewModel);
         }
     

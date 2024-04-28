@@ -1,27 +1,26 @@
 ﻿@model Nostalgame.Models.RegistrazioneEditViewModel
 
-@{
-    ViewData["Title"] = "Effettua l'upgrade";
-}
-
-<h1>@ViewData["Title"]</h1>
-
-<h4>Stai per effettuare l'upgrade al piano Premium</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdRegistrazione" />
-            <div class="form-group">
-                <input type="submit" value="Effettua l'upgrade adesso" class="btn btn-primary" />
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                
+                <div class="card-body">
+                    <h4>Stai per effettuare l'upgrade al piano Premium</h4>
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="IdRegistrazione" />
+                        <div class="form-group">
+                            <input type="submit" value="Effettua l'upgrade adesso" class="btn btn-dark" />
+                        </div>
+                    </form>
+                    <div>
+                        <a class="btn btn-secondary" asp-action="Details" asp-route-id="@Model.IdRegistrazione">Indietro</a>
+                    </div>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a class="btn btn-secondary" asp-action="Details" asp-route-id="@Model.IdRegistrazione">Indietro</a>
 </div>
 
 @section Scripts {

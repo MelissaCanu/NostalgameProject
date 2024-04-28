@@ -1,42 +1,53 @@
 ﻿@model Nostalgame.Models.RegistrazioneDetailsViewModel
 
-<h2>Modifica dettagli registrazione</h2>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Modifica dettagli registrazione</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="EditDetails">
+                        <input type="hidden" asp-for="IdRegistrazione" />
 
-<form asp-action="EditDetails">
-    <input type="hidden" asp-for="IdRegistrazione" />
+                        <div class="form-group">
+                            <label asp-for="Nome"></label>
+                            <input class="form-control" asp-for="Nome" />
+                            <span asp-validation-for="Nome" class="text-danger"></span>
+                        </div>
 
-    <div class="form-group">
-        <label asp-for="Nome"></label>
-        <input class="form-control" asp-for="Nome" />
-        <span asp-validation-for="Nome" class="text-danger"></span>
+                        <div class="form-group">
+                            <label asp-for="Cognome"></label>
+                            <input class="form-control" asp-for="Cognome" />
+                            <span asp-validation-for="Cognome" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Indirizzo"></label>
+                            <input class="form-control" asp-for="Indirizzo" />
+                            <span asp-validation-for="Indirizzo" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Citta"></label>
+                            <input class="form-control" asp-for="Citta" />
+                            <span asp-validation-for="Citta" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Email"></label>
+                            <input class="form-control" asp-for="Email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Salva modifiche</button>
+                        <div>
+                            <a class="btn btn-secondary" asp-action="Details" asp-route-id="@Model.IdRegistrazione">Indietro</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Cognome"></label>
-        <input class="form-control" asp-for="Cognome" />
-        <span asp-validation-for="Cognome" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Indirizzo"></label>
-        <input class="form-control" asp-for="Indirizzo" />
-        <span asp-validation-for="Indirizzo" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Citta"></label>
-        <input class="form-control" asp-for="Citta" />
-        <span asp-validation-for="Citta" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input class="form-control" asp-for="Email" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Salva modifiche</button>
-    <div>
-        <a class="btn btn-secondary" asp-action="Details" asp-route-id="@Model.IdRegistrazione">Indietro</a>
-    </div>
-</form>
+</div>
