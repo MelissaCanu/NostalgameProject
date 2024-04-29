@@ -293,7 +293,15 @@ input, select {
     margin-bottom: 20px;
 }
 
+/* Stili per il quiz */
+
+.quiz-card {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
 .radio-card {
+    color: black !important;
     display: block;
     position: relative;
     padding-left: 35px;
@@ -304,6 +312,7 @@ input, select {
     transition: background-color 0.3s ease;
 }
 
+}
     .radio-card input {
         position: absolute;
         opacity: 0;
@@ -312,18 +321,30 @@ input, select {
 
 .radio-label {
     padding: 10px;
-    background-color: #F6A7D6; /* Cambia il colore di sfondo a #F6A7D6 */
     border-radius: 5px;
 }
 
-.radio-card:hover input ~ .radio-label {
-    background-color: #ccc;
+.card-radio:hover {
+    background-color: #88ebf2; /* Un colore turchese più chiaro */
 }
 
-.radio-card input:checked ~ .radio-label {
-    background-color: #B886F7; /* Cambia il colore di sfondo a #B886F7 quando il pulsante radio è selezionato */
+.body-radio {
+    position: relative;
+}
+
+.body-radio:active {
+    background-color: var(--bs-viola);
     color: white;
 }
+
+.radio-input:checked + .radio-label {
+    color: white; /* Imposta il colore del testo a bianco quando il pulsante radio è selezionato */
+}
+
+.radio-input:checked ~ .card-radio {
+    background-color: var(--bs-viola); /* Imposta il colore di sfondo a viola quando il pulsante radio è selezionato */
+}
+
 
     .radio-card input:checked ~ .radio-label::after {
         display: block;

@@ -176,10 +176,16 @@ namespace Nostalgame.Controllers
                 return RedirectToAction("Details", new { id = id });
             }
 
+            var abbonamentoPremium = _context.Abbonamenti.FirstOrDefault(a => a.TipoAbbonamento == "Premium");
+            if (abbonamentoPremium == null)
+            {
+                return NotFound();
+            }
+
             var viewModel = new RegistrazioneEditViewModel
             {
                 IdRegistrazione = registrazione.IdRegistrazione,
-                IdAbbonamento = registrazione.IdAbbonamento
+                IdAbbonamento = abbonamentoPremium.IdAbbonamento
             };
 
             return View(viewModel);
@@ -212,12 +218,15 @@ namespace Nostalgame.Controllers
                 return RedirectToAction("Details", new { id = id });
             }
 
+            // Aggiorna l'IdAbbonamento nella registrazione
+            registrazione.IdAbbonamento = viewModel.IdAbbonamento;
+
             // Salva le modifiche
             _context.Update(registrazione);
             await _context.SaveChangesAsync();
 
             // Reindirizza alla pagina di pagamento
-            return RedirectToAction("Create", "PagamentoAbbonamenti", new { idUtente = registrazione.Utente.Id });
+            return RedirectToAction("Create", "PagamentoAbbonamenti", new { idUtente = registrazione.Utente.Id, idAbbonamento = viewModel.IdAbbonamento });
         }
 
 

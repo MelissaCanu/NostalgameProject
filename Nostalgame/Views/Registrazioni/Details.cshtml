@@ -4,22 +4,30 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Dettagli utente</h1>
+<h1 class="text-center">Dettagli utente</h1>
 
-<div class="card regdet-card">
-    <div class="card-header">
-        <a asp-action="EditDetails" asp-route-id="@Model.IdRegistrazione" class="btn btn-save">Modifica Dati Personali</a>
-        @if (Model.Abbonamento.TipoAbbonamento != "Premium")
-        {
-            <a asp-action="Edit" asp-route-id="@Model.IdRegistrazione" class="btn btn-return">Effettua l'upgrade</a>
-        }
-        @if (Model.Abbonamento.TipoAbbonamento == "Premium")
-        {
-            <a href="#" class="btn btn-primary" id="downgradeButton">Torna a Standard</a>
-        }
+<div class="container">
+    <div class="card regdet-card">
+        <div class="card-header">
+            <div class="d-flex flex-wrap align-items-center">
+
+                    <a asp-action="EditDetails" asp-route-id="@Model.IdRegistrazione" class="btn btn-save">Modifica Dati Personali</a>
+                </div>
+                <div class="col-md-4">
+                    @if (Model.Abbonamento.TipoAbbonamento != "Premium")
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.IdRegistrazione" class="btn btn-return">Effettua l'upgrade</a>
+                    }
+                    @if (Model.Abbonamento.TipoAbbonamento == "Premium")
+                    {
+                        <a href="#" class="btn btn-primary" id="downgradeButton">Torna a Standard</a>
+                    }
+                </div>
+                <div class="col-md-4">
+                    <a asp-action="ChangeUsernamePassword" class="btn btn-save">Cambia Username o Password</a>
+                </div>
+            </div>
         
-        <a asp-action="ChangeUsernamePassword" class="btn btn-save">Cambia Username o Password</a>
-    </div>
     <div class="card-body">
         <hr />
         <dl class="row">
@@ -77,14 +85,22 @@
     </div>
 </div>
 
-@if (User.IsInRole("Admin"))
-{
-    <a asp-action="Index" class="btn btn-back mt-3">Indietro</a>
-}
-else
-{
-    <a asp-action="Index" asp-controller="Home" class="btn btn-primary mt-3">Torna alla Home</a>
-}
+
+
+    <div class="row mt-3">
+        <div class="col-12">
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="Index" class="btn btn-back">Indietro</a>
+            }
+            else
+            {
+                <a asp-action="Index" asp-controller="Home" class="btn btn-back">Torna alla Home</a>
+            }
+        </div>
+    </div>
+</div>
+
 
 @section Scripts {
     <script type="text/javascript">
