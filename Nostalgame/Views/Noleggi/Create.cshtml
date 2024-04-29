@@ -45,16 +45,24 @@
                 <input asp-for="IndirizzoSpedizione" class="form-control" />
                 <span asp-validation-for="IndirizzoSpedizione" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CostoNoleggio" class="control-label"></label>
-                <p>@Model.CostoNoleggio €</p> 
-                <input asp-for="CostoNoleggio" type="hidden" id="CostoNoleggio" />
-            </div>
-            <div class="form-group">
-                <label asp-for="SpeseSpedizione" class="control-label"></label>
-                <p>@Model.SpeseSpedizione €</p> 
-                <input asp-for="SpeseSpedizione" type="hidden" id="SpeseSpedizione" />
-            </div>
+<div class="form-group">
+    <label asp-for="CostoNoleggio" class="control-label"></label>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">@Model.CostoNoleggio.ToString("F2") €</p>
+        </div>
+    </div>
+    <input asp-for="CostoNoleggio" type="hidden" id="CostoNoleggio" />
+</div>
+<div class="form-group">
+    <label asp-for="SpeseSpedizione" class="control-label"></label>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">@Model.SpeseSpedizione.ToString("F2") €</p>
+        </div>
+    </div>
+    <input asp-for="SpeseSpedizione" type="hidden" id="SpeseSpedizione" />
+</div>
             <div class="form-group">
                 <input type="submit" value="Noleggia" class="btn btn-primary" />
             </div>
@@ -66,7 +74,7 @@
 
 <div class="row justify-content-center">
     <div class="col-md-6 text-right">
-        <a asp-action="Index" class="btn btn-secondary mt-3">Indietro</a>
+        <a asp-action="Index" class="btn btn-back mt-3">Indietro</a>
     </div>
 </div>
 

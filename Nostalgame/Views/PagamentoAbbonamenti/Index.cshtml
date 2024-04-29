@@ -4,34 +4,38 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Pagamento Abbonamento</h1>
+<div class="container">
+    <h1 class="my-4">Pagamento Abbonamento</h1>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Tipo Abbonamento</th>
-            <th>Data Pagamento</th>
-            <th>Importo Pagato</th>
-            <th>ID Utente</th>
-            <th>UserName</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Abbonamento.TipoAbbonamento)</td>
-                <td>@Html.DisplayFor(modelItem => item.DataPagamento)</td>
-                <td>@Html.DisplayFor(modelItem => item.ImportoPagato)</td> 
-                <td>@Html.DisplayFor(modelItem => item.Utente.Id)</td>
-                <td>@Html.DisplayFor(modelItem => item.Utente.UserName)</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.IdPagamentoAbbonamento" class="btn btn-primary">Modifica</a>
-                    <a asp-action="Details" asp-route-id="@item.IdPagamentoAbbonamento" class="btn btn-secondary">Dettagli</a>
-                    <a asp-action="Delete" asp-route-id="@item.IdPagamentoAbbonamento" class="btn btn-danger">Elimina</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tipo Abbonamento</th>
+                    <th>Data Pagamento</th>
+                    <th>Importo Pagato</th>
+                    <th>ID Utente</th>
+                    <th>UserName</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Abbonamento.TipoAbbonamento)</td>
+                        <td>@Html.DisplayFor(modelItem => item.DataPagamento)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ImportoPagato)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Utente.Id)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Utente.UserName)</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.IdPagamentoAbbonamento" class="btn btn-save">Modifica</a>
+                            <a asp-action="Details" asp-route-id="@item.IdPagamentoAbbonamento" class="btn btn-return">Dettagli</a>
+                            <a asp-action="Delete" asp-route-id="@item.IdPagamentoAbbonamento" class="btn btn-cancel-delete">Elimina</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

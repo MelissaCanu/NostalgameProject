@@ -8,17 +8,17 @@
 
 <div class="card regdet-card">
     <div class="card-header">
-        <a asp-action="EditDetails" asp-route-id="@Model.IdRegistrazione" class="btn btn-primary">Modifica Dati Personali</a>
+        <a asp-action="EditDetails" asp-route-id="@Model.IdRegistrazione" class="btn btn-save">Modifica Dati Personali</a>
         @if (Model.Abbonamento.TipoAbbonamento != "Premium")
         {
-            <a asp-action="Edit" asp-route-id="@Model.IdRegistrazione" class="btn btn-primary">Effettua l'upgrade</a>
+            <a asp-action="Edit" asp-route-id="@Model.IdRegistrazione" class="btn btn-return">Effettua l'upgrade</a>
         }
         @if (Model.Abbonamento.TipoAbbonamento == "Premium")
         {
             <a href="#" class="btn btn-primary" id="downgradeButton">Torna a Standard</a>
         }
         
-        <a asp-action="ChangeUsernamePassword" class="btn btn-primary">Cambia Username o Password</a>
+        <a asp-action="ChangeUsernamePassword" class="btn btn-save">Cambia Username o Password</a>
     </div>
     <div class="card-body">
         <hr />
@@ -79,7 +79,7 @@
 
 @if (User.IsInRole("Admin"))
 {
-    <a asp-action="Index" class="btn btn-primary mt-3">Indietro</a>
+    <a asp-action="Index" class="btn btn-back mt-3">Indietro</a>
 }
 else
 {

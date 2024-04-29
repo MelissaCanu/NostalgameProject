@@ -181,7 +181,22 @@ namespace Nostalgame.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdVideogioco,IdUtenteNoleggiante,DataInizio,DataFine,IndirizzoSpedizione,CostoNoleggio, SpeseSpedizione")] NoleggioViewModel noleggioViewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                // Log degli errori di validazione del modello
+                var errors = ModelState
+                    .Where(x => x.Value.Errors.Count > 0)
+                    .Select(x => new { x.Key, x.Value.Errors });
 
+                foreach (var error in errors)
+                {
+                    _logger.LogError($"Campo: {error.Key}");
+                    foreach (var errorMessage in error.Errors)
+                    {
+                        _logger.LogError($"Errore: {errorMessage.ErrorMessage}");
+                    }
+                }
+            }
             if (ModelState.IsValid)
             {
                 var noleggio = new Noleggio

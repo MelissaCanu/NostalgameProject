@@ -33,6 +33,7 @@ namespace Nostalgame.Controllers
         {
             var applicationDbContext = _context.Registrazioni.Include(r => r.Abbonamento).Include(r => r.Utente);
 
+
             IQueryable<Registrazione> registrazioni = applicationDbContext;
 
             if (!String.IsNullOrEmpty(emailSearchString))

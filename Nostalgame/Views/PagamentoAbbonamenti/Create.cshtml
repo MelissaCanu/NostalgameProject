@@ -53,7 +53,7 @@
 </div>
 
 <div>
-    <a asp-action="Edit" asp-controller="Registrazioni" asp-route-id="@ViewData["IdRegistrazione"]">Indietro</a>
+    <a asp-action="Edit" asp-controller="Registrazioni" class="btn btn-back mt-3" asp-route-id="@ViewData["IdRegistrazione"]">Indietro</a>
 </div>
 
 @section Scripts {
@@ -63,3 +63,4 @@
     <script src="https://js.stripe.com/v3/"></script>
     <script src="~/js/pagamento.js"></script>
 }
+

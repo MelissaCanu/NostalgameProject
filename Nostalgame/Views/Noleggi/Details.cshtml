@@ -88,9 +88,9 @@
                 <div>
                     @if (User.IsInRole("Admin")) 
                     {
-                    <a asp-action="Edit" asp-route-id="@Model?.IdNoleggio">Modifica</a> 
+                        <a asp-action="Edit" class="btn btn-save" asp-route-id="@Model?.IdNoleggio">Modifica</a>
                     }
-                    <a asp-action="Index">Indietro</a>
+                    <a asp-action="Index" class="btn btn-back mt-3">Indietro</a>
                 </div>
             </div>
             <div class="col-md-6">

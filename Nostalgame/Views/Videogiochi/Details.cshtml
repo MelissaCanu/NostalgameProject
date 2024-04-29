@@ -40,12 +40,12 @@
 <div>
     @if (ViewData["UserId"] as string == Model.IdProprietario)
     {
-        <a asp-action="Edit" asp-route-id="@Model?.IdVideogioco" class="btn btn-primary">Modifica</a>
+        <a asp-action="Edit" asp-route-id="@Model?.IdVideogioco" class="btn btn-save">Modifica</a>
     }    
     @if (ViewData["UserId"] as string != Model.IdProprietario)
     {
-        <a asp-action="Create" asp-controller="Noleggi" asp-route-idVideogioco="@Model.IdVideogioco" class="btn opacity-75 @(Model.Disponibile ? "btn-success" : "btn-dark") @(Model.Disponibile ? "" : "d-none") ">Noleggia</a>
+        <a asp-action="Create" asp-controller="Noleggi" asp-route-idVideogioco="@Model.IdVideogioco" class="btn btn-rent @(Model.Disponibile ? "btn-success" : "btn-dark") @(Model.Disponibile ? "" : "d-none") ">Noleggia</a>
     }
 
-    <a asp-action="Index" class="btn btn-secondary">Indietro</a>
+    <a asp-action="Index" class="btn btn-back">Indietro</a>
 </div>

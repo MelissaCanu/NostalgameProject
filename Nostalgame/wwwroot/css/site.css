@@ -10,6 +10,13 @@
     --loading-color-start: #dab9f7; /* Viola più chiaro */
     --loading-color-middle: #9e70d9; /* Il tuo colore viola */
     --loading-color-end: #6a3db8; /* Viola più scuro */
+    --bs-arancione: #FF5722;
+    --bs-fucsia: #FF00FF;
+    --bs-lime: #00FF00;
+    --bs-pastel-green: #77dd77;
+    --bs-dark-green: #008000;
+    --bs-pastel-blue: #6495ED;
+    --bs-pastel-black: #505050; /* Un nero pastello non troppo scuro */
 }
 
 html {
@@ -84,8 +91,9 @@ main {
 .navbar {
     background-color: var(--bs-primary);
 }
-.navbar-brand{
-font-family: 'Minecraft', monospace;
+
+.navbar-brand {
+    font-family: 'Minecraft', monospace;
     font-size: 1.5rem;
     color: var(--bs-light);
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
@@ -192,8 +200,8 @@ input, select {
 
 .dropdown-menutoggle {
     background-color: rgba(0, 0, 0, 0.6);
-    color: var(--bs-light)!important;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5)!important;
+    color: var(--bs-light) !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5) !important;
     border-radius: 5px;
     margin-right: 10px;
     vertical-align: bottom;
@@ -201,7 +209,6 @@ input, select {
 }
 
 .avatar-dropdown::after {
-  
 }
 
 .avatar-dropdown {
@@ -411,15 +418,6 @@ input, select {
 }
 
 /*stili custom btn*/
-.btn-add {
-    background-color: var(--bs-turchese-scuro) !important;
-    color: white !important;
-}
-
-.btn-mygames {
-    background-color: var(--bs-turchese) !important;
-    color: white !important;
-}
 
 .btn-logout {
     background: linear-gradient(to right, var(--bs-viola), var(--bs-rosa));
@@ -449,6 +447,79 @@ input.btn {
     color: white !important;
     background: linear-gradient(to right, #6495ED, #4169E1);
 }
+
+.btn-rent {
+    background-color: var(--bs-pastel-green) !important;
+    color: white !important;
+    padding: 12px 24px !important;
+    font-size: 1.2em !important;
+}
+
+    .btn-rent:hover {
+        background-color: var(--bs-dark-green) !important;
+        transform: scale(1.1);
+    }
+
+.btn-return {
+    background-color: var(--bs-pastel-blue) !important;
+    color: white !important;
+    transition: transform 0.3s ease-in-out;
+}
+
+    .btn-return:hover {
+        background-color: #1E90FF !important; /* Un blu più scuro all'hover */
+        transform: scale(1.1);
+    }
+
+.btn-save {
+    background-color: #FF6347 !important; /* Un colore deciso */
+    color: white !important; /* Testo bianco */
+}
+
+    .btn-save:hover {
+        background-color: #FF4500 !important; /* Un colore ancora più deciso all'hover */
+        color: white !important; /* Testo bianco */
+    }
+
+.btn-cancel-delete {
+    background-color: var(--bs-pastel-black) !important;
+    color: white;
+}
+
+    .btn-cancel-delete:hover {
+        background-color: #404040!important; /* Un nero pastello leggermente più scuro all'hover */
+        color: white;
+    }
+
+.btn-completa-pagamento {
+    background-color: #FDFD96 !important; /* Questo è un colore giallo pastello */
+    color: black !important; /* Imposta il colore del testo a nero */
+}
+.btn-completa-pagamento:hover {
+            background-color: #FFD700 !important; /* Questo è un giallo più acceso all'hover */
+            color: black !important; /* Imposta il colore del testo a nero */
+        }
+
+.btn-more {
+   background-color: var(--bs-turchese) !important;
+   color: white !important;
+}
+    
+        .btn-more:hover {
+            background-color: var(--bs-turchese-scuro) !important;
+            color: white !important;
+        }
+
+.btn-back {
+    background-color: #D3D3D3 !important;  /* Grigio pastello */
+    color: white !important;
+}
+
+    .btn-back:hover {
+        background-color: #A9A9A9 !important; /* Grigio più scuro all'hover */
+        color: white !important;
+    }
+
 
 /*animazione dado*/
 

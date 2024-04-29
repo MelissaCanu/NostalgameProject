@@ -1,8 +1,12 @@
 ﻿@model Nostalgame.Models.RegistrazioneViewModel
 
-<h2>Registrazione</h2>
+<div class="container">
 
-<form method="post">
+    <h2 class="text-center my-4">Registrazione</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <form method="post">
     <div class="form-group">
         <label for="UserName">Username</label>
         <input type="text" class="form-control" id="UserName" asp-for="UserName" required />
@@ -35,11 +39,25 @@
         <input type="text" class="form-control" id="Citta" asp-for="Registrazione.Citta" required />
         </div>
 
-    <h3>Dettagli Abbonamento</h3>
-    <div class="form-group">
-        <label for="IdAbbonamento">Tipo Abbonamento</label>
-        <select class="form-control" id="IdAbbonamento" asp-for="Registrazione.IdAbbonamento" asp-items="ViewBag.IdAbbonamento"></select>
-    </div>
+                <h3>Scegli il tuo abbonamento</h3>
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text">
+                            Scegliere l'abbonamento giusto è fondamentale per un'esperienza di gioco ottimale. Offriamo due tipi di abbonamenti:
+                            <ul>
+                                <li><strong>Standard:</strong> Con un costo di noleggio di soli 5€ per gioco e una tariffa di spedizione fissa di 3€, l'abbonamento Standard è perfetto per i giocatori occasionali.</li>
+                                <li><strong>Premium:</strong> Per i veri appassionati di giochi, l'abbonamento Premium offre spedizioni gratuite e un costo di noleggio di soli 5€ per gioco. Gioca quanto vuoi senza preoccuparti dei costi di spedizione!</li>
+                            </ul>
+                        </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="IdAbbonamento">Tipo Abbonamento</label>
+                    <select class="form-control" id="IdAbbonamento" asp-for="Registrazione.IdAbbonamento" asp-items="ViewBag.IdAbbonamento"></select>
+                </div>
 
-    <button type="submit" class="btn btn-primary">Registrati</button>
-</form>
+                <button type="submit" class="btn btn-rent w-100 mt-3">Registrati</button>
+            </form>
+        </div>
+    </div>
+</div>

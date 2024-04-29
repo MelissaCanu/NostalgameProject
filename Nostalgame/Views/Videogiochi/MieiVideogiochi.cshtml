@@ -4,39 +4,39 @@
     ViewData["Title"] = "I miei videogiochi";
 }
 
-<h1>I miei videogiochi</h1>
+<div class="container">
+    <h1 class="text-center my-4">I miei videogiochi</h1>
 
-<div class="row mt-3">
-    <div class="col">
-        <a asp-action="Create" asp-controller="Videogiochi" class="btn btn-primary">Aggiungi videogioco</a>
+    <div class="d-flex justify-content-center mb-4">
+        <a asp-action="Create" asp-controller="Videogiochi" class="btn btn-return">Aggiungi videogioco</a>
     </div>
-</div>
 
-<div class="container-fluid">
-    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-5">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
         @foreach (var item in Model)
         {
-            <div class="col mb-4">
-                <div class="card position-relative videogioco-card">
-                    <img src="@item.Foto" alt="Foto del videogioco" class="card-image" />
+            <div class="col">
+                <div class="card h-100 videogioco-card">
+                    <img src="@item.Foto" alt="Foto del videogioco" class="card-img-top" />
                     @if (!item.Disponibile)
                     {
                         var ultimoNoleggio = item.Noleggi.OrderByDescending(n => n.DataFine).FirstOrDefault();
                         if (ultimoNoleggio != null && ultimoNoleggio.DataFine > DateTime.Now)
                         {
-                            <span class="badge bg-warning text-white position-absolute top-25 start-0 translate-middle-y px-3 py-2 w-100">Disponibile dal @ultimoNoleggio.DataFine.ToShortDateString()</span>
+                            <span class="badge bg-warning text-dark position-absolute top-0 start-50 translate-middle px-2 py-1">Disponibile dal @ultimoNoleggio.DataFine.ToShortDateString()</span>
                         }
                     }
                     <div class="card-body">
                         <h5 class="card-title">@item.Titolo</h5>
 
-                        <a asp-action="Details" asp-route-id="@item.IdVideogioco" class="btn btn-primary">Dettagli</a>
-                        <a asp-action="Edit" asp-route-id="@item.IdVideogioco" class="btn btn-primary">Modifica</a>
+                        <a asp-action="Details" asp-route-id="@item.IdVideogioco" class="btn btn-return">Dettagli</a>
+                        <a asp-action="Edit" class="btn btn-save" asp-route-id="@item.IdVideogioco">Modifica</a>
                     </div>
                 </div>
             </div>
         }
     </div>
-</div>
 
-<a asp-action="Index" class="btn btn-primary mt-3">Indietro</a>
+    <div class="d-flex justify-content-center mt-4">
+        <a asp-action="Index" class="btn btn-back">Indietro</a>
+    </div>
+</div>

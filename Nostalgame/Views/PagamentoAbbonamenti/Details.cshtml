@@ -38,12 +38,12 @@
 <div>
     @if (User.IsInRole("Admin")) // Se l'utente è un amministratore
     {
-        <a asp-action="Edit" asp-route-id="@Model?.IdPagamentoAbbonamento">Modifica</a>
+        <a asp-action="Edit" class="btn btn-save" asp-route-id="@Model?.IdPagamentoAbbonamento">Modifica</a>
  
     }
     @if (User.IsInRole("Admin")) // Se l'utente è un amministratore
     {
-        <a asp-action="Index">Indietro</a>
+        <a asp-action="Index" class="btn btn-back mt-3">Indietro</a>
     }
     else // Se l'utente non è un amministratore
     {

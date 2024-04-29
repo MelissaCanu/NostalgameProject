@@ -15,9 +15,9 @@
     <div class="card mb-3">
         <div class="card-body">
             <h5 class="card-title">@Html.DisplayFor(modelItem => item.Nome)</h5>
-            <a asp-action="Edit" asp-route-id="@item.IdGenere" class="btn btn-primary">Modifica</a>
-            <a asp-action="Details" asp-route-id="@item.IdGenere" class="btn btn-secondary">Dettagli</a>
-            <a asp-action="Delete" asp-route-id="@item.IdGenere" class="btn btn-danger">Elimina</a>
+            <a asp-action="Edit" asp-route-id="@item.IdGenere" class="btn btn-save">Modifica</a>
+            <a asp-action="Details" asp-route-id="@item.IdGenere" class="btn btn-return">Dettagli</a>
+            <a asp-action="Delete" asp-route-id="@item.IdGenere" class="btn btn-cancel-delete">Elimina</a>
         </div>
     </div>
 }
