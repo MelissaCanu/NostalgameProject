@@ -127,6 +127,8 @@ namespace Nostalgame.Controllers
 
             // Recupera l'oggetto Videogioco dal database
             var videogioco = await _context.Videogiochi.FindAsync(idVideogioco);
+            ViewBag.Titolo = videogioco.Titolo;
+
             _logger.LogInformation("Inizio metodo Create con idVideogioco: {idVideogioco}", idVideogioco);
 
 
@@ -209,11 +211,12 @@ namespace Nostalgame.Controllers
                     IndirizzoSpedizione = noleggioViewModel.IndirizzoSpedizione,
                     CostoNoleggio = noleggioViewModel.CostoNoleggio,
                     SpeseSpedizione = noleggioViewModel.SpeseSpedizione,
-                    Stato = Noleggio.StatoNoleggio.InSospeso
+                    Stato = Noleggio.StatoNoleggio.InSospeso,
                 };
 
                 // Trova il videogioco associato al noleggio
                 var videogioco = await _context.Videogiochi.FindAsync(noleggio.IdVideogioco);
+
 
                 // Imposta il videogioco come non disponibile
                 if (videogioco != null)

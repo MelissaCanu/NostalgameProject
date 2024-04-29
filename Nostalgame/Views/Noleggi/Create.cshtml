@@ -21,7 +21,12 @@
                 <input asp-for="IdVideogioco" class="form-control" readonly />
                 <input type="hidden" asp-for="IdVideogioco" />
             </div>
-            <input type="hidden" asp-for="IdVideogioco" />
+                    <div class="form-group">
+                        <label for="TitoloVideogioco" class="control-label">Titolo Videogioco</label>
+                        <input id="TitoloVideogioco" class="form-control" value="@ViewBag.Titolo" readonly />
+                    </div>
+
+
             <div class="form-group">
                 <label asp-for="IdUtenteNoleggiante" class="control-label"></label>
                 <input asp-for="IdUtenteNoleggiante" class="form-control" readonly />
