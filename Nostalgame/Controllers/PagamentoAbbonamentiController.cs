@@ -90,7 +90,7 @@ namespace Nostalgame.Controllers
             var abbonamentoViewModel = new AbbonamentoViewModel
             {
                 IdUtente = userId, // Imposta l'ID dell'utente
-                IdAbbonamento = abbonamento.IdAbbonamento, // Imposta l'ID dell'abbonamento
+                IdAbbonamentoAttuale = registrazione.IdAbbonamentoAttuale,
                 CostoMensile = abbonamento.CostoMensile, // Imposta il costo annuale
                 ImportoPagato = abbonamento.CostoMensile, // Imposta l'importo al costo mensile
                 DataPagamento = DateTime.UtcNow // Imposta la data di pagamento a quella corrente in UTC 
@@ -104,11 +104,9 @@ namespace Nostalgame.Controllers
         // POST: PagamentoAbbonamenti/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdPagamentoAbbonamento,IdUtente,IdAbbonamento,DataPagamento,CostoMensile,ImportoPagato")] AbbonamentoViewModel abbonamentoViewModel, string stripeToken)
+        public async Task<IActionResult> Create([Bind("IdPagamentoAbbonamento,IdUtente,IdAbbonamentoAttuale,DataPagamento,CostoMensile,ImportoPagato")] AbbonamentoViewModel abbonamentoViewModel, string stripeToken)
         {
-            _logger.LogInformation($"Stripe Token: {stripeToken}");
-            _logger.LogInformation($"Model is valid: {ModelState.IsValid}");
-            _logger.LogInformation("Create method was called.");
+            
 
             if (!ModelState.IsValid)
             {
@@ -170,7 +168,7 @@ namespace Nostalgame.Controllers
                 {
                     IdPagamentoAbbonamento = abbonamentoViewModel.IdPagamentoAbbonamento,
                     IdUtente = abbonamentoViewModel.IdUtente,
-                    IdAbbonamento = abbonamentoViewModel.IdAbbonamento,
+                    IdAbbonamento = abbonamentoViewModel.IdAbbonamentoAttuale,
                     DataPagamento = abbonamentoViewModel.DataPagamento,
                     ImportoPagato = abbonamentoViewModel.CostoMensile, // Assegna CostoMensile a ImportoPagato
                     StripeSubscriptionId = subscription.Id, // Salva l'ID della sottoscrizione Stripe
@@ -180,21 +178,25 @@ namespace Nostalgame.Controllers
                 _context.Add(pagamentoAbbonamento);
                 await _context.SaveChangesAsync();
 
-                // Trova la registrazione dell'utente
-                var registrazione = _context.Registrazioni.FirstOrDefault(r => r.IdUtente == pagamentoAbbonamento.IdUtente);
-                // Aggiorna l'abbonamento della registrazione a Premium
-                var abbonamentoPremium = await _context.Abbonamenti.FirstOrDefaultAsync(a => a.TipoAbbonamento == "Premium");
-                if (abbonamentoPremium != null)
-                {
-                    registrazione.IdAbbonamento = abbonamentoPremium.IdAbbonamento;
-                    registrazione.Abbonamento = abbonamentoPremium;
+                // Se il pagamento è stato effettuato con successo, aggiorna l'abbonamento dell'utente
+                //if (subscription.Status == "active")
+                //{
+                //    var registrazione = await _context.Registrazioni
+                //        .Include(r => r.Abbonamento) // Include l'abbonamento
+                //        .Include(r => r.Utente) // Include l'utente
+                //        .FirstOrDefaultAsync(r => r.Utente.Id == abbonamentoViewModel.IdUtente); // Trova la registrazione con l'ID dell'utente specificato
 
-                    // Salva le modifiche
-                    _context.Update(registrazione);
-                    await _context.SaveChangesAsync();
-                }
-                     // Reindirizza l'utente alla vista Details per il pagamento appena completato
-                    return RedirectToAction("Details", new { id = pagamentoAbbonamento.IdPagamentoAbbonamento });
+                //    if (registrazione != null)
+                //    {
+                //        // Aggiorna l'IdAbbonamentoAttuale nella registrazione
+                //        registrazione.IdAbbonamentoAttuale = abbonamentoViewModel.IdAbbonamentoAttuale;
+                //        // Salva le modifiche
+                //        _context.Update(registrazione);
+                //        await _context.SaveChangesAsync();
+                //    }
+                //}
+                // Reindirizza l'utente alla vista Details per il pagamento appena completato
+                return RedirectToAction("Details", new { id = pagamentoAbbonamento.IdPagamentoAbbonamento });
             }
 
             // Se il modello non è valido, restituisci la vista con il modello originale

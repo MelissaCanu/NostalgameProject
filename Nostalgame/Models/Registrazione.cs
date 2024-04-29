@@ -12,6 +12,9 @@ namespace Nostalgame.Models
 
         public int IdAbbonamento { get; set; }
 
+        public int IdAbbonamentoAttuale { get; set; }
+
+
         [Required]
         [StringLength(50)]
         public string Nome { get; set; }

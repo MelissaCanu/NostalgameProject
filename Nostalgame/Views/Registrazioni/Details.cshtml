@@ -13,16 +13,17 @@
 
                     <a asp-action="EditDetails" asp-route-id="@Model.IdRegistrazione" class="btn btn-save">Modifica Dati Personali</a>
                 </div>
-                <div class="col-md-4">
-                    @if (Model.Abbonamento.TipoAbbonamento != "Premium")
-                    {
-                        <a asp-action="Edit" asp-route-id="@Model.IdRegistrazione" class="btn btn-return">Effettua l'upgrade</a>
-                    }
-                    @if (Model.Abbonamento.TipoAbbonamento == "Premium")
-                    {
-                        <a href="#" class="btn btn-primary" id="downgradeButton">Torna a Standard</a>
-                    }
-                </div>
+            <div class="col-md-4">
+                @if (Model.IdAbbonamentoAttuale == 2)
+                {
+                    <a asp-action="Upgrade" asp-route-id="@Model.IdRegistrazione" class="btn btn-primary">Effettua l'upgrade</a>
+                }
+                else if (Model.IdAbbonamentoAttuale == 1)
+                {
+                    <a href="#" class="btn btn-primary" id="downgradeButton">Torna a Standard</a>
+                }
+            </div>
+
                 <div class="col-md-4">
                     <a asp-action="ChangeUsernamePassword" class="btn btn-save">Cambia Username o Password</a>
                 </div>

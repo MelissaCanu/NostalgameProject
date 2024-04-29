@@ -4,5 +4,7 @@ namespace Nostalgame.Models
     {
         public int IdRegistrazione { get; set; }
         public int IdAbbonamento { get; set; }
+
+        public int IdAbbonamentoAttuale { get; set; }
     }
 }

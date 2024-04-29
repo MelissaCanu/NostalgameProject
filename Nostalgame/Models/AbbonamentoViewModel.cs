@@ -8,5 +8,7 @@
         public DateTime DataPagamento { get; set; }
         public decimal CostoMensile { get; set; }
         public decimal ImportoPagato { get; set; }
+         public int IdAbbonamentoAttuale { get; set; }
+
     }
 }

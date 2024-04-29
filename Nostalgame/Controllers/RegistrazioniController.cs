@@ -122,6 +122,11 @@ namespace Nostalgame.Controllers
                     return View(model);
                 }
 
+                // Imposta sia IdAbbonamento che IdAbbonamentoAttuale
+
+                model.Registrazione.IdAbbonamento = model.Registrazione.IdAbbonamentoAttuale = abbonamento.IdAbbonamento;
+
+
                 model.Registrazione.IdUtente = user.Id;
                 model.Registrazione.Utente = user;
                 model.Registrazione.Abbonamento = abbonamento;
@@ -152,82 +157,29 @@ namespace Nostalgame.Controllers
             return View(model);
         }
 
-        // GET: Registrazioni/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            // Include l'abbonamento quando recuperi la registrazione
-            var registrazione = await _context.Registrazioni
-                .Include(r => r.Abbonamento) // Include l'abbonamento
-                .FirstOrDefaultAsync(r => r.IdRegistrazione == id);
-            
+        //Upgrade 
+        public async Task<IActionResult> Upgrade(int id)
+        {
+            var registrazione = await _context.Registrazioni.FindAsync(id);
             if (registrazione == null)
             {
                 return NotFound();
             }
 
-            // Se l'utente ha già un abbonamento Premium, reindirizza alla vista Details
-            if (registrazione.Abbonamento.TipoAbbonamento == "Premium")
-            {
-                return RedirectToAction("Details", new { id = id });
-            }
+            // Imposta l'ID dell'abbonamento attuale a 1 (assumendo che 1 sia l'ID per l'abbonamento premium)
+            registrazione.IdAbbonamentoAttuale = 1;
 
-            var abbonamentoPremium = _context.Abbonamenti.FirstOrDefault(a => a.TipoAbbonamento == "Premium");
-            if (abbonamentoPremium == null)
-            {
-                return NotFound();
-            }
-
-            var viewModel = new RegistrazioneEditViewModel
-            {
-                IdRegistrazione = registrazione.IdRegistrazione,
-                IdAbbonamento = abbonamentoPremium.IdAbbonamento
-            };
-
-            return View(viewModel);
-        }
-
-        //POST - cambia tipo abbonamento
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, RegistrazioneEditViewModel viewModel)
-        {
-            if (id != viewModel.IdRegistrazione)
-            {
-                return NotFound();
-            }
-
-            var registrazione = await _context.Registrazioni
-                .Include(r => r.Abbonamento) // Include l'abbonamento
-                .Include(r => r.Utente) // Include l'utente
-                .FirstOrDefaultAsync(r => r.IdRegistrazione == id); // Trova la registrazione con l'ID specificato
-
-            if (registrazione == null)
-            {
-                return NotFound();
-            }
-
-            // Se l'utente ha già un abbonamento Premium, reindirizza alla vista Details
-            if (registrazione.Abbonamento.TipoAbbonamento == "Premium")
-            {
-                return RedirectToAction("Details", new { id = id });
-            }
-
-            // Aggiorna l'IdAbbonamento nella registrazione
-            registrazione.IdAbbonamento = viewModel.IdAbbonamento;
-
-            // Salva le modifiche
+            // Salva le modifiche nel database
             _context.Update(registrazione);
             await _context.SaveChangesAsync();
 
-            // Reindirizza alla pagina di pagamento
-            return RedirectToAction("Create", "PagamentoAbbonamenti", new { idUtente = registrazione.Utente.Id, idAbbonamento = viewModel.IdAbbonamento });
+            // Reindirizza l'utente alla pagina di pagamento
+            return RedirectToAction("Create", "PagamentoAbbonamenti", new { idUtente = registrazione.IdUtente });
         }
+
+
+
 
 
         //downgrade
@@ -263,12 +215,10 @@ namespace Nostalgame.Controllers
 
             try
             {
-                _logger.LogInformation("Recupero la sottoscrizione Stripe con ID {SubscriptionId}", pagamentoAbbonamento.StripeSubscriptionId);
                 subscription = subscriptionService.Get(pagamentoAbbonamento.StripeSubscriptionId);
             }
             catch (StripeException ex)
             {
-                _logger.LogError(ex, "Errore nel recupero della sottoscrizione Stripe con ID {SubscriptionId}", pagamentoAbbonamento.StripeSubscriptionId);
                 return BadRequest("Errore nel recupero della sottoscrizione Stripe");
             }
 
@@ -277,19 +227,16 @@ namespace Nostalgame.Controllers
             {
                 try
                 {
-                    _logger.LogInformation("Annullamento della sottoscrizione Stripe con ID {SubscriptionId}", subscription.Id);
                     var options = new SubscriptionCancelOptions { InvoiceNow = true, Prorate = true };
                     subscriptionService.Cancel(subscription.Id, options);
                 }
                 catch (StripeException ex)
                 {
-                    _logger.LogError(ex, "Errore nell'annullamento della sottoscrizione Stripe con ID {SubscriptionId}", subscription.Id);
                     return BadRequest("Errore nell'annullamento della sottoscrizione Stripe");
                 }
             }
             else
             {
-                _logger.LogWarning("Nessuna sottoscrizione Stripe trovata con ID {SubscriptionId}", pagamentoAbbonamento.StripeSubscriptionId);
                 return NotFound("Nessuna sottoscrizione Stripe trovata");
             }
 
@@ -300,9 +247,13 @@ namespace Nostalgame.Controllers
                 return NotFound();
             }
 
-            registrazione.IdAbbonamento = abbonamentoStandard.IdAbbonamento;
-            registrazione.Abbonamento = abbonamentoStandard;
-
+            // Se IdAbbonamentoAttuale non esiste, utilizza IdAbbonamento
+            if (registrazione.IdAbbonamentoAttuale == null)
+            {
+                registrazione.IdAbbonamentoAttuale = registrazione.IdAbbonamento;
+            }
+            // Aggiorna l'IdAbbonamentoAttuale nella registrazione
+            registrazione.IdAbbonamentoAttuale = abbonamentoStandard.IdAbbonamento;
             // Salva le modifiche
             _context.Update(registrazione);
             await _context.SaveChangesAsync();

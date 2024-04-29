@@ -11,10 +11,13 @@
     <div class="col-md-4">
         <form asp-action="Create" id="payment-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
-                <label asp-for="IdAbbonamento" class="control-label"></label>
-                <input asp-for="IdAbbonamento" class="form-control" readonly />
+                <label asp-for="IdAbbonamentoAttuale" class="control-label"></label>
+                <input asp-for="IdAbbonamentoAttuale" class="form-control" readonly />
             </div>
+
+
 
             <div class="form-group">
                 <label asp-for="IdUtente" class="control-label"></label>
