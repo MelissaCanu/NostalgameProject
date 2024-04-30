@@ -44,6 +44,7 @@ namespace Nostalgame.Controllers
 
             var pagamentoAbbonamento = await _context.PagamentiAbbonamenti
                 .Include(p => p.Utente)
+                .Include(p => p.Abbonamento)
                 .FirstOrDefaultAsync(m => m.IdPagamentoAbbonamento == id);
             if (pagamentoAbbonamento == null)
             {

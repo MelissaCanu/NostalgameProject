@@ -4,12 +4,17 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Pagamento dell'abbonamento</h1>
+<h1 class="text-center">Pagamento dell'abbonamento</h1>
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" id="payment-form">
+<div class="container">
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Pagamento dell'abbonamento</h5>
+        <p class="card-text">Inserisci i dettagli del tuo pagamento qui sotto.</p>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Create" id="payment-form">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
@@ -51,8 +56,11 @@
             <div class="form-group">
                 <input type="submit" value="Paga ora" class="btn btn-primary" />
             </div>
-        </form>
+                </form>
+            </div>
+        </div>
     </div>
+</div>
 </div>
 
 <div>
